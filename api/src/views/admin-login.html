@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in</title>
+  <link rel="stylesheet" href="/admin/auth-assets/auth.css" />
+  <script type="module" src="/admin/auth-assets/auth.js"></script>
+</head>
+
+<body>
+  <main>
+    <p class="eyebrow">USOF</p>
+    <h1>Administrator sign in</h1>
+    <p>
+      Manage users, posts, categories, comments and reactions with AdminJS.
+    </p>
+    <form id="login" action="/admin/login">
+      <label>Login<input name="login" required autocomplete="username" maxlength="40" /></label>
+      <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+      <label>Password<input name="password" type="password" required autocomplete="current-password" /></label>
+      <button>Sign in</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+  </main>
+</body>
+
+</html>
