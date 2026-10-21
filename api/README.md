@@ -15,17 +15,18 @@ CBL stage progress: [docs/cbl.md](docs/cbl.md).
 
 ## Run locally
 
+From the repository root, install dependencies and create the API environment file:
+
 ```bash
-git clone ssh://git@git.green-lms.app:22022/challenge-667/nafanasiev-12105.git
-npm ci
-cp .env.example .env
+npm install
+cp api/.env.example api/.env
 ```
 
-Edit `.env`: set the database credentials, a private `AUTH_SECRET` of at least 32 characters, and `SEED_PASSWORD`. Then initialize and start the app:
+Edit `api/.env`: set the database credentials, a private `AUTH_SECRET` of at least 32 characters, and `SEED_PASSWORD`. Then initialize and start the app:
 
 ```bash
 npm run db:init
-npm start
+npm run dev:api
 ```
 
 Open `http://localhost:3000/admin`. The exact origin must match `APP_BASE_URL`. `db:init` creates the database, schema, indexes, constraints, and seed data only when the users table is empty. It never drops existing data. To rebuild the configured reference database, use `npm run db:recreate`; it does not delete avatar files or the development mail outbox.

@@ -1,0 +1,91 @@
+:root {
+  font-family: Tahoma, Arial, sans-serif;
+  color: #1c1c1c;
+  background: #6685a5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  font-size: 16px;
+  font-weight: 400;
+  --primary-blue: #0054a6;
+  --primary-mid-blue: #3a89e8;
+  --primary-light-blue: #dceeff;
+  --primary-silver: #ece9d8;
+  --primary-paper: #fff;
+  --primary-gold: #f6d86f;
+  --primary-link: #003399;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: #6685a5;
+  line-height: 1.5;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: var(--primary-link);
+}
+
+a:hover {
+  color: #c43b00;
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 1px dotted #111;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: #316ac5;
+  color: #fff;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: #123d73;
+  font-family: Tahoma, Arial, sans-serif;
+  line-height: 1.2;
+}
+
+code,
+pre {
+  font-family: "Perfect DOS VGA 437 Win", monospace;
+}
+
+button,
+input,
+select,
+textarea {
+  color: #111;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

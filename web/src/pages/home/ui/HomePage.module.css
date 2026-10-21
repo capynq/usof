@@ -1,0 +1,145 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(230px, 0.8fr);
+  align-items: start;
+  gap: 1rem;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.welcome {
+  overflow: hidden;
+  box-shadow: 1px 1px 2px rgb(34 57 80 / 20%);
+}
+
+.welcomeBody {
+  padding: 1.5rem;
+  background: #fff;
+}
+
+.titleIcon {
+  display: inline-grid;
+  width: 15px;
+  height: 15px;
+  place-items: center;
+  margin-right: 0.4rem;
+  border: 1px solid #18539b;
+  background: #f7d86f;
+  box-shadow: inset 1px 1px #fff1b6;
+  color: #174884;
+  font-family: Tahoma, Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.eyebrow {
+  margin: 0 0 0.55rem;
+  color: #435e7b;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
+  font-size: 0.8rem;
+}
+
+.welcome h1 {
+  max-width: 21ch;
+  margin: 0;
+  color: #153e70;
+  font-size: clamp(1.75rem, 4.6vw, 2.65rem);
+  font-weight: 700;
+  line-height: 1.14;
+}
+
+.intro {
+  max-width: 61ch;
+  margin: 1rem 0 1.2rem;
+  color: #303d4b;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.actionLink {
+  display: inline-flex;
+  min-height: 2.15rem;
+  align-items: center;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #003c74;
+  background: linear-gradient(#5ea3ed, #347ed0 48%, #1260b4);
+  box-shadow: inset 1px 1px rgb(255 255 255 / 65%), inset -1px -1px #164e91;
+  color: #fff;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
+  font-size: 0.84rem;
+  text-decoration: none;
+  text-shadow: 1px 1px #174d88;
+}
+
+.actionLink:hover {
+  background: linear-gradient(#79b4f0, #458bd4 48%, #246cbd);
+  color: #fff;
+  text-decoration: none;
+}
+
+.actionLink:active {
+  padding: 0.38rem 0.86rem 0.32rem 0.94rem;
+  background: #286bb3;
+  box-shadow: inset 1px 1px #164e91, inset -1px -1px #7eb3eb;
+}
+
+.guidance {
+  grid-column: 1 / -1;
+  padding: 0.9rem 1rem;
+  border: 1px solid #a8b6c5;
+  background: #e9eef4;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #d4dce5;
+}
+
+.guidanceHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.35rem;
+}
+
+.guidanceHeading h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.documentIcon {
+  display: flex;
+  width: 17px;
+  height: 20px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 0.2rem;
+  border: 1px solid #536f8e;
+  background: #fff;
+  box-shadow: inset 1px 1px #d9eaff;
+}
+
+.documentIcon span {
+  height: 1px;
+  background: #4979af;
+}
+
+.guidance p {
+  margin: 0;
+  color: #303d4b;
+  font-size: 0.92rem;
+}
+
+.guidanceHint {
+  padding-top: 0.3rem;
+  color: #5a6774 !important;
+  font-size: 0.83rem !important;
+}
+
+@media (max-width: 760px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .guidance {
+    grid-column: auto;
+  }
+}

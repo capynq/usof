@@ -1,0 +1,167 @@
+.helper {
+  align-self: start;
+  padding: 0.9rem;
+  border: 1px solid #8a9aab;
+  background: #f1efe5;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #d1cfc3;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.65rem;
+}
+
+.mascot {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  image-rendering: pixelated;
+}
+
+.thinking {
+  animation: think 320ms steps(2, end);
+}
+
+.explaining {
+  animation: explain 360ms steps(3, end);
+}
+
+.happy {
+  animation: cheer 420ms steps(3, end);
+}
+
+.welcome {
+  animation: greet 460ms steps(4, end);
+}
+
+.heading h2 {
+  margin: 0 0 0.15rem;
+  color: #183a65;
+  font-size: 1rem;
+}
+
+.heading p {
+  margin: 0;
+  color: #4b5968;
+  font-size: 0.82rem;
+}
+
+.bubble {
+  position: relative;
+  min-height: 4.3rem;
+  padding: 0.7rem 0.75rem;
+  border: 1px solid #8e9baa;
+  background: #fff;
+  box-shadow: inset 1px 1px #e9e9e9;
+  color: #222;
+  font-size: 0.91rem;
+  line-height: 1.45;
+}
+
+.bubble::before {
+  position: absolute;
+  top: -6px;
+  left: 18px;
+  width: 9px;
+  height: 9px;
+  border-top: 1px solid #8e9baa;
+  border-left: 1px solid #8e9baa;
+  background: #fff;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+.actions button,
+.restoreButton {
+  min-height: 1.9rem;
+  padding: 0.25rem 0.65rem;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
+  font-size: 0.78rem;
+}
+
+.hideButton {
+  margin-left: auto;
+}
+
+.restoreButton {
+  align-self: start;
+}
+
+@keyframes think {
+  0% {
+    transform: translateY(1px);
+  }
+
+  50% {
+    transform: translateY(-2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes explain {
+  0% {
+    transform: translateX(-2px);
+  }
+
+  50% {
+    transform: translateX(2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes cheer {
+  0% {
+    transform: translateY(0);
+  }
+
+  33% {
+    transform: translateY(-3px);
+  }
+
+  66% {
+    transform: translateY(1px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes greet {
+  0% {
+    transform: rotate(0);
+  }
+
+  30% {
+    transform: rotate(-8deg);
+  }
+
+  60% {
+    transform: rotate(8deg);
+  }
+
+  100% {
+    transform: rotate(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot {
+    animation: none;
+  }
+}
