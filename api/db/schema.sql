@@ -59,16 +59,20 @@ CREATE TABLE IF NOT EXISTS post_categories (
 CREATE TABLE IF NOT EXISTS comments (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
   post_id INT UNSIGNED NOT NULL,
+  parent_id INT UNSIGNED NULL,
   author_id INT UNSIGNED NOT NULL,
   content MEDIUMTEXT NOT NULL,
   status ENUM('active','inactive') NOT NULL DEFAULT 'active',
+  is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
   publish_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
   KEY comments_post_status_publish_date_idx (post_id, status, publish_date),
+  KEY comments_parent_idx (parent_id),
   KEY comments_author_idx (author_id),
   KEY comments_status_idx (status),
   CONSTRAINT comments_post_fk FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+  CONSTRAINT comments_parent_fk FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE SET NULL,
   CONSTRAINT comments_author_fk FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

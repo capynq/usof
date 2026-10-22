@@ -1,5 +1,8 @@
-import { strictObject } from "valibot";
-import { status, text } from "./common.js";
+import { optional, strictObject, union } from "valibot";
+import { id, idInput, status, text } from "./common.js";
 
-export const createComment = strictObject({ content: text(1, 10000) });
+export const createComment = strictObject({
+  content: text(1, 10000),
+  parent_id: optional(union([id, idInput])),
+});
 export const updateComment = strictObject({ status });
