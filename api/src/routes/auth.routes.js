@@ -1,7 +1,8 @@
 import { Router } from "express";
 
-export function authRoutes(controller, authenticate) {
+export const authRoutes = (controller, authenticate) => {
   const router = Router();
+  router.get("/me", authenticate, controller.me);
   router.post("/register", controller.register);
   router.post("/login", controller.login);
   router.post("/logout", authenticate, controller.logout);
@@ -10,4 +11,4 @@ export function authRoutes(controller, authenticate) {
   router.post("/password-reset", controller.requestReset);
   router.post("/password-reset/:confirm_token", controller.reset);
   return router;
-}
+};

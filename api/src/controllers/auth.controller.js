@@ -1,4 +1,4 @@
-export function authController(auth, config) {
+export const authController = (auth, config) => {
   const requestMail = (method) => async (request, response) => {
     await auth[method](request.body);
     response.json({
@@ -11,6 +11,8 @@ export function authController(auth, config) {
     });
   };
   return {
+    me: async (request, response) =>
+      response.json({ data: await auth.me(request.user) }),
     register: async (request, response) =>
       response.status(201).json({ data: await auth.register(request.body) }),
     login: async (request, response) =>
@@ -36,4 +38,4 @@ export function authController(auth, config) {
       });
     },
   };
-}
+};

@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { storageDirectory } from "./files.js";
 import { AppError } from "../errors/AppError.js";
 
-export function createMailer(config) {
+export const createMailer = (config) => {
   const transport =
     config.mailMode === "smtp"
       ? nodemailer.createTransport({
@@ -21,15 +21,15 @@ export function createMailer(config) {
           socketTimeout: 10000,
         })
       : null;
-  return async function sendAccountMail(email, kind, token) {
+  return async (email, kind, token) => {
     const message = {
       from: config.smtp.from,
       to: email,
       subject: `Usof ${kind}`,
       text:
         kind === "confirmation"
-          ? `Use this link within one hour: ${config.baseUrl}/api/auth/email-confirm/${token}`
-          : `Use this reset token within one hour: ${token}\nSend POST ${config.baseUrl}/api/auth/password-reset/${token} with a JSON body containing new_password.`,
+          ? `Use this link within one hour: ${config.webBaseUrl}/email-confirmation?token=${encodeURIComponent(token)}`
+          : `Use this link within one hour: ${config.webBaseUrl}/reset-password?token=${encodeURIComponent(token)}`,
     };
     try {
       if (!transport) {
@@ -42,8 +42,12 @@ export function createMailer(config) {
         );
         return "saved_to_local_outbox_not_sent";
       }
+
       const info = await transport.sendMail(message);
-      if (!info.accepted.includes(email)) throw new Error("Recipient rejected");
+      if (!info.accepted.includes(email)) {
+        throw new Error("Recipient rejected");
+      }
+
       return "accepted_by_smtp";
     } catch {
       throw new AppError(
@@ -53,4 +57,4 @@ export function createMailer(config) {
       );
     }
   };
-}
+};

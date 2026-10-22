@@ -1,12 +1,15 @@
 import { DATABASE_NAME_PATTERN } from "../constants/regex.js";
 import { DECIMAL_PORT_PATTERN } from "./constants.js";
 
-export function loadConfig(source = process.env) {
+export const loadConfig = (source = process.env) => {
   const required = (name) => {
-    if (!source[name]?.trim())
+    if (!source[name]?.trim()) {
       throw new Error(`Missing configuration: ${name}`);
+    }
+
     return source[name];
   };
+
   const port = (name, fallback) => {
     const value = source[name] ?? String(fallback);
     if (
@@ -16,18 +19,24 @@ export function loadConfig(source = process.env) {
     ) {
       throw new Error(`Invalid configuration: ${name}`);
     }
+
     return Number(value);
   };
+
   const database = required("DB_NAME");
+
   if (!DATABASE_NAME_PATTERN.test(database)) {
     throw new Error("DB_NAME must be usof or start with usof_");
   }
+
   const authSecret = required("AUTH_SECRET");
+
   if (authSecret.length < 32 || authSecret.startsWith("replace-")) {
     throw new Error(
       "AUTH_SECRET must be a new random secret of at least 32 characters",
     );
   }
+
   const baseUrl = new URL(required("APP_BASE_URL"));
   if (
     !["http:", "https:"].includes(baseUrl.protocol) ||
@@ -39,8 +48,22 @@ export function loadConfig(source = process.env) {
   ) {
     throw new Error("APP_BASE_URL must be an HTTP(S) origin");
   }
+
+  const webBaseUrl = new URL(source.WEB_BASE_URL ?? baseUrl.origin);
+  if (
+    !["http:", "https:"].includes(webBaseUrl.protocol) ||
+    webBaseUrl.username ||
+    webBaseUrl.password ||
+    webBaseUrl.search ||
+    webBaseUrl.hash ||
+    webBaseUrl.pathname !== "/"
+  ) {
+    throw new Error("WEB_BASE_URL must be an HTTP(S) origin");
+  }
+
   const production = source.NODE_ENV === "production";
   const mailMode = source.MAIL_MODE ?? (production ? "smtp" : "file");
+
   if (
     !["file", "smtp"].includes(mailMode) ||
     (production && mailMode !== "smtp")
@@ -49,6 +72,7 @@ export function loadConfig(source = process.env) {
       "MAIL_MODE must be smtp in production or file for development",
     );
   }
+
   const smtp = {
     host: source.SMTP_HOST ?? "",
     port: port("SMTP_PORT", 587),
@@ -56,15 +80,21 @@ export function loadConfig(source = process.env) {
     password: source.SMTP_PASSWORD ?? "",
     from: required("SMTP_FROM"),
   };
-  if (mailMode === "smtp" && !smtp.host)
+
+  if (mailMode === "smtp" && !smtp.host) {
     throw new Error("SMTP_HOST is required for SMTP mode");
-  if (Boolean(smtp.user) !== Boolean(smtp.password))
+  }
+
+  if (Boolean(smtp.user) !== Boolean(smtp.password)) {
     throw new Error("SMTP credentials must be supplied together");
+  }
+
   return Object.freeze({
     port: port("PORT", 3000),
     production,
     authSecret,
     baseUrl: baseUrl.origin,
+    webBaseUrl: webBaseUrl.origin,
     mailMode,
     smtp,
     seedPassword: source.SEED_PASSWORD,
@@ -76,4 +106,4 @@ export function loadConfig(source = process.env) {
       database,
     },
   });
-}
+};

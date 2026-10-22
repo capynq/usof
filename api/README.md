@@ -39,6 +39,7 @@ Open `http://localhost:3000/admin`. The exact origin must match `APP_BASE_URL`. 
 | `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME` | MySQL connection; `DB_NAME` is `usof` or an allowed `usof_` name |
 | `AUTH_SECRET` | Token-signing secret, at least 32 characters |
 | `APP_BASE_URL` | Exact public origin, for example `http://localhost:3000` |
+| `WEB_BASE_URL` | Frontend origin used for confirmation and password-reset links; defaults to `APP_BASE_URL` |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` | SMTP delivery settings |
 | `MAIL_MODE` | `file` for local JSON outbox messages, or `smtp` |
 | `SEED_PASSWORD` | Password assigned to all seed accounts |

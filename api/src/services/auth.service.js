@@ -9,17 +9,21 @@ import {
 } from "../schemas/index.js";
 import { SECONDS_PER_HOUR } from "../constants/dates.js";
 
-export function createAuthService(users, mailer, config) {
+export const createAuthService = (users, mailer, config) => {
   const send = async (method, body, kind) => {
     const input = parse(emailRequest, body, "email");
     const result = await users[method](input.email);
-    if (!result) return null;
+    if (!result) {
+      return null;
+    }
+
     return {
       delivery: await mailer(result.user.email, kind, result.token),
       user: result.user,
     };
   };
   return {
+    me: (actor) => users.get(actor.id, actor),
     register: async (body) => {
       const input = parse(registration, body, "registration");
       const result = await users.register({
@@ -53,4 +57,4 @@ export function createAuthService(users, mailer, config) {
       return users.reset(token, input.new_password);
     },
   };
-}
+};
