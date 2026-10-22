@@ -5,10 +5,13 @@ import { postsRoutes } from "./posts.routes.js";
 import { categoriesRoutes } from "./categories.routes.js";
 import { commentsRoutes } from "./comments.routes.js";
 
-export function apiRoutes(controllers, authenticate, optional, admin) {
+export const apiRoutes = (controllers, authenticate, optional, admin) => {
   const router = Router();
   router.use("/auth", authRoutes(controllers.auth, authenticate));
-  router.use("/users", usersRoutes(controllers.users, authenticate, admin));
+  router.use(
+    "/users",
+    usersRoutes(controllers.users, authenticate, optional, admin),
+  );
   router.use("/posts", postsRoutes(controllers.posts, authenticate, optional));
   router.get("/favorites", authenticate, controllers.posts.favorites);
   router.put(
@@ -30,4 +33,4 @@ export function apiRoutes(controllers, authenticate, optional, admin) {
     commentsRoutes(controllers.comments, authenticate, optional, admin),
   );
   return router;
-}
+};

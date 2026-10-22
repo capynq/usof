@@ -15,7 +15,10 @@ const isAdmin = (actor) => actor?.role === "admin";
 const sameUser = (actor, id) => Number(actor?.id) === Number(id);
 
 const safe = (row, viewer) => {
-  if (!row) return null;
+  if (!row) {
+    return null;
+  }
+
   const {
     password_hash,
     email_confirmation_token_hash,
@@ -26,17 +29,22 @@ const safe = (row, viewer) => {
     email_confirmed,
     ...user
   } = row;
-  if (!isAdmin(viewer) && !sameUser(viewer, row.id)) delete user.email;
+  if (!isAdmin(viewer) && !sameUser(viewer, row.id)) {
+    delete user.email;
+  }
+
   return user;
 };
 
 const duplicate = (error) => {
-  if (error.code === "ER_DUP_ENTRY")
+  if (error.code === "ER_DUP_ENTRY") {
     throw new AppError(
       409,
       ERROR_CODES.USER_EXISTS,
       "Login or email already exists",
     );
+  }
+
   throw error;
 };
 
@@ -57,9 +65,23 @@ export class User {
       `SELECT ${safeFields} FROM users WHERE id = ?`,
       [id],
     );
-    if (!rows[0])
+    if (!rows[0]) {
       throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
+    }
+
     return safe(rows[0], viewer);
+  }
+
+  async getPublic(id) {
+    const [rows] = await this.db.query(
+      `SELECT ${publicFields} FROM users WHERE id = ?`,
+      [id],
+    );
+    if (!rows[0]) {
+      throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
+    }
+
+    return rows[0];
   }
 
   async findAuthById(id) {
@@ -76,18 +98,22 @@ export class User {
       [login, email],
     );
     const user = rows[0];
-    if (!user || !(await verifyPassword(password, user.password_hash)))
+    if (!user || !(await verifyPassword(password, user.password_hash))) {
       throw new AppError(
         401,
         ERROR_CODES.INVALID_CREDENTIALS,
         "Invalid credentials",
       );
-    if (!user.email_confirmed)
+    }
+
+    if (!user.email_confirmed) {
       throw new AppError(
         403,
         ERROR_CODES.ACCOUNT_UNCONFIRMED,
         "Account is not confirmed",
       );
+    }
+
     return user;
   }
 
@@ -98,12 +124,14 @@ export class User {
         "SELECT id FROM users WHERE login = ? OR email = ? FOR UPDATE",
         [input.login, input.email],
       );
-      if (existing.length)
+      if (existing.length) {
         throw new AppError(
           409,
           ERROR_CODES.USER_EXISTS,
           "Login or email already exists",
         );
+      }
+
       let result;
       try {
         [result] = await connection.query(
@@ -137,12 +165,14 @@ export class User {
         "SELECT id FROM users WHERE login = ? OR email = ? FOR UPDATE",
         [input.login, input.email],
       );
-      if (existing.length)
+      if (existing.length) {
         throw new AppError(
           409,
           ERROR_CODES.USER_EXISTS,
           "Login or email already exists",
         );
+      }
+
       let result;
       try {
         [result] = await connection.query(
@@ -172,12 +202,14 @@ export class User {
         "SELECT id FROM users WHERE email_confirmation_token_hash = ? AND email_confirmation_expires_at > UTC_TIMESTAMP() FOR UPDATE",
         [hashSecureToken(token)],
       );
-      if (!rows[0])
+      if (!rows[0]) {
         throw new AppError(
           400,
           ERROR_CODES.INVALID_TOKEN,
           "Invalid or expired confirmation token",
         );
+      }
+
       await connection.query(
         "UPDATE users SET email_confirmed = TRUE,email_confirmation_token_hash = NULL,email_confirmation_expires_at = NULL WHERE id = ?",
         [rows[0].id],
@@ -195,7 +227,10 @@ export class User {
       "SELECT id FROM users WHERE email = ? AND email_confirmed = FALSE",
       [email],
     );
-    if (!rows[0]) return null;
+    if (!rows[0]) {
+      return null;
+    }
+
     const confirmation = createSecureToken();
     await this.db.query(
       "UPDATE users SET email_confirmation_token_hash = ?,email_confirmation_expires_at = ? WHERE id = ?",
@@ -211,7 +246,10 @@ export class User {
     const [rows] = await this.db.query("SELECT id FROM users WHERE email = ?", [
       email,
     ]);
-    if (!rows[0]) return null;
+    if (!rows[0]) {
+      return null;
+    }
+
     const reset = createSecureToken();
     await this.db.query(
       "UPDATE users SET password_reset_token_hash = ?,password_reset_expires_at = ? WHERE id = ?",
@@ -229,12 +267,14 @@ export class User {
         "SELECT id FROM users WHERE password_reset_token_hash = ? AND password_reset_expires_at > UTC_TIMESTAMP() FOR UPDATE",
         [hashSecureToken(token)],
       );
-      if (!rows[0])
+      if (!rows[0]) {
         throw new AppError(
           400,
           ERROR_CODES.INVALID_TOKEN,
           "Invalid or expired reset token",
         );
+      }
+
       await connection.query(
         "UPDATE users SET password_hash = ?,password_reset_token_hash = NULL,password_reset_expires_at = NULL,auth_version = auth_version + 1 WHERE id = ?",
         [await hashPassword(newPassword), rows[0].id],
@@ -252,27 +292,35 @@ export class User {
       "UPDATE users SET auth_version = auth_version + 1 WHERE id = ?",
       [id],
     );
-    if (!result.affectedRows)
+    if (!result.affectedRows) {
       throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
+    }
+
     return { id: Number(id) };
   }
 
   async update(id, input, actor) {
-    if (!actor)
+    if (!actor) {
       throw new AppError(
         401,
         ERROR_CODES.UNAUTHORIZED,
         "Authentication required",
       );
-    if (!isAdmin(actor) && !sameUser(actor, id))
+    }
+
+    if (!isAdmin(actor) && !sameUser(actor, id)) {
       throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
+    }
+
     return transaction(this.db, async (connection) => {
       const [targets] = await connection.query(
         "SELECT id,email FROM users WHERE id = ? FOR UPDATE",
         [id],
       );
-      if (!targets[0])
+      if (!targets[0]) {
         throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
+      }
+
       const fields = [];
       const values = [];
       for (const key of ["login", "full_name"]) {
@@ -281,6 +329,7 @@ export class User {
           values.push(input[key]);
         }
       }
+
       if (isAdmin(actor) && input.role !== undefined) {
         fields.push("role = ?");
         values.push(input.role);
@@ -299,6 +348,7 @@ export class User {
         );
         values.push(input.email, confirmation.hash, confirmation.expiresAt);
       }
+
       if (fields.length) {
         try {
           await connection.query(
@@ -319,22 +369,28 @@ export class User {
   }
 
   async delete(id, actor) {
-    if (!actor)
+    if (!actor) {
       throw new AppError(
         401,
         ERROR_CODES.UNAUTHORIZED,
         "Authentication required",
       );
-    if (!isAdmin(actor) && !sameUser(actor, id))
+    }
+
+    if (!isAdmin(actor) && !sameUser(actor, id)) {
       throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
+    }
+
     return transaction(this.db, async (connection) => {
       await Like.lockUsers(connection);
       const [rows] = await connection.query(
         "SELECT profile_picture FROM users WHERE id = ? FOR UPDATE",
         [id],
       );
-      if (!rows[0])
+      if (!rows[0]) {
         throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
+      }
+
       await connection.query("DELETE FROM users WHERE id = ?", [id]);
       await Like.recalculate(connection);
       return {
@@ -349,8 +405,10 @@ export class User {
         "SELECT profile_picture FROM users WHERE id = ? FOR UPDATE",
         [id],
       );
-      if (!rows[0])
+      if (!rows[0]) {
         throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
+      }
+
       await connection.query(
         "UPDATE users SET profile_picture = ? WHERE id = ?",
         [path, id],
