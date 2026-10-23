@@ -1,0 +1,33 @@
+.window {
+  width: min(100%, 39rem);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.body {
+  display: grid;
+  gap: 1rem;
+  padding: 1.2rem;
+  background: var(--surface-color-raised);
+}
+
+.titleText {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.titleIcon {
+  display: block;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+@media (max-width: 520px) {
+  .body {
+    gap: 0.85rem;
+    padding: 0.85rem;
+  }
+}

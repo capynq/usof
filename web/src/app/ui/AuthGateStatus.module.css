@@ -1,0 +1,21 @@
+.statusPage {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 1rem;
+  background: var(--surface-color-page);
+}
+
+.window {
+  width: min(100%, 30rem);
+}
+
+.window :global(.window-body) {
+  padding: 1rem;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}

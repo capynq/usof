@@ -1,0 +1,34 @@
+.avatar {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--avatar-border);
+  background: var(--avatar-surface);
+  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--avatar-shadow);
+  color: var(--text-color-emphasis);
+  font-family: Tahoma, Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1;
+  image-rendering: pixelated;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.regular {
+  width: 2.3rem;
+  height: 2.3rem;
+  font-size: 0.85rem;
+}
+
+.large {
+  width: 4rem;
+  height: 4rem;
+  font-size: 1.2rem;
+}
