@@ -1,18 +1,13 @@
+@import "./variables.css";
+
 :root {
   font-family: Tahoma, Arial, sans-serif;
-  color: #1c1c1c;
-  background: #6685a5;
+  color: var(--global-text-default);
+  background: var(--surface-color-page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   font-size: 16px;
   font-weight: 400;
-  --primary-blue: #0054a6;
-  --primary-mid-blue: #3a89e8;
-  --primary-light-blue: #dceeff;
-  --primary-silver: #ece9d8;
-  --primary-paper: #fff;
-  --primary-gold: #f6d86f;
-  --primary-link: #003399;
 }
 
 * {
@@ -22,7 +17,7 @@
 body {
   min-height: 100vh;
   margin: 0;
-  background: #6685a5;
+  background: var(--surface-color-page);
   line-height: 1.5;
 }
 
@@ -33,22 +28,22 @@ textarea {
 }
 
 a {
-  color: var(--primary-link);
+  color: var(--text-color-link);
 }
 
 a:hover {
-  color: #c43b00;
+  color: var(--global-text-link-hover);
   text-decoration-thickness: 2px;
 }
 
 :focus-visible {
-  outline: 1px dotted #111;
+  outline: 1px dotted var(--text-color-default);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: #316ac5;
-  color: #fff;
+  background: var(--global-surface-selection);
+  color: var(--text-color-on-primary);
 }
 
 h1,
@@ -61,7 +56,7 @@ p {
 h1,
 h2,
 h3 {
-  color: #123d73;
+  color: var(--global-text-title);
   font-family: Tahoma, Arial, sans-serif;
   line-height: 1.2;
 }
@@ -75,7 +70,7 @@ button,
 input,
 select,
 textarea {
-  color: #111;
+  color: var(--text-color-default);
 }
 
 @media (prefers-reduced-motion: reduce) {

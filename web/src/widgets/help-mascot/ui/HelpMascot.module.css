@@ -1,9 +1,9 @@
 .helper {
   align-self: start;
   padding: 0.9rem;
-  border: 1px solid #8a9aab;
-  background: #f1efe5;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #d1cfc3;
+  border: 1px solid var(--mascot-border);
+  background: var(--mascot-surface);
+  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--mascot-shadow);
 }
 
 .heading {
@@ -38,13 +38,13 @@
 
 .heading h2 {
   margin: 0 0 0.15rem;
-  color: #183a65;
+  color: var(--mascot-heading-text);
   font-size: 1rem;
 }
 
 .heading p {
   margin: 0;
-  color: #4b5968;
+  color: var(--mascot-description-text);
   font-size: 0.82rem;
 }
 
@@ -52,10 +52,10 @@
   position: relative;
   min-height: 4.3rem;
   padding: 0.7rem 0.75rem;
-  border: 1px solid #8e9baa;
-  background: #fff;
-  box-shadow: inset 1px 1px #e9e9e9;
-  color: #222;
+  border: 1px solid var(--border-color-control);
+  background: var(--surface-color-raised);
+  box-shadow: inset 1px 1px var(--mascot-bubble-highlight);
+  color: var(--mascot-bubble-text);
   font-size: 0.91rem;
   line-height: 1.45;
 }
@@ -66,9 +66,9 @@
   left: 18px;
   width: 9px;
   height: 9px;
-  border-top: 1px solid #8e9baa;
-  border-left: 1px solid #8e9baa;
-  background: #fff;
+  border-top: 1px solid var(--border-color-control);
+  border-left: 1px solid var(--border-color-control);
+  background: var(--surface-color-raised);
   content: "";
   transform: rotate(45deg);
 }

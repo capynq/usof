@@ -4,17 +4,17 @@
   min-height: 100vh;
   flex-direction: column;
   margin: 0 auto;
-  border-right: 1px solid #34587a;
-  border-left: 1px solid #34587a;
-  background: #f3f5f8;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 30%);
+  border-right: 1px solid var(--border-color-layout);
+  border-left: 1px solid var(--border-color-layout);
+  background: var(--surface-color-content);
+  box-shadow: 0 0 0 1px var(--layout-frame-highlight);
 }
 
 .main {
   width: 100%;
   flex: 1;
   padding: 1.5rem 1rem;
-  background: linear-gradient(180deg, #f8fbff, #e9eef5 80%);
+  background: linear-gradient(180deg, var(--layout-surface-gradient-start), var(--layout-surface-gradient-end) 80%);
 }
 
 @media (max-width: 520px) {

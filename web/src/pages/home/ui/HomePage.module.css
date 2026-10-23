@@ -9,12 +9,12 @@
 
 .welcome {
   overflow: hidden;
-  box-shadow: 1px 1px 2px rgb(34 57 80 / 20%);
+  box-shadow: 1px 1px 2px var(--shadow-color-card);
 }
 
 .welcomeBody {
   padding: 1.5rem;
-  background: #fff;
+  background: var(--surface-color-raised);
 }
 
 .titleIcon {
@@ -23,10 +23,10 @@
   height: 15px;
   place-items: center;
   margin-right: 0.4rem;
-  border: 1px solid #18539b;
-  background: #f7d86f;
-  box-shadow: inset 1px 1px #fff1b6;
-  color: #174884;
+  border: 1px solid var(--home-badge-border);
+  background: var(--home-badge-surface);
+  box-shadow: inset 1px 1px var(--home-badge-highlight);
+  color: var(--home-badge-text);
   font-family: Tahoma, Arial, sans-serif;
   font-size: 0.75rem;
   font-weight: 700;
@@ -35,7 +35,7 @@
 
 .eyebrow {
   margin: 0 0 0.55rem;
-  color: #435e7b;
+  color: var(--text-color-muted);
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   font-size: 0.8rem;
 }
@@ -43,7 +43,7 @@
 .welcome h1 {
   max-width: 21ch;
   margin: 0;
-  color: #153e70;
+  color: var(--text-color-heading);
   font-size: clamp(1.75rem, 4.6vw, 2.65rem);
   font-weight: 700;
   line-height: 1.14;
@@ -52,7 +52,7 @@
 .intro {
   max-width: 61ch;
   margin: 1rem 0 1.2rem;
-  color: #303d4b;
+  color: var(--text-color-body);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -62,34 +62,34 @@
   min-height: 2.15rem;
   align-items: center;
   padding: 0.35rem 0.9rem;
-  border: 1px solid #003c74;
-  background: linear-gradient(#5ea3ed, #347ed0 48%, #1260b4);
-  box-shadow: inset 1px 1px rgb(255 255 255 / 65%), inset -1px -1px #164e91;
-  color: #fff;
+  border: 1px solid var(--action-color-border);
+  background: linear-gradient(var(--home-action-gradient-start), var(--home-action-gradient-middle) 48%, var(--home-action-gradient-end));
+  box-shadow: inset 1px 1px var(--home-action-highlight), inset -1px -1px var(--action-color-shadow-strong);
+  color: var(--text-color-on-primary);
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   font-size: 0.84rem;
   text-decoration: none;
-  text-shadow: 1px 1px #174d88;
+  text-shadow: 1px 1px var(--action-color-text-shadow);
 }
 
 .actionLink:hover {
-  background: linear-gradient(#79b4f0, #458bd4 48%, #246cbd);
-  color: #fff;
+  background: linear-gradient(var(--home-action-hover-start), var(--home-action-hover-middle) 48%, var(--action-color-primary-hover));
+  color: var(--text-color-on-primary);
   text-decoration: none;
 }
 
 .actionLink:active {
   padding: 0.38rem 0.86rem 0.32rem 0.94rem;
-  background: #286bb3;
-  box-shadow: inset 1px 1px #164e91, inset -1px -1px #7eb3eb;
+  background: var(--home-action-active);
+  box-shadow: inset 1px 1px var(--action-color-shadow-strong), inset -1px -1px var(--home-action-active-highlight);
 }
 
 .guidance {
   grid-column: 1 / -1;
   padding: 0.9rem 1rem;
-  border: 1px solid #a8b6c5;
-  background: #e9eef4;
-  box-shadow: inset 1px 1px #fff, inset -1px -1px #d4dce5;
+  border: 1px solid var(--home-panel-border);
+  background: var(--home-panel-surface);
+  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--home-panel-inset);
 }
 
 .guidanceHeading {
@@ -112,25 +112,25 @@
   justify-content: center;
   gap: 2px;
   padding: 0.2rem;
-  border: 1px solid #536f8e;
-  background: #fff;
-  box-shadow: inset 1px 1px #d9eaff;
+  border: 1px solid var(--home-document-border);
+  background: var(--surface-color-raised);
+  box-shadow: inset 1px 1px var(--home-document-highlight);
 }
 
 .documentIcon span {
   height: 1px;
-  background: #4979af;
+  background: var(--home-document-line);
 }
 
 .guidance p {
   margin: 0;
-  color: #303d4b;
+  color: var(--text-color-body);
   font-size: 0.92rem;
 }
 
 .guidanceHint {
   padding-top: 0.3rem;
-  color: #5a6774 !important;
+  color: var(--home-text-hint) !important;
   font-size: 0.83rem !important;
 }
 

@@ -5,13 +5,13 @@
   gap: 0.2rem;
   margin: 0;
   padding: 0.25rem 0.5rem;
-  border-top: 1px solid #afbac6;
-  background: #e8e6dc;
+  border-top: 1px solid var(--footer-border);
+  background: var(--footer-surface);
 }
 
 .service {
   min-width: 5rem;
-  color: #23486e;
+  color: var(--footer-text);
   font-weight: 700;
 }
 

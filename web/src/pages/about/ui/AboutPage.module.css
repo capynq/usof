@@ -1,32 +1,32 @@
 .window {
   width: min(100%, 780px);
   margin: 0 auto;
-  box-shadow: 1px 1px 2px rgb(34 57 80 / 20%);
+  box-shadow: 1px 1px 2px var(--shadow-color-card);
 }
 
 .article {
   padding: 1.5rem;
-  background: #fff;
+  background: var(--surface-color-raised);
 }
 
 .article h1 {
   max-width: 22ch;
   margin: 0 0 1rem;
-  color: #153e70;
+  color: var(--text-color-heading);
   font-size: clamp(1.75rem, 5vw, 2.55rem);
   line-height: 1.14;
 }
 
 .article p {
   max-width: 66ch;
-  color: #303d4b;
+  color: var(--text-color-body);
   font-size: 1rem;
   line-height: 1.65;
 }
 
 .eyebrow {
   margin: 0 0 0.55rem;
-  color: #435e7b !important;
+  color: var(--text-color-muted) !important;
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   font-size: 0.8rem !important;
 }
