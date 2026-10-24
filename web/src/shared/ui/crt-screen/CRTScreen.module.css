@@ -1,0 +1,60 @@
+.screen {
+  --crt-vignette-strength: 0.76;
+  --crt-vignette-mid-strength: 0.17;
+  --crt-corner-strength: 0.43;
+  --crt-scanline-opacity: 0.035;
+  --crt-mask-opacity: 0.5;
+  --crt-glow-strength: 0.54;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+.content {
+  position: relative;
+  z-index: 0;
+  text-shadow: 0 0 0.55px rgb(190 230 255 / var(--crt-glow-strength));
+}
+
+.overlay {
+  position: fixed;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.glass,
+.scanlines,
+.shadowMask {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.glass {
+  background:
+    radial-gradient(ellipse at 0 0, rgb(0 0 0 / var(--crt-corner-strength)), transparent 34%),
+    radial-gradient(ellipse at 100% 0, rgb(0 0 0 / var(--crt-corner-strength)), transparent 34%),
+    radial-gradient(ellipse at 0 100%, rgb(0 0 0 / var(--crt-corner-strength)), transparent 36%),
+    radial-gradient(ellipse at 100% 100%, rgb(0 0 0 / var(--crt-corner-strength)), transparent 36%),
+    radial-gradient(ellipse 100% 100% at 50% 46%, transparent 50%, rgb(3 8 14 / var(--crt-vignette-mid-strength)) 78%, rgb(0 2 5 / var(--crt-vignette-strength)) 112%),
+    radial-gradient(ellipse 82% 92% at 50% 50%, transparent 73%, rgb(190 230 255 / 0.035) 76%, transparent 80%),
+    radial-gradient(ellipse at 50% 42%, rgb(127 216 255 / 0.045), transparent 68%);
+}
+
+.scanlines {
+  background: repeating-linear-gradient(to bottom,
+      rgb(0 0 0 / var(--crt-scanline-opacity)) 0 1px,
+      transparent 1px 4px);
+}
+
+.shadowMask {
+  opacity: var(--crt-mask-opacity);
+  background: repeating-linear-gradient(to right,
+      rgb(255 45 45 / 0.035) 0 1px,
+      rgb(45 255 120 / 0.025) 1px 2px,
+      rgb(70 125 255 / 0.035) 2px 3px,
+      transparent 3px 4px);
+}
