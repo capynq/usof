@@ -1,23 +1,20 @@
 import styles from "./AuthGateStatus.module.css";
+import { WindowShell } from "../../shared/ui/window-shell/index.js";
 
 export const StatusWindow = ({ status, children }) => {
   const { title, message, ariaLive, labelledBy, role } = status;
 
   return (
-    <section
-      className={`window ${styles.window}`}
+    <WindowShell
+      className={styles.window}
+      bodyClassName=""
       aria-live={ariaLive}
       aria-labelledby={labelledBy}
+      title={title}
+      titleId={labelledBy}
     >
-      <div className="title-bar">
-        <div className="title-bar-text" id={labelledBy}>
-          {title}
-        </div>
-      </div>
-      <div className="window-body">
-        <p role={role}>{message}</p>
-        {children}
-      </div>
-    </section>
+      <p role={role}>{message}</p>
+      {children}
+    </WindowShell>
   );
 };

@@ -1,9 +1,9 @@
 import { ERROR_CODES } from "../constants/errorCodes.js";
 import { transaction } from "../config/database.js";
 import { AppError } from "../errors/AppError.js";
+import { isAdmin, requireAuthenticatedUser, requireAdmin } from "./access.js";
 import { Like } from "./Like.js";
 
-const isAdmin = (actor) => actor?.role === "admin";
 const postVisible = (post, viewer) =>
   post &&
   (post.status === "active" ||
@@ -21,11 +21,43 @@ const reactionCountsJoin = `LEFT JOIN (
   WHERE comment_id IS NOT NULL
   GROUP BY comment_id
 ) reaction_counts ON reaction_counts.comment_id = c.id`;
-const commentListSelect = `SELECT ${commentFields},COALESCE(reaction_counts.like_count,0) AS like_count,COALESCE(reaction_counts.dislike_count,0) AS dislike_count,COALESCE(reaction_counts.reaction_count,0) AS reaction_count FROM comments c JOIN users u ON u.id = c.author_id ${reactionCountsJoin}`;
+const selectComments = ({ includePostContext = false, includeViewerReaction = false } = {}) => {
+  const fields = [
+    commentFields,
+    includePostContext
+      ? "(SELECT COUNT(*) FROM likes l WHERE l.comment_id = c.id AND l.type = 'like') AS like_count"
+      : "COALESCE(reaction_counts.like_count,0) AS like_count",
+    includePostContext
+      ? "(SELECT COUNT(*) FROM likes l WHERE l.comment_id = c.id AND l.type = 'dislike') AS dislike_count"
+      : "COALESCE(reaction_counts.dislike_count,0) AS dislike_count",
+    includePostContext
+      ? "(SELECT COUNT(*) FROM likes l WHERE l.comment_id = c.id) AS reaction_count"
+      : "COALESCE(reaction_counts.reaction_count,0) AS reaction_count",
+  ];
+  if (includePostContext) {
+    fields.push("p.author_id AS post_author_id", "p.status AS post_status");
+  }
+  if (includeViewerReaction) {
+    fields.push("(SELECT l.type FROM likes l WHERE l.comment_id = c.id AND l.author_id = ? LIMIT 1) AS viewer_reaction");
+  }
+
+  const postJoin = includePostContext ? "JOIN posts p ON p.id = c.post_id" : "";
+  const reactionsJoin = includePostContext ? "" : reactionCountsJoin;
+  return `SELECT ${fields.join(",")} FROM comments c JOIN users u ON u.id = c.author_id ${postJoin} ${reactionsJoin}`;
+};
+
+const assertCommentAccess = (comment, user) => {
+  if (!postVisible({ author_id: comment.post_author_id, status: comment.post_status }, user)) {
+    throw new AppError(404, ERROR_CODES.COMMENT_NOT_FOUND, "Comment not found");
+  }
+  if (!isAdmin(user) && Number(comment.author_id) !== Number(user.id)) {
+    throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
+  }
+};
 
 const privateComment = async (connection, id, lock = false) => {
   const [rows] = await connection.query(
-    `SELECT ${commentFields},p.author_id AS post_author_id,p.status AS post_status,(SELECT COUNT(*) FROM likes l WHERE l.comment_id = c.id AND l.type = 'like') AS like_count,(SELECT COUNT(*) FROM likes l WHERE l.comment_id = c.id AND l.type = 'dislike') AS dislike_count,(SELECT COUNT(*) FROM likes l WHERE l.comment_id = c.id) AS reaction_count FROM comments c JOIN posts p ON p.id = c.post_id JOIN users u ON u.id = c.author_id WHERE c.id = ?${lock ? " FOR UPDATE" : ""}`,
+    `${selectComments({ includePostContext: true })} WHERE c.id = ?${lock ? " FOR UPDATE" : ""}`,
     [id],
   );
   return rows[0] || null;
@@ -120,12 +152,11 @@ export class Comment {
   }
 
   async list(viewer) {
-    if (!isAdmin(viewer)) {
-      throw new AppError(403, ERROR_CODES.FORBIDDEN, "Admin access required");
-    }
+    requireAdmin(viewer);
 
     const [rows] = await this.db.query(
-      `${commentListSelect} ORDER BY c.publish_date DESC,c.id DESC`,
+      `${selectComments({ includeViewerReaction: true })} ORDER BY c.publish_date DESC,c.id DESC`,
+      [viewer.id],
     );
     return rows.map((row) => presentComment(row));
   }
@@ -153,10 +184,10 @@ export class Comment {
       ? "WHERE c.post_id = ?"
       : "WHERE c.post_id = ? AND c.id IN (SELECT id FROM discussion_ids)";
     const values = isAdmin(viewer)
-      ? [postId]
-      : [postId, postId, postId];
+      ? [viewer?.id || 0, postId]
+      : [postId, postId, viewer?.id || 0, postId];
     const [rows] = await this.db.query(
-      `${discussionCte} ${commentListSelect} ${condition}`,
+      `${discussionCte} ${selectComments({ includeViewerReaction: true })} ${condition}`,
       values,
     );
     return orderDiscussion(rows, viewer);
@@ -184,21 +215,15 @@ export class Comment {
     return presentComment(row);
   }
 
-  async create(postId, input, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async create(postId, input, user) {
+    requireAuthenticatedUser(user);
 
     const createdId = await transaction(this.db, async (connection) => {
       const [posts] = await connection.query(
         "SELECT id,author_id,status FROM posts WHERE id = ? FOR UPDATE",
         [postId],
       );
-      if (!posts[0] || (!isAdmin(actor) && posts[0].status !== "active")) {
+      if (!posts[0] || (!isAdmin(user) && posts[0].status !== "active")) {
         throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
       }
 
@@ -223,21 +248,15 @@ export class Comment {
 
       const [result] = await connection.query(
         "INSERT INTO comments (post_id,parent_id,author_id,content,status) VALUES (?,?,?,?, 'active')",
-        [postId, parentId, actor.id, input.content.trim()],
+        [postId, parentId, user.id, input.content.trim()],
       );
       return result.insertId;
     });
-    return this.get(createdId, actor);
+    return this.get(createdId, user);
   }
 
-  async update(id, input, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async update(id, input, user) {
+    requireAuthenticatedUser(user);
 
     return transaction(this.db, async (connection) => {
       const comment = await privateComment(connection, id, true);
@@ -257,22 +276,7 @@ export class Comment {
         );
       }
 
-      if (
-        !postVisible(
-          { author_id: comment.post_author_id, status: comment.post_status },
-          actor,
-        )
-      ) {
-        throw new AppError(
-          404,
-          ERROR_CODES.COMMENT_NOT_FOUND,
-          "Comment not found",
-        );
-      }
-
-      if (!isAdmin(actor) && Number(comment.author_id) !== Number(actor.id)) {
-        throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
-      }
+      assertCommentAccess(comment, user);
 
       if (input.status !== undefined) {
         await connection.query("UPDATE comments SET status = ? WHERE id = ?", [
@@ -285,14 +289,8 @@ export class Comment {
     });
   }
 
-  async delete(id, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async delete(id, user) {
+    requireAuthenticatedUser(user);
 
     return transaction(this.db, async (connection) => {
       await Like.lockUsers(connection);
@@ -305,22 +303,7 @@ export class Comment {
         );
       }
 
-      if (
-        !postVisible(
-          { author_id: comment.post_author_id, status: comment.post_status },
-          actor,
-        )
-      ) {
-        throw new AppError(
-          404,
-          ERROR_CODES.COMMENT_NOT_FOUND,
-          "Comment not found",
-        );
-      }
-
-      if (!isAdmin(actor) && Number(comment.author_id) !== Number(actor.id)) {
-        throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
-      }
+      assertCommentAccess(comment, user);
 
       const [replies] = await connection.query(
         "SELECT id FROM comments WHERE parent_id = ? LIMIT 1 FOR UPDATE",

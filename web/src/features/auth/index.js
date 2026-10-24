@@ -35,6 +35,7 @@ export {
   validateEmailRequest,
   validateLogin,
   validatePasswordReset,
+  validatePasswordConfirmation,
   validateRegistration,
 } from "./model/validation.js";
 export { AuthField } from "./ui/AuthField.jsx";

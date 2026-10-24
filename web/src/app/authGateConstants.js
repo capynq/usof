@@ -3,6 +3,8 @@ export const AUTH_GATE_COPY = {
     title: "Checking your Usof session",
     message: "Usof is checking that your sign-in is still current.",
     ariaLive: "polite",
+    labelledBy: "auth-gate-restoring-title",
+    role: "status",
   },
   restoreError: {
     title: "Session could not be restored",

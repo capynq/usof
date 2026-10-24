@@ -8,18 +8,18 @@ export const NavigationLinks = ({
   activeLinkClassName,
   iconClassName
 }) => {
+  const navigationClassName = [className].filter(Boolean).join(" ");
+
   return (
-    <nav className={className} aria-label={ariaLabel}>
+    <nav className={navigationClassName} aria-label={ariaLabel}>
       {items.map(({ to, end, label, Icon }) => (
         <NavLink
           key={to}
-          className={({ isActive }) => isActive
-            ? `${linkClassName} ${activeLinkClassName}`
-            : linkClassName}
+          className={({ isActive }) => [linkClassName, isActive && activeLinkClassName].filter(Boolean).join(" ")}
           end={end}
           to={to}
         >
-          {Icon && <Icon className={iconClassName} />}
+          {Icon && <Icon className={[iconClassName].filter(Boolean).join(" ")} />}
           {label}
         </NavLink>
       ))}

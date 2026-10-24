@@ -5,9 +5,9 @@ import { assertNonEmpty } from "../schemas/parse.js";
 import { idInput } from "../schemas/common.js";
 
 export const createUsersService = (users, mailer) => ({
-  list: (actor) => users.list(actor),
-  get: (rawId, actor) =>
-    users.get(parse(idInput, String(rawId), "user_id"), actor),
+  list: (user) => users.list(user),
+  get: (rawId, user) =>
+    users.get(parse(idInput, String(rawId), "user_id"), user),
   getPublic: (rawId) =>
     users.getPublic(parse(idInput, String(rawId), "user_id")),
   create: async (body) => {
@@ -15,10 +15,10 @@ export const createUsersService = (users, mailer) => ({
     const { password_confirmation: ignored, ...modelInput } = input;
     return users.create({ ...modelInput, full_name: input.full_name ?? "" });
   },
-  update: async (rawId, body, actor) => {
+  update: async (rawId, body, user) => {
     const input = assertNonEmpty(
       parse(
-        actor?.role === "admin" ? updateUser : updateOwnUser,
+        user?.role === "admin" ? updateUser : updateOwnUser,
         body,
         "user",
       ),
@@ -27,7 +27,7 @@ export const createUsersService = (users, mailer) => ({
     const result = await users.update(
       parse(idInput, String(rawId), "user_id"),
       input,
-      actor,
+      user,
     );
     if (result.token && mailer) {
       return {
@@ -42,18 +42,18 @@ export const createUsersService = (users, mailer) => ({
 
     return result;
   },
-  delete: async (rawId, actor) => {
+  delete: async (rawId, user) => {
     const result = await users.delete(
       parse(idInput, String(rawId), "user_id"),
-      actor,
+      user,
     );
     await Promise.all(result.avatarPaths.map(deleteAvatar));
     return result;
   },
-  avatar: async (file, actor) => {
+  avatar: async (file, user) => {
     const path = await saveAvatar(file);
     try {
-      const result = await users.setAvatar(actor.id, path);
+      const result = await users.setAvatar(user.id, path);
       await deleteAvatar(result.oldPath);
       return result.user;
     } catch (error) {

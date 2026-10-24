@@ -1,0 +1,16 @@
+.action {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+}
+
+.button {
+  border-color: var(--feedback-error-border);
+  color: var(--feedback-error-text);
+}
+
+.error {
+  margin: 0;
+  color: var(--feedback-error-text);
+  font-size: 0.85rem;
+}

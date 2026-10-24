@@ -1,4 +1,20 @@
 export const API_URLS = {
+  posts: {
+    list: "/posts",
+    details: (postId) => `/posts/${postId}`,
+    comments: (postId) => `/posts/${postId}/comments`,
+    reactions: (postId) => `/posts/${postId}/like`,
+  },
+  comments: {
+    details: (commentId) => `/comments/${commentId}`,
+    reactions: (commentId) => `/comments/${commentId}/like`,
+  },
+  categories: {
+    list: "/categories",
+  },
+  users: {
+    publicDetails: (userId) => `/users/${userId}`,
+  },
   auth: {
     currentUser: "/auth/me",
     login: "/auth/login",

@@ -1,12 +1,9 @@
 import styles from "./AboutPage.module.css";
+import { WindowShell } from "../../../shared/ui/window-shell/index.js";
 
 export const AboutPage = () => {
   return (
-    <section className={`window ${styles.window}`} aria-labelledby="about-title">
-      <div className="title-bar">
-        <div className="title-bar-text">About Usof</div>
-      </div>
-      <article className={`window-body ${styles.article}`}>
+    <WindowShell as="section" bodyAs="article" title="About Usof" className={styles.window} bodyClassName={styles.article} labelledBy="about-title">
         <p className={styles.eyebrow}>About the community</p>
         <h1 id="about-title">Knowledge grows when it is shared.</h1>
         <p>
@@ -17,7 +14,6 @@ export const AboutPage = () => {
           Its interface brings the familiar details of Windows XP-era software
           to a conventional, readable community website.
         </p>
-      </article>
-    </section>
+    </WindowShell>
   );
 };

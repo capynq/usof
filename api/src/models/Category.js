@@ -2,6 +2,12 @@ import { ERROR_CODES } from "../constants/errorCodes.js";
 import { AppError } from "../errors/AppError.js";
 
 const fields = "id,title,description,created_at,updated_at";
+const categoryConflict = (error) => {
+  if (error.code === "ER_DUP_ENTRY") {
+    throw new AppError(409, ERROR_CODES.CATEGORY_EXISTS, "Category already exists");
+  }
+  throw error;
+};
 
 export class Category {
   constructor(db) {
@@ -37,13 +43,7 @@ export class Category {
       );
       return this.get(result.insertId);
     } catch (error) {
-      if (error.code === "ER_DUP_ENTRY")
-        throw new AppError(
-          409,
-          ERROR_CODES.CATEGORY_EXISTS,
-          "Category already exists",
-        );
-      throw error;
+      categoryConflict(error);
     }
   }
 
@@ -66,13 +66,7 @@ export class Category {
           [...values, id],
         );
       } catch (error) {
-        if (error.code === "ER_DUP_ENTRY")
-          throw new AppError(
-            409,
-            ERROR_CODES.CATEGORY_EXISTS,
-            "Category already exists",
-          );
-        throw error;
+        categoryConflict(error);
       }
     }
     return this.get(id);

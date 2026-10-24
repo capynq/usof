@@ -3,8 +3,8 @@ import { transaction } from "../config/database.js";
 import { AppError } from "../errors/AppError.js";
 import { Like } from "./Like.js";
 import { DATE_ONLY_PATTERN } from "../constants/regex.js";
+import { isAdmin, requireAuthenticatedUser } from "./access.js";
 
-const isAdmin = (actor) => actor?.role === "admin";
 const visible = (post, viewer) =>
   post &&
   (post.status === "active" ||
@@ -41,7 +41,8 @@ const options = (query) => ({
 const fullPostFields =
   "p.id,p.author_id,p.title,p.content,p.status,p.publish_date,p.updated_at";
 const summaryPostFields =
-  "p.id,p.author_id,p.title,p.status,p.publish_date,p.updated_at";
+  "p.id,p.author_id,p.title,LEFT(p.content,320) AS excerpt,p.status,p.publish_date,p.updated_at";
+const reactionCountFields = "COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count";
 const attachSummaries = async (connection, posts) => {
   if (!posts.length) {
     return posts;
@@ -108,6 +109,27 @@ const ensureCategories = async (connection, categories) => {
   }
 };
 
+const insertPostCategories = async (connection, postId, categories) => {
+  if (!categories.length) {
+    return;
+  }
+
+  await connection.query(
+    `INSERT INTO post_categories (post_id,category_id) VALUES ${categories.map(() => "(?,?)").join(",")}`,
+    categories.flatMap((categoryId) => [postId, categoryId]),
+  );
+};
+
+const pageResult = async (connection, rows, page, pageSize, total) => ({
+  data: await attachSummaries(connection, rows),
+  meta: {
+    page,
+    page_size: pageSize,
+    total,
+    total_pages: Math.ceil(total / pageSize),
+  },
+});
+
 export class Post {
   constructor(db) {
     this.db = db;
@@ -163,33 +185,18 @@ export class Post {
         : `p.publish_date ${queryOptions.direction}, p.id DESC`;
     const offset = (queryOptions.page - 1) * queryOptions.pageSize;
     const [rows] = await this.db.query(
-      `SELECT ${queryOptions.summary ? summaryPostFields : fullPostFields},COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count FROM posts p LEFT JOIN likes l ON l.post_id = p.id ${condition} GROUP BY p.id ORDER BY ${order} LIMIT ? OFFSET ?`,
-      [...values, queryOptions.pageSize, offset],
+      `SELECT ${queryOptions.summary ? summaryPostFields : fullPostFields},${reactionCountFields},MAX(CASE WHEN l.author_id = ? THEN l.type END) AS viewer_reaction FROM posts p LEFT JOIN likes l ON l.post_id = p.id ${condition} GROUP BY p.id ORDER BY ${order} LIMIT ? OFFSET ?`,
+      [viewer?.id || 0, ...values, queryOptions.pageSize, offset],
     );
     const [counts] = await this.db.query(
       `SELECT COUNT(*) AS total FROM posts p ${condition}`,
       values,
     );
-    const total = Number(counts[0].total);
-    return {
-      data: await attachSummaries(this.db, rows),
-      meta: {
-        page: queryOptions.page,
-        page_size: queryOptions.pageSize,
-        total,
-        total_pages: Math.ceil(total / queryOptions.pageSize),
-      },
-    };
+    return pageResult(this.db, rows, queryOptions.page, queryOptions.pageSize, Number(counts[0].total));
   }
 
   async listFavorites(query = {}, viewer) {
-    if (!viewer) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+    requireAuthenticatedUser(viewer);
 
     const queryOptions = options(query);
     const where = ["f.user_id = ?"];
@@ -202,71 +209,50 @@ export class Post {
     const condition = `WHERE ${where.join(" AND ")}`;
     const offset = (queryOptions.page - 1) * queryOptions.pageSize;
     const [rows] = await this.db.query(
-      `SELECT ${fullPostFields},f.created_at AS favorited_at,1 AS is_favorite,COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count FROM favorites f JOIN posts p ON p.id = f.post_id LEFT JOIN likes l ON l.post_id = p.id ${condition} GROUP BY p.id,f.created_at ORDER BY f.created_at DESC,p.id DESC LIMIT ? OFFSET ?`,
-      [...values, queryOptions.pageSize, offset],
+      `SELECT ${fullPostFields},f.created_at AS favorited_at,1 AS is_favorite,${reactionCountFields},MAX(CASE WHEN l.author_id = ? THEN l.type END) AS viewer_reaction FROM favorites f JOIN posts p ON p.id = f.post_id LEFT JOIN likes l ON l.post_id = p.id ${condition} GROUP BY p.id,f.created_at ORDER BY f.created_at DESC,p.id DESC LIMIT ? OFFSET ?`,
+      [viewer.id, ...values, queryOptions.pageSize, offset],
     );
     const [counts] = await this.db.query(
       `SELECT COUNT(*) AS total FROM favorites f JOIN posts p ON p.id = f.post_id ${condition}`,
       values,
     );
-    const total = Number(counts[0].total);
-    return {
-      data: await attachSummaries(this.db, rows),
-      meta: {
-        page: queryOptions.page,
-        page_size: queryOptions.pageSize,
-        total,
-        total_pages: Math.ceil(total / queryOptions.pageSize),
-      },
-    };
+    return pageResult(this.db, rows, queryOptions.page, queryOptions.pageSize, Number(counts[0].total));
   }
 
-  async addFavorite(id, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async addFavorite(id, user) {
+    requireAuthenticatedUser(user);
 
     return transaction(this.db, async (connection) => {
       const [posts] = await connection.query(
         "SELECT id,author_id,status FROM posts WHERE id = ? FOR UPDATE",
         [id],
       );
-      if (!visible(posts[0], actor)) {
+      if (!visible(posts[0], user)) {
         throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
       }
 
       await connection.query(
         "INSERT INTO favorites (user_id,post_id) VALUES (?,?) ON DUPLICATE KEY UPDATE post_id = VALUES(post_id)",
-        [actor.id, id],
+        [user.id, id],
       );
     });
   }
 
-  async removeFavorite(id, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async removeFavorite(id, user) {
+    requireAuthenticatedUser(user);
 
     return transaction(this.db, async (connection) => {
       await connection.query(
         "DELETE FROM favorites WHERE user_id = ? AND post_id = ?",
-        [actor.id, id],
+        [user.id, id],
       );
     });
   }
 
   async get(id, viewer) {
     const [rows] = await this.db.query(
-      `SELECT ${fullPostFields},COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count FROM posts p LEFT JOIN likes l ON l.post_id = p.id WHERE p.id = ? GROUP BY p.id`,
-      [id],
+      `SELECT ${fullPostFields},COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count,MAX(CASE WHEN l.author_id = ? THEN l.type END) AS viewer_reaction FROM posts p LEFT JOIN likes l ON l.post_id = p.id WHERE p.id = ? GROUP BY p.id`,
+      [viewer?.id || 0, id],
     );
     if (!visible(rows[0], viewer)) {
       throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
@@ -279,59 +265,42 @@ export class Post {
     return (await this.get(id, viewer)).categories;
   }
 
-  async create(input, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async create(input, user) {
+    requireAuthenticatedUser(user);
 
     const createdId = await transaction(this.db, async (connection) => {
       const categories = integerIds(input.categories);
       await ensureCategories(connection, categories);
       const [result] = await connection.query(
         "INSERT INTO posts (author_id,title,content,status) VALUES (?,?,?,'active')",
-        [actor.id, input.title.trim(), input.content.trim()],
+        [user.id, input.title.trim(), input.content.trim()],
       );
-      if (categories.length) {
-        await connection.query(
-          `INSERT INTO post_categories (post_id,category_id) VALUES ${categories.map(() => "(?,?)").join(",")}`,
-          categories.flatMap((categoryId) => [result.insertId, categoryId]),
-        );
-      }
+      await insertPostCategories(connection, result.insertId, categories);
 
       return result.insertId;
     });
-    return this.get(createdId, actor);
+    return this.get(createdId, user);
   }
 
-  async update(id, input, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async update(id, input, user) {
+    requireAuthenticatedUser(user);
 
     const [posts] = await this.db.query(
       "SELECT id,author_id,status FROM posts WHERE id = ?",
       [id],
     );
     const post = posts[0];
-    if (!visible(post, actor)) {
+    if (!visible(post, user)) {
       throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
     }
 
-    if (!isAdmin(actor) && Number(post.author_id) !== Number(actor.id)) {
+    if (!isAdmin(user) && Number(post.author_id) !== Number(user.id)) {
       throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
     }
 
     const fields = [];
     const values = [];
-    if (isAdmin(actor)) {
+    if (isAdmin(user)) {
       if (input.status !== undefined) {
         fields.push("status = ?");
         values.push(input.status);
@@ -363,25 +332,14 @@ export class Post {
           "DELETE FROM post_categories WHERE post_id = ?",
           [id],
         );
-        if (categories.length) {
-          await connection.query(
-            `INSERT INTO post_categories (post_id,category_id) VALUES ${categories.map(() => "(?,?)").join(",")}`,
-            categories.flatMap((categoryId) => [id, categoryId]),
-          );
-        }
+        await insertPostCategories(connection, id, categories);
       }
     });
-    return this.get(id, actor);
+    return this.get(id, user);
   }
 
-  async delete(id, actor) {
-    if (!actor) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
-    }
+  async delete(id, user) {
+    requireAuthenticatedUser(user);
 
     return transaction(this.db, async (connection) => {
       await Like.lockUsers(connection);
@@ -393,7 +351,7 @@ export class Post {
         throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
       }
 
-      if (!isAdmin(actor) && Number(rows[0].author_id) !== Number(actor.id)) {
+      if (!isAdmin(user) && Number(rows[0].author_id) !== Number(user.id)) {
         throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
       }
 

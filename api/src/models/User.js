@@ -1,6 +1,7 @@
 import { ERROR_CODES } from "../constants/errorCodes.js";
 import { transaction } from "../config/database.js";
 import { AppError } from "../errors/AppError.js";
+import { isAdmin } from "./access.js";
 import { hashPassword, verifyPassword } from "../utils/password.js";
 import { createSecureToken, hashSecureToken } from "../utils/secureToken.js";
 import { Like } from "./Like.js";
@@ -11,8 +12,7 @@ const safeFields = `${publicFields},email`;
 const authFields =
   "id,login,email,password_hash,full_name,role,email_confirmed,auth_version,profile_picture,rating,created_at,updated_at";
 
-const isAdmin = (actor) => actor?.role === "admin";
-const sameUser = (actor, id) => Number(actor?.id) === Number(id);
+const sameUser = (user, id) => Number(user?.id) === Number(id);
 
 const safe = (row, viewer) => {
   if (!row) {
@@ -299,8 +299,8 @@ export class User {
     return { id: Number(id) };
   }
 
-  async update(id, input, actor) {
-    if (!actor) {
+  async update(id, input, user) {
+    if (!user) {
       throw new AppError(
         401,
         ERROR_CODES.UNAUTHORIZED,
@@ -308,7 +308,7 @@ export class User {
       );
     }
 
-    if (!isAdmin(actor) && !sameUser(actor, id)) {
+    if (!isAdmin(user) && !sameUser(user, id)) {
       throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
     }
 
@@ -330,7 +330,7 @@ export class User {
         }
       }
 
-      if (isAdmin(actor) && input.role !== undefined) {
+      if (isAdmin(user) && input.role !== undefined) {
         fields.push("role = ?");
         values.push(input.role);
       }
@@ -363,13 +363,13 @@ export class User {
         `SELECT ${safeFields} FROM users WHERE id = ?`,
         [id],
       );
-      const user = safe(rows[0], actor);
-      return confirmation ? { user, token: confirmation.token } : user;
+      const updatedUser = safe(rows[0], user);
+      return confirmation ? { user: updatedUser, token: confirmation.token } : updatedUser;
     });
   }
 
-  async delete(id, actor) {
-    if (!actor) {
+  async delete(id, user) {
+    if (!user) {
       throw new AppError(
         401,
         ERROR_CODES.UNAUTHORIZED,
@@ -377,7 +377,7 @@ export class User {
       );
     }
 
-    if (!isAdmin(actor) && !sameUser(actor, id)) {
+    if (!isAdmin(user) && !sameUser(user, id)) {
       throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
     }
 

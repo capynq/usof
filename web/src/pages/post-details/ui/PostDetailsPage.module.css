@@ -1,0 +1,125 @@
+.page {
+  display: grid;
+  width: min(100%, 58rem);
+  gap: 1.2rem;
+  margin: 0 auto;
+}
+
+.window {
+  width: 100%;
+  overflow: hidden;
+}
+
+.titleIcon {
+  margin-right: 0.45rem;
+  color: var(--accent-color);
+  image-rendering: pixelated;
+}
+
+.body,
+.stateBody {
+  display: grid;
+  gap: 1rem;
+  padding: 1.1rem;
+  background: var(--surface-color-raised);
+}
+
+.state,
+.error {
+  width: min(100%, 58rem);
+  margin: 1rem auto;
+  color: var(--text-color-secondary);
+}
+
+.error {
+  color: var(--feedback-error-text);
+}
+
+.stateBody p {
+  margin: 0;
+}
+
+.heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.heading h1 {
+  margin: 0 0 0.6rem;
+  color: var(--text-color-heading);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.75rem;
+  color: var(--text-color-muted);
+  font-size: 0.82rem;
+}
+
+.status {
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--feedback-info-border);
+  background: var(--feedback-info-surface);
+  color: var(--feedback-info-text);
+}
+
+.manage {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 0.4rem;
+}
+
+.button {
+  padding: 0.3rem 0.7rem;
+}
+
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.categories li {
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--border-color-subtle);
+  background: var(--surface-color-neutral);
+  color: var(--text-color-emphasis);
+  font-size: 0.78rem;
+}
+
+.content {
+  min-height: 8rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border-color-subtle);
+  border-bottom: 1px solid var(--border-color-subtle);
+  color: var(--text-color-body);
+  font-size: 1rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+@media (max-width: 620px) {
+  .body {
+    padding: 0.8rem;
+  }
+
+  .heading {
+    flex-direction: column;
+  }
+
+  .manage {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

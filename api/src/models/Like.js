@@ -1,8 +1,7 @@
 import { ERROR_CODES } from "../constants/errorCodes.js";
 import { transaction } from "../config/database.js";
 import { AppError } from "../errors/AppError.js";
-
-const isAdmin = (actor) => actor?.role === "admin";
+import { isAdmin, requireAuthenticatedUser, requireAdmin } from "./access.js";
 
 const targetSpec = (target) => {
   if (target === "post") return { foreignKey: "post_id" };
@@ -29,11 +28,17 @@ const targetRows = async (connection, target, id, lock = false) => {
   return rows;
 };
 
-const targetVisible = (row, target, actor) =>
+const targetVisible = (row, target, user) =>
   row &&
-  (isAdmin(actor) ||
+  (isAdmin(user) ||
     (row.status === "active" &&
       (target === "post" || row.post_status === "active")));
+
+const requireVisibleTarget = (row, target, user) => {
+  if (!targetVisible(row, target, user)) {
+    throw new AppError(404, ERROR_CODES.TARGET_NOT_FOUND, "Reaction target not found");
+  }
+};
 
 export class Like {
   constructor(db) {
@@ -53,12 +58,7 @@ export class Like {
   async list(target, id, viewer) {
     const spec = targetSpec(target);
     const targets = await targetRows(this.db, target, id);
-    if (!targetVisible(targets[0], target, viewer))
-      throw new AppError(
-        404,
-        ERROR_CODES.TARGET_NOT_FOUND,
-        "Reaction target not found",
-      );
+    requireVisibleTarget(targets[0], target, viewer);
     const [rows] = await this.db.query(
       `SELECT l.id,l.author_id,l.type,l.created_at FROM likes l WHERE l.${spec.foreignKey} = ? ORDER BY l.created_at, l.id`,
       [id],
@@ -67,8 +67,7 @@ export class Like {
   }
 
   async listAll(viewer) {
-    if (!isAdmin(viewer))
-      throw new AppError(403, ERROR_CODES.FORBIDDEN, "Admin access required");
+    requireAdmin(viewer);
     const [rows] = await this.db.query(
       "SELECT id,author_id,post_id,comment_id,type,created_at FROM likes ORDER BY created_at DESC,id DESC",
     );
@@ -76,8 +75,7 @@ export class Like {
   }
 
   async get(id, viewer) {
-    if (!isAdmin(viewer))
-      throw new AppError(403, ERROR_CODES.FORBIDDEN, "Admin access required");
+    requireAdmin(viewer);
     const [rows] = await this.db.query(
       "SELECT id,author_id,post_id,comment_id,type,created_at FROM likes WHERE id = ?",
       [id],
@@ -91,28 +89,18 @@ export class Like {
     return rows[0];
   }
 
-  async create(target, id, type, actor) {
+  async create(target, id, type, user) {
     const spec = targetSpec(target);
-    if (!actor)
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
+    requireAuthenticatedUser(user);
     return transaction(this.db, async (connection) => {
       await Like.lockUsers(connection);
       const targets = await targetRows(connection, target, id, true);
-      if (!targetVisible(targets[0], target, actor))
-        throw new AppError(
-          404,
-          ERROR_CODES.TARGET_NOT_FOUND,
-          "Reaction target not found",
-        );
+      requireVisibleTarget(targets[0], target, user);
       let result;
       try {
         [result] = await connection.query(
           `INSERT INTO likes (author_id,${spec.foreignKey},type) VALUES (?,?,?)`,
-          [actor.id, id, type],
+          [user.id, id, type],
         );
       } catch (error) {
         if (error.code === "ER_DUP_ENTRY")
@@ -132,25 +120,21 @@ export class Like {
     });
   }
 
-  async delete(target, id, actor, authorId) {
+  async delete(target, id, user, authorId) {
     const spec = targetSpec(target);
-    if (!actor)
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
+
+    requireAuthenticatedUser(user);
+
     const selectedAuthorId =
-      isAdmin(actor) && authorId !== undefined ? authorId : actor.id;
+      isAdmin(user) && authorId !== undefined ? authorId : user.id;
+
     return transaction(this.db, async (connection) => {
       await Like.lockUsers(connection);
+
       const targets = await targetRows(connection, target, id, true);
-      if (!targetVisible(targets[0], target, actor))
-        throw new AppError(
-          404,
-          ERROR_CODES.TARGET_NOT_FOUND,
-          "Reaction target not found",
-        );
+
+      requireVisibleTarget(targets[0], target, user);
+
       const [rows] = await connection.query(
         `SELECT id,author_id FROM likes WHERE ${spec.foreignKey} = ? AND author_id = ? FOR UPDATE`,
         [id, selectedAuthorId],
@@ -161,8 +145,10 @@ export class Like {
           ERROR_CODES.REACTION_NOT_FOUND,
           "Reaction not found",
         );
+
       await connection.query("DELETE FROM likes WHERE id = ?", [rows[0].id]);
       await Like.recalculate(connection);
+
       return { id: Number(rows[0].id) };
     });
   }

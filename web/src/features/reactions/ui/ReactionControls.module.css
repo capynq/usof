@@ -1,0 +1,47 @@
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 2rem;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--border-color-control);
+  background: linear-gradient(var(--link-button-surface-middle), var(--link-button-surface-end));
+  color: var(--text-color-emphasis);
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  color: var(--form-text-disabled);
+}
+
+.selected {
+  border-color: var(--action-color-border);
+  background: var(--action-color-primary-subtle);
+  box-shadow: inset 1px 1px var(--surface-color-raised);
+  font-weight: 700;
+}
+
+.count {
+  min-width: 1ch;
+  font-variant-numeric: tabular-nums;
+}
+
+.symbol {
+  color: var(--text-color-emphasis);
+  font-family: "Pixelated MS Sans Serif", Tahoma, sans-serif;
+  font-size: 0.8rem;
+}
+
+.error {
+  color: var(--feedback-error-text);
+  font-size: 0.82rem;
+}

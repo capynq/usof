@@ -1,0 +1,44 @@
+.discussion {
+  display: grid;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color-subtle);
+}
+
+.heading h2 {
+  margin: 0;
+  color: var(--text-color-heading);
+  font-size: 1.2rem;
+}
+
+.heading span {
+  color: var(--text-color-muted);
+  font-size: 0.82rem;
+}
+
+.list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.signInPrompt,
+.state,
+.error {
+  margin: 0;
+  color: var(--text-color-secondary);
+}
+
+.error {
+  color: var(--feedback-error-text);
+}

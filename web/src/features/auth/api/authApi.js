@@ -1,6 +1,7 @@
 import { API_URLS, baseApi, unwrapResponse } from "../../../shared/api/index.js";
-import { sessionEnded, sessionEstablished } from "../model/authSlice.js";
-import { clearStoredSession, saveStoredSession } from "../model/sessionStorage.js";
+import { sessionEstablished } from "../model/authSlice.js";
+import { endAuthSession } from "../model/endAuthSession.js";
+import { saveStoredSession } from "../model/sessionStorage.js";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -41,9 +42,7 @@ export const authApi = baseApi.injectEndpoints({
       }),
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         await queryFulfilled.catch(() => undefined);
-        clearStoredSession();
-        dispatch(sessionEnded());
-        dispatch(baseApi.util.resetApiState());
+        endAuthSession(dispatch);
       },
     }),
     confirmEmail: builder.mutation({
@@ -79,9 +78,7 @@ export const authApi = baseApi.injectEndpoints({
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
           await queryFulfilled;
-          clearStoredSession();
-          dispatch(sessionEnded());
-          dispatch(baseApi.util.resetApiState());
+          endAuthSession(dispatch);
         } catch {
           return;
         }

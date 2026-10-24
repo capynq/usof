@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import {
   AUTH_LINKS,
@@ -11,25 +10,18 @@ import {
   validateRegistration,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
+import { useFormFields } from "../../../shared/lib/useFormFields.js";
 import { AccountIcon } from "../../../shared/ui/icons/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const RegisterPage = () => {
-  const [values, setValues] = useState(REGISTER_INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState({});
+  const { values, fieldErrors, handleChange: changeField, validate } = useFormFields(REGISTER_INITIAL_VALUES);
   const [register, { error, isLoading }] = useRegisterMutation();
   const navigate = useNavigate();
 
-  const changeField = (event) => {
-    const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
-    setFieldErrors((current) => ({ ...current, [name]: undefined }));
-  };
-
   const submit = async (event) => {
     event.preventDefault();
-    const errors = validateRegistration(values);
-    setFieldErrors(errors);
+    const errors = validate(validateRegistration);
 
     if (Object.keys(errors).length) {
       return;

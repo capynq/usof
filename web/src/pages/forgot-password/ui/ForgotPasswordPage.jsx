@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   AUTH_LINKS,
   AuthField,
@@ -10,24 +9,17 @@ import {
   validateEmailRequest,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
+import { useFormFields } from "../../../shared/lib/useFormFields.js";
 import { KeyIcon } from "../../../shared/ui/icons/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const ForgotPasswordPage = () => {
-  const [values, setValues] = useState(EMAIL_INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState({});
+  const { values, fieldErrors, handleChange: changeEmail, validate } = useFormFields(EMAIL_INITIAL_VALUES);
   const [requestReset, { data, error, isLoading }] = useRequestPasswordResetMutation();
-
-  const changeEmail = (event) => {
-    const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
-    setFieldErrors((current) => ({ ...current, [name]: undefined }));
-  };
 
   const submit = async (event) => {
     event.preventDefault();
-    const errors = validateEmailRequest(values);
-    setFieldErrors(errors);
+    const errors = validate(validateEmailRequest);
 
     if (Object.keys(errors).length) {
       return;

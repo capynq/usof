@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router";
 import {
   AuthField,
@@ -8,23 +7,16 @@ import {
   validatePasswordReset,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
+import { useFormFields } from "../../../shared/lib/useFormFields.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const ResetPasswordForm = ({ token }) => {
-  const [values, setValues] = useState(RESET_INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState({});
+  const { values, fieldErrors, handleChange: changeField, validate } = useFormFields(RESET_INITIAL_VALUES);
   const [resetPassword, { data, error, isLoading }] = useResetPasswordMutation();
-
-  const changeField = (event) => {
-    const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
-    setFieldErrors((current) => ({ ...current, [name]: undefined }));
-  };
 
   const submit = (event) => {
     event.preventDefault();
-    const errors = validatePasswordReset(values);
-    setFieldErrors(errors);
+    const errors = validate(validatePasswordReset);
 
     if (Object.keys(errors).length) {
       return;

@@ -1,17 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { baseApi } from "../../../shared/api/index.js";
 import { useGetCurrentUserQuery } from "../api/authApi.js";
 import {
   selectAuth,
-  sessionEnded,
   sessionExpired,
   sessionRestoreFailed,
   sessionRestoreStarted,
   sessionRestored,
 } from "./authSlice.js";
 import { AUTH_STATUS } from "./constants.js";
-import { clearStoredSession } from "./sessionStorage.js";
+import { endAuthSession } from "./endAuthSession.js";
 
 export const useAuthSession = () => {
   const dispatch = useDispatch();
@@ -40,16 +38,12 @@ export const useAuthSession = () => {
 
     const remaining = auth.expiresAt - Date.now();
     if (remaining <= 0) {
-      clearStoredSession();
-      dispatch(sessionExpired());
-      dispatch(baseApi.util.resetApiState());
+      endAuthSession(dispatch, sessionExpired());
       return undefined;
     }
 
     const timeoutId = window.setTimeout(() => {
-      clearStoredSession();
-      dispatch(sessionExpired());
-      dispatch(baseApi.util.resetApiState());
+      endAuthSession(dispatch, sessionExpired());
     }, remaining);
 
     return () => window.clearTimeout(timeoutId);
@@ -58,9 +52,7 @@ export const useAuthSession = () => {
   const retryRestore = () => dispatch(sessionRestoreStarted());
 
   const signInAgain = () => {
-    clearStoredSession();
-    dispatch(sessionEnded());
-    dispatch(baseApi.util.resetApiState());
+    endAuthSession(dispatch);
   };
 
   return {

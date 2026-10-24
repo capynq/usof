@@ -10,21 +10,12 @@ import {
   deleteReaction,
 } from "../schemas/index.js";
 import { idInput } from "../schemas/common.js";
+import { normalizePaginationQuery } from "./query.js";
 
 const id = (value, name) => parse(idInput, String(value), name);
-const normalizeQuery = (query) => {
-  const result = { ...(query ?? {}) };
-  for (const key of ["page", "page_size"]) {
-    if (typeof result[key] === "number") {
-      result[key] = String(result[key]);
-    }
-  }
-
-  return result;
-};
 export const createPostsService = (posts, comments, reactions) => ({
-  list: (query = {}, actor, internal = {}) => {
-    const publicQuery = normalizeQuery(query);
+  list: (query = {}, user, internal = {}) => {
+    const publicQuery = normalizePaginationQuery(query);
     if (internal.direction !== undefined) {
       delete publicQuery.direction;
     }
@@ -34,59 +25,59 @@ export const createPostsService = (posts, comments, reactions) => ({
       internal.direction
         ? { ...parsed, direction: internal.direction }
         : parsed,
-      actor,
+      user,
     );
   },
-  favorites: (query = {}, actor) =>
+  favorites: (query = {}, user) =>
     posts.listFavorites(
-      parse(favoritesQuery, normalizeQuery(query), "query"),
-      actor,
+      parse(favoritesQuery, normalizePaginationQuery(query), "query"),
+      user,
     ),
-  get: (rawId, actor) => posts.get(id(rawId, "post_id"), actor),
-  categories: (rawId, actor) => posts.categories(id(rawId, "post_id"), actor),
-  create: (body, actor) =>
-    posts.create(parse(createPost, body, "post"), actor),
-  update: (rawId, body, actor) =>
+  get: (rawId, user) => posts.get(id(rawId, "post_id"), user),
+  categories: (rawId, user) => posts.categories(id(rawId, "post_id"), user),
+  create: (body, user) =>
+    posts.create(parse(createPost, body, "post"), user),
+  update: (rawId, body, user) =>
     posts.update(
       id(rawId, "post_id"),
       assertNonEmpty(
         parse(
-          actor?.role === "admin" ? updateAdminPost : updateUserPost,
+          user?.role === "admin" ? updateAdminPost : updateUserPost,
           body,
           "post",
         ),
         "At least one editable post field is required",
       ),
-      actor,
+      user,
     ),
-  delete: (rawId, actor) => posts.delete(id(rawId, "post_id"), actor),
-  addFavorite: (rawId, actor) =>
-    posts.addFavorite(id(rawId, "post_id"), actor),
-  removeFavorite: (rawId, actor) =>
-    posts.removeFavorite(id(rawId, "post_id"), actor),
-  comments: (rawId, actor) =>
-    comments.listForPost(id(rawId, "post_id"), actor),
-  createComment: (rawId, body, actor) =>
+  delete: (rawId, user) => posts.delete(id(rawId, "post_id"), user),
+  addFavorite: (rawId, user) =>
+    posts.addFavorite(id(rawId, "post_id"), user),
+  removeFavorite: (rawId, user) =>
+    posts.removeFavorite(id(rawId, "post_id"), user),
+  comments: (rawId, user) =>
+    comments.listForPost(id(rawId, "post_id"), user),
+  createComment: (rawId, body, user) =>
     comments.create(
       id(rawId, "post_id"),
       parse(createComment, body, "comment"),
-      actor,
+      user,
     ),
-  likes: (rawId, actor) =>
-    reactions.list("post", id(rawId, "post_id"), actor),
-  createLike: (rawId, body, actor) =>
+  likes: (rawId, user) =>
+    reactions.list("post", id(rawId, "post_id"), user),
+  createLike: (rawId, body, user) =>
     reactions.create(
       "post",
       id(rawId, "post_id"),
       parse(createReaction, body, "reaction").type,
-      actor,
+      user,
     ),
-  deleteLike: (rawId, query, actor) => {
+  deleteLike: (rawId, query, user) => {
     const input = parse(deleteReaction, query ?? {}, "reaction");
     return reactions.delete(
       "post",
       id(rawId, "post_id"),
-      actor,
+      user,
       input.author_id,
     );
   },

@@ -23,7 +23,7 @@ export const createAuthService = (users, mailer, config) => {
     };
   };
   return {
-    me: (actor) => users.get(actor.id, actor),
+    me: (user) => users.get(user.id, user),
     register: async (body) => {
       const input = parse(registration, body, "registration");
       const result = await users.register({
@@ -45,7 +45,7 @@ export const createAuthService = (users, mailer, config) => {
         token_type: "Bearer",
       };
     },
-    logout: (actor) => users.logout(actor?.id),
+    logout: (user) => users.logout(user?.id),
     confirm: async (rawToken) =>
       users.confirm(parse(confirmToken, rawToken, "confirm_token")),
     requestConfirmation: (body) =>

@@ -1,0 +1,45 @@
+.window {
+  width: min(100%, 52rem);
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.titleIcon {
+  margin-right: 0.4rem;
+  color: var(--accent-color);
+  image-rendering: pixelated;
+}
+
+.body {
+  display: grid;
+  gap: 1rem;
+  padding: 1.1rem;
+  background: var(--surface-color-raised);
+}
+
+.body h1 {
+  margin: 0;
+  color: var(--text-color-heading);
+  font-size: 1.5rem;
+}
+
+.state,
+.error {
+  width: min(100%, 52rem);
+  margin: 1rem auto;
+  color: var(--text-color-secondary);
+}
+
+.error {
+  color: var(--feedback-error-text);
+}
+
+.body p {
+  margin: 0;
+}
+
+@media (max-width: 520px) {
+  .body {
+    padding: 0.8rem;
+  }
+}

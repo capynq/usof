@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import {
   AUTH_LINKS,
@@ -11,27 +10,20 @@ import {
   validateLogin,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
+import { useFormFields } from "../../../shared/lib/useFormFields.js";
 import { KeyIcon } from "../../../shared/ui/icons/index.js";
 import { getReturnPath } from "../model/getReturnPath.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const LoginPage = () => {
-  const [values, setValues] = useState(LOGIN_INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState({});
+  const { values, fieldErrors, handleChange: changeField, validate } = useFormFields(LOGIN_INITIAL_VALUES);
   const [login, { error, isLoading }] = useLoginMutation();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const changeField = (event) => {
-    const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
-    setFieldErrors((current) => ({ ...current, [name]: undefined }));
-  };
-
   const submit = async (event) => {
     event.preventDefault();
-    const errors = validateLogin(values);
-    setFieldErrors(errors);
+    const errors = validate(validateLogin);
 
     if (Object.keys(errors).length) {
       return;

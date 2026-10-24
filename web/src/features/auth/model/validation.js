@@ -46,11 +46,7 @@ export const validateLogin = (values) => {
 
 export const validateRegistration = (values) => {
   const errors = validateLogin(values);
-
-  if (values.password !== values.password_confirmation) {
-    errors.password_confirmation = "The passwords do not match.";
-  }
-
+  Object.assign(errors, validatePasswordConfirmation(values));
   return errors;
 };
 
@@ -67,9 +63,12 @@ export const validatePasswordReset = (values) => {
     errors.new_password = passwordError;
   }
 
-  if (values.new_password !== values.password_confirmation) {
-    errors.password_confirmation = "The passwords do not match.";
-  }
+  Object.assign(errors, validatePasswordConfirmation(values, "new_password"));
 
   return errors;
 };
+
+export const validatePasswordConfirmation = (values, passwordField = "password") =>
+  values[passwordField] === values.password_confirmation
+    ? {}
+    : { password_confirmation: "The passwords do not match." };

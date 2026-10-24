@@ -1,18 +1,19 @@
 import { Link } from "react-router";
 import { HelpMascot } from "../../../widgets/help-mascot/index.js";
+import { PostFeed } from "../../../widgets/post-feed/ui/PostFeed.jsx";
 import styles from "./HomePage.module.css";
+import { WindowShell } from "../../../shared/ui/window-shell/index.js";
 
 export const HomePage = () => {
   return (
     <div className={styles.page}>
-      <section className={`window ${styles.welcome}`} aria-labelledby="welcome-title">
-        <div className="title-bar">
-          <div className="title-bar-text">
-            <span className={styles.titleIcon} aria-hidden="true">?</span>
-            Welcome to Usof
-          </div>
-        </div>
-        <div className={`window-body ${styles.welcomeBody}`}>
+      <WindowShell
+        className={styles.welcome}
+        bodyClassName={styles.welcomeBody}
+        labelledBy="welcome-title"
+        title="Welcome to Usof"
+        titleIcon={<span className={styles.titleIcon} aria-hidden="true">?</span>}
+      >
           <p className={styles.eyebrow}>Programming questions and answers</p>
           <h1 id="welcome-title">Good questions help everyone build better software.</h1>
           <p className={styles.intro}>
@@ -22,10 +23,11 @@ export const HomePage = () => {
           <Link className={styles.actionLink} to="/about">
             How Usof works
           </Link>
-        </div>
-      </section>
+      </WindowShell>
 
       <HelpMascot />
+
+      <PostFeed />
 
       <section className={styles.guidance} aria-labelledby="guidance-title">
         <div className={styles.guidanceHeading}>
