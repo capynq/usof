@@ -1,4 +1,4 @@
-export function commentsController(comments) {
+export const commentsController = (comments) => {
   return {
     list: async (request, response) =>
       response.json({ data: await comments.list(request.user) }),
@@ -39,4 +39,4 @@ export function commentsController(comments) {
       response.status(204).end();
     },
   };
-}
+};

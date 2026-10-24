@@ -3,7 +3,7 @@ import { verifyAuthToken } from "../utils/authToken.js";
 import { AppError } from "../errors/AppError.js";
 import { BEARER_HEADER_PATTERN } from "./constants.js";
 
-export function authenticate(users, secret, optional = false) {
+export const authenticate = (users, secret, optional = false) => {
   return async (request, response, next) => {
     const header = request.get("authorization");
     if (!header && optional) {
@@ -27,4 +27,4 @@ export function authenticate(users, secret, optional = false) {
     request.user = { id: user.id, role: user.role, email: user.email };
     next();
   };
-}
+};

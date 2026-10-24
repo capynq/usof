@@ -1,7 +1,7 @@
 import AdminJS from "adminjs";
 import { adminResources } from "../controllers/admin.controller.js";
 
-export async function createAdmin(services) {
+export const createAdmin = async (services) => {
   const admin = new AdminJS({
     rootPath: "/admin",
     loginPath: "/admin/login",
@@ -15,4 +15,4 @@ export async function createAdmin(services) {
   });
   await admin.initialize();
   return admin;
-}
+};

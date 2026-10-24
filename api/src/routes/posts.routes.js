@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-export function postsRoutes(controller, authenticate, optional) {
+export const postsRoutes = (controller, authenticate, optional) => {
   const router = Router();
   router.get("/", optional, controller.list);
   router.post("/", authenticate, controller.create);
@@ -16,4 +16,4 @@ export function postsRoutes(controller, authenticate, optional) {
   router.patch("/:post_id", authenticate, controller.update);
   router.delete("/:post_id", authenticate, controller.delete);
   return router;
-}
+};

@@ -271,7 +271,7 @@ const protectedActions = (edit) => ({
   search: { isVisible: false, isAccessible: false },
 });
 
-export function adminResources(services) {
+export const adminResources = (services) => {
   const users = new ModelResource({
     id: "Users",
     fields: fields.users,
@@ -596,4 +596,4 @@ export function adminResources(services) {
     }
     return { resource, options };
   });
-}
+};

@@ -7,7 +7,7 @@ import { MILLISECONDS_PER_HOUR } from "../constants/dates.js";
 const view = (name) =>
   fileURLToPath(new URL(`../views/${name}`, import.meta.url));
 
-export function adminAuthController(auth, config) {
+export const adminAuthController = (auth, config) => {
   return {
     home: (request, response) => response.redirect("/admin/resources/Users"),
     loginPage: (request, response) =>
@@ -37,4 +37,4 @@ export function adminAuthController(auth, config) {
       response.json({ data: { redirect: "/admin/login" } });
     },
   };
-}
+};

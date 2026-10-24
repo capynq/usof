@@ -5,7 +5,7 @@ import { createAdmin } from "../config/admin.js";
 import { adminAuthController } from "../controllers/adminAuth.controller.js";
 import { adminSession, sameOrigin } from "../middleware/adminSession.js";
 
-export async function adminRoutes(services, users, config) {
+export const adminRoutes = async (services, users, config) => {
   const admin = await createAdmin(services);
   const controller = adminAuthController(services.auth, config);
   const router = Router();
@@ -31,4 +31,4 @@ export async function adminRoutes(services, users, config) {
     }),
   );
   return router;
-}
+};

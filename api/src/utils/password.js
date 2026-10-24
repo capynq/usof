@@ -4,13 +4,13 @@ import { PASSWORD_SALT_PATTERN, PASSWORD_HASH_PATTERN } from "./constants.js";
 
 const derive = promisify(scrypt);
 
-export async function hashPassword(password) {
+export const hashPassword = async (password) => {
   const salt = randomBytes(16).toString("hex");
   const hash = await derive(password, salt, 64, { N: 16384, r: 8, p: 1 });
   return `scrypt$16384$8$1$${salt}$${hash.toString("hex")}`;
-}
+};
 
-export async function verifyPassword(password, encoded) {
+export const verifyPassword = async (password, encoded) => {
   const parts = encoded.split("$");
   if (
     parts.length !== 6 ||
@@ -22,4 +22,4 @@ export async function verifyPassword(password, encoded) {
   }
   const actual = await derive(password, parts[4], 64, { N: 16384, r: 8, p: 1 });
   return timingSafeEqual(actual, Buffer.from(parts[5], "hex"));
-}
+};

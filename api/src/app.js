@@ -20,7 +20,7 @@ import { apiRoutes } from "./routes/index.js";
 import { adminRoutes } from "./routes/admin.routes.js";
 import { createServices } from "./services/index.js";
 
-export async function createApp(config, database) {
+export const createApp = async (config, database) => {
   const app = express();
   const users = new User(database);
   const posts = new Post(database);
@@ -73,4 +73,4 @@ export async function createApp(config, database) {
   app.use(notFound);
   app.use(errorHandler);
   return app;
-}
+};

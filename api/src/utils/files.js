@@ -11,7 +11,7 @@ export const storageDirectory = fileURLToPath(
 );
 export const avatarDirectory = join(storageDirectory, "avatars");
 
-export async function saveAvatar(file) {
+export const saveAvatar = async (file) => {
   if (!file)
     throw new AppError(
       400,
@@ -56,13 +56,13 @@ export async function saveAvatar(file) {
     mode: 0o600,
   });
   return `/avatars/${name}`;
-}
+};
 
-export async function deleteAvatar(relativePath) {
+export const deleteAvatar = async (relativePath) => {
   if (!relativePath || !AVATAR_PATH_PATTERN.test(relativePath)) return;
   try {
     await unlink(join(avatarDirectory, relativePath.slice("/avatars/".length)));
   } catch (error) {
     if (error.code !== "ENOENT") console.error("Avatar cleanup failed");
   }
-}
+};

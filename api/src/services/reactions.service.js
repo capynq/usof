@@ -5,7 +5,7 @@ import { createReaction, deleteReaction } from "../schemas/index.js";
 import { idInput, reactionTarget } from "../schemas/common.js";
 
 const id = (value, name) => parse(idInput, String(value), name);
-export function createReactionsService(likes) {
+export const createReactionsService = (likes) => {
   return {
     list: (target, rawId, user) =>
       likes.list(
@@ -55,4 +55,4 @@ export function createReactionsService(likes) {
       );
     },
   };
-}
+};

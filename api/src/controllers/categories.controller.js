@@ -1,4 +1,4 @@
-export function categoriesController(categories) {
+export const categoriesController = (categories) => {
   return {
     list: async (_request, response) =>
       response.json({ data: await categories.list() }),
@@ -25,4 +25,4 @@ export function categoriesController(categories) {
       response.status(204).end();
     },
   };
-}
+};

@@ -4,7 +4,7 @@ import { AppError } from "../errors/AppError.js";
 
 export const adminCookieName = "usof_admin";
 
-export function adminSession(users, config) {
+export const adminSession = (users, config) => {
   return async (request, response, next) => {
     const token = request
       .get("cookie")
@@ -54,7 +54,7 @@ export function adminSession(users, config) {
     request.session = { adminUser: request.user };
     next();
   };
-}
+};
 
 export const sameOrigin = (config) => (request, response, next) => {
   if (

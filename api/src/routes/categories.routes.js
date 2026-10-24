@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-export function categoriesRoutes(controller, authenticate, optional, admin) {
+export const categoriesRoutes = (controller, authenticate, optional, admin) => {
   const router = Router();
   router.get("/", controller.list);
   router.get("/:category_id", controller.get);
@@ -9,4 +9,4 @@ export function categoriesRoutes(controller, authenticate, optional, admin) {
   router.patch("/:category_id", authenticate, admin, controller.update);
   router.delete("/:category_id", authenticate, admin, controller.delete);
   return router;
-}
+};

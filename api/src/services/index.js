@@ -5,11 +5,11 @@ import { createCategoriesService } from "./categories.service.js";
 import { createCommentsService } from "./comments.service.js";
 import { createReactionsService } from "./reactions.service.js";
 
-export function createServices(
+export const createServices = (
   { users, posts, categories, comments, likes },
   mailer,
   config,
-) {
+) => {
   const reactions = createReactionsService(likes);
   return {
     auth: createAuthService(users, mailer, config),
@@ -19,7 +19,7 @@ export function createServices(
     comments: createCommentsService(comments, reactions),
     reactions,
   };
-}
+};
 
 export {
   createAuthService,

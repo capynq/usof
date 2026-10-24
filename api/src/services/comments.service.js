@@ -8,7 +8,7 @@ import {
 import { idInput } from "../schemas/common.js";
 
 const id = (value, name) => parse(idInput, String(value), name);
-export function createCommentsService(comments, reactions) {
+export const createCommentsService = (comments, reactions) => {
   return {
     list: (user) => comments.list(user),
     get: (rawId, user) => comments.get(id(rawId, "comment_id"), user),
@@ -46,4 +46,4 @@ export function createCommentsService(comments, reactions) {
       );
     },
   };
-}
+};

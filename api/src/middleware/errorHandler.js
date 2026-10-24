@@ -52,7 +52,7 @@ const mapError = (error) => {
   return error;
 };
 
-export function errorHandler(error, request, response, next) {
+export const errorHandler = (error, request, response, next) => {
   if (response.headersSent) return next(error);
   const result = mapError(error);
   if (!(result instanceof AppError)) {
@@ -72,4 +72,4 @@ export function errorHandler(error, request, response, next) {
   const body = { code: result.code, message: result.message };
   if (result.details !== undefined) body.details = result.details;
   response.status(result.status).json({ error: body });
-}
+};

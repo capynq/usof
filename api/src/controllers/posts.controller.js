@@ -1,4 +1,4 @@
-export function postsController(posts) {
+export const postsController = (posts) => {
   return {
     list: async (request, response) =>
       response.json(await posts.list(request.query, request.user)),
@@ -69,4 +69,4 @@ export function postsController(posts) {
       response.status(204).end();
     },
   };
-}
+};

@@ -4,7 +4,7 @@ import { idInput } from "../schemas/common.js";
 import { normalizePaginationQuery } from "./query.js";
 
 const id = (value, name) => parse(idInput, String(value), name);
-export function createCategoriesService(categories, posts) {
+export const createCategoriesService = (categories, posts) => {
   return {
     list: () => categories.list(),
     get: (rawId) => categories.get(id(rawId, "category_id")),
@@ -33,4 +33,4 @@ export function createCategoriesService(categories, posts) {
       ),
     delete: (rawId) => categories.delete(id(rawId, "category_id")),
   };
-}
+};

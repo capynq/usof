@@ -4,7 +4,7 @@ import {
   DATABASE_SESSION_TIME_ZONE,
 } from "./constants.js";
 
-export function createDatabasePool(config) {
+export const createDatabasePool = (config) => {
   const pool = mysql.createPool({
     ...config.db,
     connectionLimit: 10,
@@ -23,9 +23,9 @@ export function createDatabasePool(config) {
     );
   });
   return pool;
-}
+};
 
-export async function transaction(pool, operation) {
+export const transaction = async (pool, operation) => {
   const connection = await pool.getConnection();
   try {
     await connection.beginTransaction();
@@ -38,4 +38,4 @@ export async function transaction(pool, operation) {
   } finally {
     connection.release();
   }
-}
+};

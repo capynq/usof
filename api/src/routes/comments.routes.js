@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-export function commentsRoutes(controller, authenticate, optional, admin) {
+export const commentsRoutes = (controller, authenticate, optional, admin) => {
   const router = Router();
   router.get("/", authenticate, admin, controller.list);
   router.get("/:comment_id", optional, controller.get);
@@ -10,4 +10,4 @@ export function commentsRoutes(controller, authenticate, optional, admin) {
   router.patch("/:comment_id", authenticate, controller.update);
   router.delete("/:comment_id", authenticate, controller.delete);
   return router;
-}
+};

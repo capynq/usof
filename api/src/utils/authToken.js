@@ -8,7 +8,7 @@ import {
 import { URL_SAFE_CHARACTERS_PATTERN } from "../constants/regex.js";
 import { AUTH_TOKEN_SIGNATURE_PATTERN } from "./constants.js";
 
-export function signAuthToken(user, secret) {
+export const signAuthToken = (user, secret) => {
   const now = Math.floor(Date.now() / MILLISECONDS_PER_SECOND);
   const payload = Buffer.from(
     JSON.stringify({
@@ -22,9 +22,9 @@ export function signAuthToken(user, secret) {
     .update(payload)
     .digest("base64url");
   return `${payload}.${signature}`;
-}
+};
 
-export function verifyAuthToken(token, secret) {
+export const verifyAuthToken = (token, secret) => {
   const fail = () => {
     throw new AppError(
       401,
@@ -68,4 +68,4 @@ export function verifyAuthToken(token, secret) {
   )
     return fail();
   return payload;
-}
+};
