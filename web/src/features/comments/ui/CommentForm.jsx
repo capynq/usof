@@ -1,31 +1,11 @@
-import { useState } from "react";
-import { useCreateCommentMutation } from "../../../entities/comment/index.js";
-import { getErrorMessage } from "../../../shared/api/index.js";
+import { useCommentForm } from "../model/useCommentForm.js";
 import styles from "./CommentForm.module.css";
 
 export const CommentForm = ({ postId, parentId = null, parentLabel, onCreated }) => {
-  const [content, setContent] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [createComment, { isLoading }] = useCreateCommentMutation();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setErrorMessage(null);
-    try {
-      await createComment({
-        postId,
-        content: content.trim(),
-        ...(parentId === null ? {} : { parent_id: parentId }),
-      }).unwrap();
-      setContent("");
-      onCreated?.();
-    } catch (error) {
-      setErrorMessage(getErrorMessage(error, "Your reply could not be posted."));
-    }
-  };
+  const form = useCommentForm({ postId, parentId, onCreated });
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={form.submit}>
       {parentLabel && <p className={styles.replyContext}>Replying to {parentLabel}</p>}
       <label className={styles.label}>
         <span>{parentId === null ? "Add to the discussion" : "Your reply"}</span>
@@ -33,13 +13,13 @@ export const CommentForm = ({ postId, parentId = null, parentLabel, onCreated })
           maxLength={10000}
           required
           rows={4}
-          value={content}
-          onChange={(event) => setContent(event.currentTarget.value)}
+          value={form.content}
+          onChange={(event) => form.setContent(event.currentTarget.value)}
         />
       </label>
-      {errorMessage && <p className={styles.error} role="alert">{errorMessage}</p>}
-      <button className={`button ${styles.submit}`} type="submit" disabled={isLoading || !content.trim()}>
-        {isLoading ? "Posting…" : parentId === null ? "Post comment" : "Post reply"}
+      {form.errorMessage && <p className={styles.error} role="alert">{form.errorMessage}</p>}
+      <button className={`button ${styles.submit}`} type="submit" disabled={form.isLoading || !form.content.trim()}>
+        {form.isLoading ? "Posting…" : parentId === null ? "Post comment" : "Post reply"}
       </button>
     </form>
   );
