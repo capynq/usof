@@ -1,0 +1,49 @@
+.page {
+  display: grid;
+  width: min(100%, 64rem);
+  gap: 1rem;
+  margin: 0 auto;
+}
+
+.category {
+  width: 100%;
+}
+
+.categoryBody {
+  padding: 1rem;
+  background: var(--surface-color-raised);
+}
+
+.categoryBody h1 {
+  margin: 0;
+  color: var(--text-color-heading);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  overflow-wrap: anywhere;
+}
+
+.categoryBody p {
+  max-width: 70ch;
+  margin: 0.5rem 0 0;
+  color: var(--text-color-secondary);
+  line-height: 1.5;
+}
+
+.folderIcon {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.35rem;
+  color: var(--text-color-emphasis);
+  vertical-align: text-bottom;
+}
+
+.state,
+.error {
+  width: min(100%, 64rem);
+  margin: 0 auto;
+  padding: 1rem;
+  color: var(--text-color-secondary);
+}
+
+.error {
+  color: var(--feedback-error-text);
+}

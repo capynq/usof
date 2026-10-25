@@ -34,13 +34,34 @@ export async function seed(pool, config) {
         ],
       );
     }
-    const categories = ["A", "B", "C", "D", "E"];
-    const categoryDescriptions = ["F", "G", "H", "I", "J"];
+    const categories = [
+      {
+        title: "Programming Languages",
+        description: "Language syntax, types, runtime behavior, and libraries.",
+      },
+      {
+        title: "Web Development",
+        description: "Browsers, web standards, frontend, and server-side web apps.",
+      },
+      {
+        title: "Databases",
+        description: "SQL, data modeling, query performance, and transactions.",
+      },
+      {
+        title: "Algorithms & Data Structures",
+        description: "Problem solving, complexity, and collections of data.",
+      },
+      {
+        title: "Developer Tools",
+        description: "Editors, version control, build systems, and command-line tools.",
+      },
+    ];
     for (let index = 0; index < categories.length; index += 1) {
       const date = seedDate("02", index);
+      const { title, description } = categories[index];
       await connection.query(
         "INSERT INTO categories (title,description,created_at,updated_at) VALUES (?,?,?,?)",
-        [categories[index], categoryDescriptions[index], date, date],
+        [title, description, date, date],
       );
     }
     const [userRows] = await connection.query(
@@ -70,12 +91,12 @@ export async function seed(pool, config) {
       postIds.push(result.insertId);
     }
     const postCategories = [
-      [postIds[0], categoryId("A")],
-      [postIds[1], categoryId("B")],
-      [postIds[2], categoryId("C")],
-      [postIds[3], categoryId("D")],
-      [postIds[4], categoryId("A")],
-      [postIds[4], categoryId("B")],
+      [postIds[0], categoryId("Programming Languages")],
+      [postIds[1], categoryId("Web Development")],
+      [postIds[2], categoryId("Databases")],
+      [postIds[3], categoryId("Algorithms & Data Structures")],
+      [postIds[4], categoryId("Programming Languages")],
+      [postIds[4], categoryId("Web Development")],
     ];
     for (const [postId, categoryIdValue] of postCategories)
       await connection.query(

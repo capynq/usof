@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import { AccountPage } from "../pages/account/index.js";
+import { CategoryPage } from "../pages/category/index.js";
 import { AboutPage } from "../pages/about/index.js";
 import { EmailConfirmationPage } from "../pages/email-confirmation/index.js";
 import { ForgotPasswordPage } from "../pages/forgot-password/index.js";
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: "posts/new", element: <ProtectedRoute><CreatePostPage /></ProtectedRoute> },
       { path: "posts/:postId/edit", element: <ProtectedRoute><EditPostPage /></ProtectedRoute> },
       { path: "posts/:postId", element: <PostDetailsPage /> },
+      { path: "categories/:categoryId", element: <CategoryPage /> },
       { path: "users/:userId", element: <UserProfilePage /> },
       { path: "login", element: <GuestRoute><LoginPage /></GuestRoute> },
       { path: "register", element: <GuestRoute><RegisterPage /></GuestRoute> },

@@ -1,0 +1,41 @@
+.settings {
+  display: grid;
+  gap: 0.8rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border-color-subtle);
+}
+
+.settings h2 {
+  margin: 0;
+  color: var(--text-color-heading);
+  font-size: 1.15rem;
+}
+
+.intro {
+  margin: 0;
+  color: var(--text-color-secondary);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.form {
+  display: grid;
+  justify-items: start;
+  gap: 0.65rem;
+  padding: 0.8rem;
+  border: 1px solid var(--border-color-subtle);
+  background: var(--surface-color-neutral);
+}
+
+.field {
+  width: min(100%, 34rem);
+}
+
+.field :global(label) {
+  color: var(--text-color-secondary);
+  font-size: 0.82rem;
+}
+
+.form input[type="file"] {
+  max-width: 100%;
+}

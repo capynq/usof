@@ -21,6 +21,7 @@ export const baseApi = createApi({
     "Comment",
     "CommentList",
     "Category",
+    "User",
   ],
   endpoints: () => ({}),
 });

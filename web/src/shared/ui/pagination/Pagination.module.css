@@ -1,0 +1,42 @@
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--border-color-subtle);
+}
+
+.inline {
+  padding: 0;
+  border-top: 0;
+}
+
+.pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.current {
+  font-weight: 700;
+  outline: 1px solid var(--action-color-border);
+  outline-offset: 1px;
+}
+
+@media (max-width: 520px) {
+  .pagination {
+    gap: 0.3rem;
+    padding: 0.65rem 0.4rem;
+  }
+
+  .pages {
+    gap: 0.2rem;
+  }
+}

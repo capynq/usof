@@ -1,0 +1,66 @@
+.field {
+  display: grid;
+  min-width: 0;
+  gap: 0.25rem;
+}
+
+.horizontal {
+  grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1.5fr);
+  align-items: start;
+  gap: 0.7rem;
+}
+
+.label {
+  color: var(--form-label-text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.horizontal .label {
+  padding-top: 0.35rem;
+}
+
+.control {
+  display: grid;
+  min-width: 0;
+  gap: 0.3rem;
+}
+
+.control input {
+  width: 100%;
+  min-height: 2rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--form-control-border);
+  background: var(--surface-color-raised);
+  box-shadow: inset 1px 1px var(--form-control-inset);
+  font: inherit;
+}
+
+.control input[aria-invalid="true"] {
+  border-color: var(--form-error-border);
+}
+
+.hint,
+.error {
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.hint {
+  color: var(--form-text-note);
+}
+
+.error {
+  color: var(--form-error-text);
+}
+
+@media (max-width: 520px) {
+  .horizontal {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  .horizontal .label {
+    padding-top: 0;
+  }
+}

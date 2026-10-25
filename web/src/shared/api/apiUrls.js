@@ -11,9 +11,12 @@ export const API_URLS = {
   },
   categories: {
     list: "/categories",
+    details: (categoryId) => `/categories/${categoryId}`,
   },
   users: {
     publicDetails: (userId) => `/users/${userId}`,
+    profile: (userId) => `/users/${userId}`,
+    avatar: "/users/avatar",
   },
   auth: {
     currentUser: "/auth/me",

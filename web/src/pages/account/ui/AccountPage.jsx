@@ -6,6 +6,7 @@ import { ACCOUNT_DETAIL_LABELS } from "../model/constants.js";
 import { getAccountDetailValue } from "../model/getAccountDetailValue.js";
 import styles from "./AccountPage.module.css";
 import { WindowShell } from "../../../shared/ui/window-shell/index.js";
+import { ProfileSettings } from "./ProfileSettings.jsx";
 
 export const AccountPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -37,6 +38,7 @@ export const AccountPage = () => {
             </div>
           ))}
         </dl>
+        <ProfileSettings user={user} />
         <div className={styles.footer}>
           <Link to="/">Back to Usof</Link>
         </div>
