@@ -45,6 +45,5 @@ export { AuthLinks } from "./ui/AuthLinks.jsx";
 export { AuthNotice } from "./ui/AuthNotice.jsx";
 export { AuthWindow } from "./ui/AuthWindow.jsx";
 export { GuestRoute } from "./ui/GuestRoute.jsx";
-export { LogoutButton } from "./ui/LogoutButton.jsx";
 export { ProtectedRoute } from "./ui/ProtectedRoute.jsx";
 export { SessionNotice } from "./ui/SessionNotice.jsx";

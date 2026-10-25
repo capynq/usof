@@ -1,4 +1,11 @@
-.linkButton {
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action {
   display: inline-flex;
   min-height: 1.9rem;
   align-items: center;
@@ -11,20 +18,26 @@
   font-family: var(--sans-serif, Tahoma, Arial, sans-serif);
   font-size: 0.6875rem;
   text-decoration: none;
+  cursor: pointer;
 }
 
-.linkButton:hover {
+.action:hover:not(:disabled) {
   box-shadow: inset -1px 1px var(--link-button-hover-highlight), inset 1px 2px var(--link-button-hover-shadow), inset -2px 2px var(--link-button-hover-shadow-strong), inset 2px -2px var(--link-button-hover-border);
   color: var(--text-color-default);
   text-decoration: none;
 }
 
-.linkButton:active {
+.action:active:not(:disabled) {
   background: linear-gradient(180deg, var(--link-button-active-start) 0%, var(--link-button-active-middle) 8%, var(--link-button-active-end) 94%, var(--link-button-active-highlight) 100%);
   box-shadow: none;
 }
 
-.linkButton:focus-visible {
+.action:focus-visible {
   box-shadow: inset -1px 1px var(--link-button-focus-start), inset 1px 2px var(--link-button-focus-middle), inset -2px 2px var(--link-button-focus-end),
     inset 1px -1px var(--action-color-focus), inset 2px -2px var(--action-color-focus);
+}
+
+.action:disabled {
+  color: var(--form-text-disabled);
+  cursor: default;
 }

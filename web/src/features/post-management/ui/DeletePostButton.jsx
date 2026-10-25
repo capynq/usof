@@ -16,13 +16,17 @@ export const DeletePostButton = ({ postId }) => {
 
   return (
     <div className={styles.action}>
-      <button className={`button ${styles.button}`} type="button" onClick={() => deletion.setIsConfirming(true)}>
+      <button
+        className={`button ${styles.button}`}
+        type="button"
+        onClick={() => deletion.setIsConfirming(true)}
+      >
         Delete question
       </button>
       {deletion.errorMessage && <p className={styles.error} role="alert">{deletion.errorMessage}</p>}
       {deletion.isConfirming && (
         <ConfirmDialog
-          open={isConfirming}
+          open={deletion.isConfirming}
           title="Delete question?"
           message="This permanently removes the question and its discussion. This action cannot be undone."
           confirmLabel={isLoading ? "Deleting…" : "Delete question"}

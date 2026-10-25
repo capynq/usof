@@ -5,29 +5,35 @@ import styles from "./CommentItem.module.css";
 
 export const CommentDeleteAction = ({ comment, postId }) => {
   const [deleteComment, { isLoading }] = useDeleteCommentMutation();
-  const deletion = useConfirmMutation({
+  const confirmation = useConfirmMutation({
     mutate: deleteComment,
     fallbackMessage: "This comment could not be removed.",
   });
 
-  const startConfirmation = () => {
-    deletion.setErrorMessage(null);
-    deletion.setIsConfirming(true);
+  const openConfirmation = () => {
+    confirmation.setErrorMessage(null);
+    confirmation.setIsConfirming(true);
   };
 
   return (
     <>
-      <button className={`button ${styles.actionButton}`} type="button" onClick={startConfirmation}>Remove</button>
-      {deletion.errorMessage && <p className={`${styles.error} ${styles.actionError}`} role="alert">{deletion.errorMessage}</p>}
-      {deletion.isConfirming && (
+      <button className={`button ${styles.actionButton}`} type="button" onClick={openConfirmation}>
+        Remove
+      </button>
+      {confirmation.errorMessage && (
+        <p className={`${styles.error} ${styles.actionError}`} role="alert">
+          {confirmation.errorMessage}
+        </p>
+      )}
+      {confirmation.isConfirming && (
         <ConfirmDialog
-          open={deletion.isConfirming}
+          open={confirmation.isConfirming}
           title="Remove comment?"
           message="The comment will be removed. Replies will remain in the discussion."
           confirmLabel={isLoading ? "Removing…" : "Remove comment"}
           confirmDisabled={isLoading}
-          onCancel={() => deletion.setIsConfirming(false)}
-          onConfirm={() => deletion.run({ commentId: comment.id, postId })}
+          onCancel={() => confirmation.setIsConfirming(false)}
+          onConfirm={() => confirmation.run({ commentId: comment.id, postId })}
         />
       )}
     </>
