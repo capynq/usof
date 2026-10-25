@@ -1,5 +1,7 @@
-import { DATABASE_NAME_PATTERN } from "../constants/regex.js";
-import { DECIMAL_PORT_PATTERN } from "./constants.js";
+import {
+  DATABASE_NAME_PATTERN,
+  DECIMAL_PORT_PATTERN,
+} from "../constants/regex.js";
 
 export const loadConfig = (source = process.env) => {
   const required = (name) => {

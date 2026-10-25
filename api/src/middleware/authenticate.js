@@ -1,7 +1,7 @@
 import { ERROR_CODES } from "../constants/errorCodes.js";
 import { verifyAuthToken } from "../utils/authToken.js";
 import { AppError } from "../errors/AppError.js";
-import { BEARER_HEADER_PATTERN } from "./constants.js";
+import { BEARER_HEADER_PATTERN } from "../constants/regex.js";
 
 export const authenticate = (users, secret, optional = false) => {
   return async (request, response, next) => {

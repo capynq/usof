@@ -1,4 +1,4 @@
-import { EMAIL_PATTERN, LOGIN_PATTERN } from "./patterns.js";
+import { EMAIL_PATTERN, LOGIN_PATTERN } from "../../../shared/lib/regexPatterns.js";
 
 const validateEmail = (value) => {
   const email = value.trim();

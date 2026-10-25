@@ -8,7 +8,7 @@ import {
   maxValue,
 } from "valibot";
 import { categories, date, idInput, status, text } from "./common.js";
-import { POST_SORT_PATTERN } from "./constants.js";
+import { BOOLEAN_STRING_PATTERN, POST_SORT_PATTERN } from "../constants/regex.js";
 
 const categoriesQuery = pipe(
   string(),
@@ -39,7 +39,7 @@ export const postQuery = strictObject({
   summary: optional(
     pipe(
       string(),
-      regex(/^(true|false)$/),
+      regex(BOOLEAN_STRING_PATTERN),
       transform((value) => value === "true"),
     ),
   ),

@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { AppError } from "../errors/AppError.js";
-import { AVATAR_PATH_PATTERN } from "./constants.js";
+import { AVATAR_PATH_PATTERN } from "../constants/regex.js";
 
 export const storageDirectory = fileURLToPath(
   new URL("../../storage/", import.meta.url),

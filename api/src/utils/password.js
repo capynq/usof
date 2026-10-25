@@ -1,6 +1,9 @@
 import { randomBytes, scrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
-import { PASSWORD_SALT_PATTERN, PASSWORD_HASH_PATTERN } from "./constants.js";
+import {
+  PASSWORD_SALT_PATTERN,
+  PASSWORD_HASH_PATTERN,
+} from "../constants/regex.js";
 
 const derive = promisify(scrypt);
 

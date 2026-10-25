@@ -5,8 +5,10 @@ import {
   SECONDS_PER_HOUR,
   MILLISECONDS_PER_SECOND,
 } from "../constants/dates.js";
-import { URL_SAFE_CHARACTERS_PATTERN } from "../constants/regex.js";
-import { AUTH_TOKEN_SIGNATURE_PATTERN } from "./constants.js";
+import {
+  AUTH_TOKEN_SIGNATURE_PATTERN,
+  URL_SAFE_CHARACTERS_PATTERN,
+} from "../constants/regex.js";
 
 export const signAuthToken = (user, secret) => {
   const now = Math.floor(Date.now() / MILLISECONDS_PER_SECOND);

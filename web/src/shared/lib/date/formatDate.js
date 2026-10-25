@@ -1,11 +1,16 @@
+import {
+  DATE_TIMEZONE_SUFFIX_PATTERN,
+  MYSQL_DATETIME_SPACE_SEPARATOR_PATTERN,
+} from "../regexPatterns.js";
+
 const normalizeDateValue = (value) => {
   if (typeof value !== "string") {
     return value;
   }
 
-  let normalized = value.replace(/^(\d{4}-\d{2}-\d{2}) /, "$1T");
+  let normalized = value.replace(MYSQL_DATETIME_SPACE_SEPARATOR_PATTERN, "$1T");
   const hasTime = normalized.includes("T");
-  const hasTimezone = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(normalized);
+  const hasTimezone = DATE_TIMEZONE_SUFFIX_PATTERN.test(normalized);
 
   if (hasTime && !hasTimezone) {
     normalized = `${normalized}Z`;
