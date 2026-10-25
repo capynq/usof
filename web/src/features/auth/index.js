@@ -22,6 +22,7 @@ export {
 } from "./model/authSlice.js";
 export { default as authReducer } from "./model/authSlice.js";
 export { useAuthSession } from "./model/useAuthSession.js";
+export { useValidatedAuthForm } from "./model/useValidatedAuthForm.js";
 export { clearStoredSession, saveStoredSession } from "./model/sessionStorage.js";
 export {
   AUTH_STATUS,
@@ -39,6 +40,7 @@ export {
   validateRegistration,
 } from "./model/validation.js";
 export { AuthField } from "./ui/AuthField.jsx";
+export { AuthFormActions } from "./ui/AuthFormActions.jsx";
 export { AuthLinks } from "./ui/AuthLinks.jsx";
 export { AuthNotice } from "./ui/AuthNotice.jsx";
 export { AuthWindow } from "./ui/AuthWindow.jsx";

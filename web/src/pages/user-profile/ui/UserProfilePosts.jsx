@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { getUserDisplayName } from "../../../entities/user/index.js";
 import { PostCollection } from "../../../entities/post/index.js";
+import { Pagination } from "../../../shared/ui/pagination/Pagination.jsx";
 import styles from "./UserProfilePage.module.css";
 
 export const UserProfilePosts = ({ user, posts, error, isLoading, currentPage, onPageChange }) => (
@@ -20,11 +21,12 @@ export const UserProfilePosts = ({ user, posts, error, isLoading, currentPage, o
       errorClassName={styles.error}
     />
     {!isLoading && posts?.meta?.total_pages > 1 && (
-      <nav className={styles.pagination} aria-label="Profile questions pages">
-        <button className="button" type="button" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>Previous</button>
-        <span>Page {posts.meta.page} of {posts.meta.total_pages}</span>
-        <button className="button" type="button" disabled={currentPage >= posts.meta.total_pages} onClick={() => onPageChange(currentPage + 1)}>Next</button>
-      </nav>
+      <Pagination
+        page={posts.meta.page}
+        totalPages={posts.meta.total_pages}
+        onPageChange={onPageChange}
+        label="Profile question pages"
+      />
     )}
   </section>
 );

@@ -1,7 +1,13 @@
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { UserAvatar } from "../../../entities/user/index.js";
-import { PostMeta, usePostRouteData } from "../../../entities/post/index.js";
+import {
+  getPostPermissions,
+  getPostRouteStatus,
+  PostMeta,
+  PostRouteMessage,
+  usePostRouteData,
+} from "../../../entities/post/index.js";
 import { CategoryList } from "../../../entities/category/index.js";
 import { WindowShell } from "../../../shared/ui/window-shell/index.js";
 import { CommentDiscussion } from "../../../features/comments/index.js";
@@ -14,27 +20,26 @@ import styles from "./PostDetailsPage.module.css";
 export const PostDetailsPage = () => {
   const currentUser = useSelector(selectCurrentUser);
   const { isValidPostId, data: post, error, isLoading } = usePostRouteData();
+  const routeStatus = getPostRouteStatus({ isValidPostId, isLoading, error, post });
 
-  if (!isValidPostId) {
-    return <p className={styles.error} role="alert">That question address is not valid.</p>;
+  if (routeStatus === "invalid") {
+    return <PostRouteMessage className={styles.error}>That question address is not valid.</PostRouteMessage>;
   }
 
-  if (isLoading) {
-    return <p className={styles.state}>Loading question…</p>;
+  if (routeStatus === "loading") {
+    return <PostRouteMessage className={styles.state} type="loading">Loading question…</PostRouteMessage>;
   }
 
-  if (error || !post) {
+  if (routeStatus === "unavailable") {
     return (
       <WindowShell title="Question unavailable" className={styles.window} bodyClassName={styles.stateBody}>
-          <p role="alert">{getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}</p>
+          <PostRouteMessage>{getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}</PostRouteMessage>
           <Link to="/">Return to recent questions</Link>
       </WindowShell>
     );
   }
 
-  const isOwner = Number(currentUser?.id) === Number(post.author_id);
-  const isAdmin = currentUser?.role === "admin";
-  const canManage = isOwner || isAdmin;
+  const permissions = getPostPermissions(post, currentUser);
 
   return (
     <div className={styles.page}>
@@ -50,7 +55,7 @@ export const PostDetailsPage = () => {
               <h1>{post.title}</h1>
               <PostMeta post={post} leading={<UserAvatar user={post.author} />} className={styles.meta} statusClassName={styles.status} />
             </div>
-            {canManage && (
+            {permissions.canManage && (
               <div className={styles.manage}>
                 <Link className={`button ${styles.button}`} to={`/posts/${post.id}/edit`}>Edit</Link>
                 <DeletePostButton postId={post.id} />
@@ -66,7 +71,7 @@ export const PostDetailsPage = () => {
             dislikeCount={post.dislike_count}
             viewerReaction={post.viewer_reaction}
             currentUser={currentUser}
-            canReact={post.status === "active" || isAdmin}
+            canReact={permissions.canReact}
           />
       </WindowShell>
       <CommentDiscussion postId={post.id} postStatus={post.status} />

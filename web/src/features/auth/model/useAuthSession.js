@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetCurrentUserQuery } from "../api/authApi.js";
 import {
   selectAuth,
-  sessionExpired,
   sessionRestoreFailed,
   sessionRestoreStarted,
   sessionRestored,
 } from "./authSlice.js";
 import { AUTH_STATUS } from "./constants.js";
 import { endAuthSession } from "./endAuthSession.js";
+import { useSessionExpiry } from "./useSessionExpiry.js";
 
 export const useAuthSession = () => {
   const dispatch = useDispatch();
@@ -31,23 +31,7 @@ export const useAuthSession = () => {
     }
   }, [auth.status, dispatch, error]);
 
-  useEffect(() => {
-    if (auth.status !== AUTH_STATUS.authenticated || !auth.expiresAt) {
-      return undefined;
-    }
-
-    const remaining = auth.expiresAt - Date.now();
-    if (remaining <= 0) {
-      endAuthSession(dispatch, sessionExpired());
-      return undefined;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      endAuthSession(dispatch, sessionExpired());
-    }, remaining);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [auth.expiresAt, auth.status, dispatch]);
+  useSessionExpiry({ dispatch, expiresAt: auth.expiresAt, status: auth.status });
 
   const retryRestore = () => dispatch(sessionRestoreStarted());
 

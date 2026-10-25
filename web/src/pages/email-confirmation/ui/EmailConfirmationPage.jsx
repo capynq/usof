@@ -7,15 +7,17 @@ import {
 } from "../../../features/auth/index.js";
 import { EnvelopeIcon } from "../../../shared/ui/icons/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
-import { getRegistrationMessage } from "../model/registrationMessages.js";
+import { getEmailConfirmationPageState } from "../model/getEmailConfirmationPageState.js";
 import { EmailConfirmationAction } from "./EmailConfirmationAction.jsx";
 import { ResendConfirmationForm } from "./ResendConfirmationForm.jsx";
 
 export const EmailConfirmationPage = () => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const token = searchParams.get("token") ?? "";
-  const registrationDelivery = location.state?.registrationDelivery;
+  const pageState = getEmailConfirmationPageState({
+    token: searchParams.get("token"),
+    registrationDelivery: location.state?.registrationDelivery,
+  });
 
   return (
     <AuthWindow title="Confirm your email" Icon={EnvelopeIcon}>
@@ -23,13 +25,13 @@ export const EmailConfirmationPage = () => {
         <h1>One more step</h1>
         <p>Confirm your email address before signing in to Usof.</p>
       </div>
-      {registrationDelivery && (
-        <AuthNotice type="success">{getRegistrationMessage(registrationDelivery)}</AuthNotice>
+      {pageState.registrationMessage && (
+        <AuthNotice type="success">{pageState.registrationMessage}</AuthNotice>
       )}
-      {!token && !registrationDelivery && (
+      {pageState.showInstructions && (
         <AuthNotice>Open the link from your confirmation message, or request a new one below.</AuthNotice>
       )}
-      {token && <EmailConfirmationAction token={token} />}
+      {pageState.token && <EmailConfirmationAction token={pageState.token} />}
       <ResendConfirmationForm />
       <AuthLinks links={AUTH_LINKS.emailConfirmation} />
     </AuthWindow>

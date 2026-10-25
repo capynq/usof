@@ -1,32 +1,30 @@
 import { Link } from "react-router";
 import {
   AuthField,
+  AuthFormActions,
   AuthNotice,
   RESET_INITIAL_VALUES,
   useResetPasswordMutation,
+  useValidatedAuthForm,
   validatePasswordReset,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
-import { useFormFields } from "../../../shared/lib/useFormFields.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const ResetPasswordForm = ({ token }) => {
-  const { values, fieldErrors, handleChange: changeField, validate } = useFormFields(RESET_INITIAL_VALUES);
   const [resetPassword, { data, error, isLoading }] = useResetPasswordMutation();
 
-  const submit = (event) => {
-    event.preventDefault();
-    const errors = validate(validatePasswordReset);
-
-    if (Object.keys(errors).length) {
-      return;
-    }
-
+  const submit = (values) => {
     resetPassword({ token, new_password: values.new_password });
   };
+  const form = useValidatedAuthForm({
+    initialValues: RESET_INITIAL_VALUES,
+    validator: validatePasswordReset,
+    onSubmit: submit,
+  });
 
   return (
-    <form className={styles.form} noValidate onSubmit={submit}>
+    <form className={styles.form} noValidate onSubmit={form.handleSubmit}>
       {data?.message && (
         <AuthNotice type="success">
           {data.message} <Link to="/login">Sign in</Link>
@@ -39,32 +37,27 @@ export const ResetPasswordForm = ({ token }) => {
       )}
       <AuthField
         autoComplete="new-password"
-        error={fieldErrors.new_password}
+        error={form.fieldErrors.new_password}
         label="New password"
         maxLength={128}
         minLength={8}
         name="new_password"
-        onChange={changeField}
+        onChange={form.handleChange}
         type="password"
-        value={values.new_password}
+        value={form.values.new_password}
       />
       <AuthField
         autoComplete="new-password"
-        error={fieldErrors.password_confirmation}
+        error={form.fieldErrors.password_confirmation}
         label="Confirm password"
         maxLength={128}
         minLength={8}
         name="password_confirmation"
-        onChange={changeField}
+        onChange={form.handleChange}
         type="password"
-        value={values.password_confirmation}
+        value={form.values.password_confirmation}
       />
-      <div className={styles.actions}>
-        <button className={styles.primaryButton} type="submit" disabled={isLoading}>
-          {isLoading && "Saving…"}
-          {!isLoading && "Save new password"}
-        </button>
-      </div>
+      <AuthFormActions isLoading={isLoading} label="Save new password" loadingLabel="Saving…" />
     </form>
   );
 };

@@ -1,32 +1,30 @@
 import {
   AUTH_LINKS,
   AuthField,
+  AuthFormActions,
   AuthLinks,
   AuthNotice,
   AuthWindow,
   EMAIL_INITIAL_VALUES,
   useRequestPasswordResetMutation,
+  useValidatedAuthForm,
   validateEmailRequest,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
-import { useFormFields } from "../../../shared/lib/useFormFields.js";
 import { KeyIcon } from "../../../shared/ui/icons/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const ForgotPasswordPage = () => {
-  const { values, fieldErrors, handleChange: changeEmail, validate } = useFormFields(EMAIL_INITIAL_VALUES);
   const [requestReset, { data, error, isLoading }] = useRequestPasswordResetMutation();
 
-  const submit = async (event) => {
-    event.preventDefault();
-    const errors = validate(validateEmailRequest);
-
-    if (Object.keys(errors).length) {
-      return;
-    }
-
+  const submit = async (values) => {
     await requestReset({ email: values.email.trim() });
   };
+  const form = useValidatedAuthForm({
+    initialValues: EMAIL_INITIAL_VALUES,
+    validator: validateEmailRequest,
+    onSubmit: submit,
+  });
 
   return (
     <AuthWindow title="Password help" Icon={KeyIcon}>
@@ -40,23 +38,18 @@ export const ForgotPasswordPage = () => {
           {getErrorMessage(error, "The reset link could not be requested.")}
         </AuthNotice>
       )}
-      <form className={styles.form} noValidate onSubmit={submit}>
+      <form className={styles.form} noValidate onSubmit={form.handleSubmit}>
         <AuthField
           autoComplete="email"
-          error={fieldErrors.email}
+          error={form.fieldErrors.email}
           label="Email address"
           maxLength={254}
           name="email"
-          onChange={changeEmail}
+          onChange={form.handleChange}
           type="email"
-          value={values.email}
+          value={form.values.email}
         />
-        <div className={styles.actions}>
-          <button className={styles.primaryButton} type="submit" disabled={isLoading}>
-            {isLoading && "Requesting…"}
-            {!isLoading && "Request reset link"}
-          </button>
-        </div>
+        <AuthFormActions isLoading={isLoading} label="Request reset link" loadingLabel="Requesting…" />
       </form>
       <AuthLinks links={AUTH_LINKS.forgotPassword} />
     </AuthWindow>

@@ -1,4 +1,4 @@
-import styles from "./AuthField.module.css";
+import { FormField } from "../../../shared/ui/form-field/index.js";
 
 export const AuthField = ({
   autoComplete,
@@ -11,26 +11,13 @@ export const AuthField = ({
   type = "text",
   value,
 }) => {
-  const errorId = `${name}-error`;
-
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={name}>{label}</label>
-      <div className={styles.inputWrap}>
-        <input
-          id={name}
-          name={name}
-          type={type}
-          autoComplete={autoComplete}
-          maxLength={maxLength}
-          minLength={minLength}
-          value={value}
-          onChange={onChange}
-          aria-invalid={Boolean(error)}
-          {...(Boolean(error) && { "aria-describedby": errorId })}
-        />
-        {error && <span className={styles.error} id={errorId}>{error}</span>}
-      </div>
-    </div>
+    <FormField
+      id={name}
+      label={label}
+      layout="horizontal"
+      error={error}
+      inputProps={{ autoComplete, maxLength, minLength, name, onChange, type, value }}
+    />
   );
 };

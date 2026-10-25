@@ -2,33 +2,26 @@ import { Link, useLocation, useNavigate } from "react-router";
 import {
   AUTH_LINKS,
   AuthField,
+  AuthFormActions,
   AuthLinks,
   AuthNotice,
   AuthWindow,
   LOGIN_INITIAL_VALUES,
   useLoginMutation,
+  useValidatedAuthForm,
   validateLogin,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
-import { useFormFields } from "../../../shared/lib/useFormFields.js";
 import { KeyIcon } from "../../../shared/ui/icons/index.js";
 import { getReturnPath } from "../model/getReturnPath.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const LoginPage = () => {
-  const { values, fieldErrors, handleChange: changeField, validate } = useFormFields(LOGIN_INITIAL_VALUES);
   const [login, { error, isLoading }] = useLoginMutation();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const submit = async (event) => {
-    event.preventDefault();
-    const errors = validate(validateLogin);
-
-    if (Object.keys(errors).length) {
-      return;
-    }
-
+  const submit = async (values) => {
     try {
       await login({
         login: values.login.trim(),
@@ -40,6 +33,11 @@ export const LoginPage = () => {
       return;
     }
   };
+  const form = useValidatedAuthForm({
+    initialValues: LOGIN_INITIAL_VALUES,
+    validator: validateLogin,
+    onSubmit: submit,
+  });
 
   return (
     <AuthWindow title="Sign in to Usof" Icon={KeyIcon}>
@@ -52,45 +50,39 @@ export const LoginPage = () => {
           {getErrorMessage(error, "Sign-in failed. Check your details and try again.")}
         </AuthNotice>
       )}
-      <form className={styles.form} noValidate onSubmit={submit}>
+      <form className={styles.form} noValidate onSubmit={form.handleSubmit}>
         <AuthField
           autoComplete="username"
-          error={fieldErrors.login}
+          error={form.fieldErrors.login}
           label="Login"
           maxLength={40}
           minLength={3}
           name="login"
-          onChange={changeField}
-          value={values.login}
+          onChange={form.handleChange}
+          value={form.values.login}
         />
         <AuthField
           autoComplete="email"
-          error={fieldErrors.email}
+          error={form.fieldErrors.email}
           label="Email address"
           maxLength={254}
           name="email"
-          onChange={changeField}
+          onChange={form.handleChange}
           type="email"
-          value={values.email}
+          value={form.values.email}
         />
         <AuthField
           autoComplete="current-password"
-          error={fieldErrors.password}
+          error={form.fieldErrors.password}
           label="Password"
           maxLength={128}
           minLength={8}
           name="password"
-          onChange={changeField}
+          onChange={form.handleChange}
           type="password"
-          value={values.password}
+          value={form.values.password}
         />
-        <div className={styles.actions}>
-          <button className={styles.primaryButton} type="submit" disabled={isLoading}>
-            {isLoading && "Signing in…"}
-            {!isLoading && "Sign in"}
-          </button>
-          <span className={styles.pendingText}>Email confirmation is required.</span>
-        </div>
+        <AuthFormActions isLoading={isLoading} label="Sign in" loadingLabel="Signing in…" note="Email confirmation is required." noteType="pending" />
       </form>
       <AuthLinks links={AUTH_LINKS.login} />
       <p className={styles.forgotLink}>

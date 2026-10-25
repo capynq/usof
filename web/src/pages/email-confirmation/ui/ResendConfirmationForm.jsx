@@ -1,39 +1,25 @@
-import { useState } from "react";
 import {
   AuthField,
+  AuthFormActions,
   AuthNotice,
   EMAIL_INITIAL_VALUES,
   useResendConfirmationMutation,
+  useValidatedAuthForm,
   validateEmailRequest,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const ResendConfirmationForm = () => {
-  const [values, setValues] = useState(EMAIL_INITIAL_VALUES);
-  const [fieldErrors, setFieldErrors] = useState({});
   const [resendConfirmation, { data, error, isLoading, reset }] =
     useResendConfirmationMutation();
 
-  const changeEmail = (event) => {
-    const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
-    setFieldErrors((current) => ({ ...current, [name]: undefined }));
-  };
-
-  const submitResend = (event) => {
-    event.preventDefault();
-    reset();
-
-    const errors = validateEmailRequest(values);
-    setFieldErrors(errors);
-
-    if (Object.keys(errors).length) {
-      return;
-    }
-
-    resendConfirmation({ email: values.email.trim() });
-  };
+  const form = useValidatedAuthForm({
+    initialValues: EMAIL_INITIAL_VALUES,
+    validator: validateEmailRequest,
+    onAttempt: reset,
+    onSubmit: (values) => resendConfirmation({ email: values.email.trim() }),
+  });
 
   return (
     <section className={styles.secondaryPanel} aria-labelledby="resend-title">
@@ -45,21 +31,23 @@ export const ResendConfirmationForm = () => {
           {getErrorMessage(error, "A new confirmation link could not be requested.")}
         </AuthNotice>
       )}
-      <form className={styles.form} noValidate onSubmit={submitResend}>
+      <form className={styles.form} noValidate onSubmit={form.handleSubmit}>
         <AuthField
           autoComplete="email"
-          error={fieldErrors.email}
+          error={form.fieldErrors.email}
           label="Email address"
           maxLength={254}
           name="email"
-          onChange={changeEmail}
+          onChange={form.handleChange}
           type="email"
-          value={values.email}
+          value={form.values.email}
         />
-        <button className={styles.secondaryButton} type="submit" disabled={isLoading}>
-          {isLoading && "Requesting…"}
-          {!isLoading && "Resend confirmation"}
-        </button>
+        <AuthFormActions
+          isLoading={isLoading}
+          label="Resend confirmation"
+          loadingLabel="Requesting…"
+          variant="secondary"
+        />
       </form>
     </section>
   );

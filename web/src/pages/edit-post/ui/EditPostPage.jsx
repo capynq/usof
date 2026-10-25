@@ -1,6 +1,11 @@
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
-import { usePostRouteData } from "../../../entities/post/index.js";
+import {
+  getPostPermissions,
+  getPostRouteStatus,
+  PostRouteMessage,
+  usePostRouteData,
+} from "../../../entities/post/index.js";
 import { selectCurrentUser } from "../../../features/auth/index.js";
 import { PostForm } from "../../../features/post-management/index.js";
 import styles from "./EditPostPage.module.css";
@@ -10,26 +15,26 @@ import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.j
 export const EditPostPage = () => {
   const currentUser = useSelector(selectCurrentUser);
   const { isValidPostId, data: post, error, isLoading } = usePostRouteData();
+  const routeStatus = getPostRouteStatus({ isValidPostId, isLoading, error, post });
 
-  if (!isValidPostId) {
-    return <p className={styles.error} role="alert">That question address is not valid.</p>;
+  if (routeStatus === "invalid") {
+    return <PostRouteMessage className={styles.error}>That question address is not valid.</PostRouteMessage>;
   }
 
-  if (isLoading) {
-    return <p className={styles.state}>Loading question…</p>;
+  if (routeStatus === "loading") {
+    return <PostRouteMessage className={styles.state} type="loading">Loading question…</PostRouteMessage>;
   }
 
-  if (error || !post) {
-    return <p className={styles.error} role="alert">{getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}</p>;
+  if (routeStatus === "unavailable") {
+    return <PostRouteMessage className={styles.error}>{getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}</PostRouteMessage>;
   }
 
-  const isAdmin = currentUser?.role === "admin";
-  const isOwner = Number(currentUser?.id) === Number(post.author_id);
+  const permissions = getPostPermissions(post, currentUser);
 
-  if (!isAdmin && !isOwner) {
+  if (!permissions.canManage) {
     return (
       <WindowShell title="Edit question" className={styles.window} bodyClassName={styles.body}>
-          <p role="alert">You can edit only your own questions.</p>
+          <PostRouteMessage>You can edit only your own questions.</PostRouteMessage>
           <Link to={`/posts/${post.id}`}>Return to the question</Link>
       </WindowShell>
     );
@@ -44,7 +49,7 @@ export const EditPostPage = () => {
       titleIcon={<span className={styles.titleIcon} aria-hidden="true">✎</span>}
     >
         <h1 id="edit-post-title">Edit question</h1>
-        <PostForm post={post} isAdmin={isAdmin} />
+        <PostForm post={post} isAdmin={permissions.isAdmin} />
         <Link to={`/posts/${post.id}`}>Cancel and return</Link>
     </WindowShell>
   );
