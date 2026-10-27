@@ -1,8 +1,8 @@
 .page {
   display: grid;
-  width: min(100%, 58rem);
+  width: 100%;
   gap: 1.2rem;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .profile {

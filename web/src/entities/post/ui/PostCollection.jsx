@@ -1,8 +1,13 @@
+import { StateCompanion } from "../../../shared/ui/mascot/StateCompanion.jsx";
 import { PostPreview } from "./PostPreview.jsx";
-import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.js";
+import {
+  API_ERROR_MESSAGES,
+  getErrorMessage,
+} from "../../../shared/api/index.js";
 
 export const PostCollection = ({
   posts,
+  renderActions,
   error,
   isLoading,
   loadingMessage,
@@ -13,15 +18,35 @@ export const PostCollection = ({
   errorClassName,
 }) => {
   if (isLoading) {
-    return <p className={stateClassName}>{loadingMessage}</p>;
+    return (
+      <div>
+        <StateCompanion kind="loading">
+          <p className={stateClassName} role="status">
+            {loadingMessage}
+          </p>
+        </StateCompanion>
+      </div>
+    );
   }
 
   if (error) {
-    return <p className={errorClassName} role="alert">{getErrorMessage(error, errorMessage)}</p>;
+    return (
+      <StateCompanion kind="error">
+        <p className={errorClassName} role="alert">
+          {getErrorMessage(error, errorMessage)}
+        </p>
+      </StateCompanion>
+    );
   }
 
   if (posts?.length === 0) {
-    return <p className={stateClassName}>{emptyMessage}</p>;
+    return (
+      <div>
+        <StateCompanion kind="empty">
+          <p className={stateClassName}>{emptyMessage}</p>
+        </StateCompanion>
+      </div>
+    );
   }
 
   if (!posts?.length) {
@@ -30,7 +55,13 @@ export const PostCollection = ({
 
   return (
     <div className={listClassName}>
-      {posts.map((post) => <PostPreview key={post.id} post={post} />)}
+      {posts.map((post) => (
+        <PostPreview
+          key={post.id}
+          post={post}
+          actions={renderActions?.(post)}
+        />
+      ))}
     </div>
   );
 };

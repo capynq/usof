@@ -1,5 +1,5 @@
 import { Pagination } from "../../../shared/ui/pagination/Pagination.jsx";
-import { FilterSelect } from "./FilterSelect.jsx";
+import { SelectControl } from "../../../shared/ui/select-control/index.js";
 import { POST_FEED_PAGE_SIZES } from "../model/postFeedQuery.js";
 import styles from "./PostFeed.module.css";
 
@@ -14,9 +14,9 @@ export const PostFeedResultsFooter = ({
   <div className={styles.resultsFooter}>
     <label className={styles.pageSizeField}>
       <span>Questions per page</span>
-      <FilterSelect value={pageSize} onChange={onPageSizeChange}>
+      <SelectControl value={pageSize} onChange={onPageSizeChange}>
         {POST_FEED_PAGE_SIZES.map((size) => <option key={size} value={size}>{size}</option>)}
-      </FilterSelect>
+      </SelectControl>
     </label>
     {!isLoading && !error && data?.meta?.total_pages > 1 && (
       <Pagination

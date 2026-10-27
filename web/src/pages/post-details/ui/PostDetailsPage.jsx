@@ -1,3 +1,5 @@
+import { FavoriteButton } from "../../../features/favorites/ui/FavoriteButton.jsx";
+import { SharePostButton } from "../../../features/post-management/ui/SharePostButton.jsx";
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import { UserAvatar } from "../../../entities/user/index.js";
@@ -14,27 +16,49 @@ import { CommentDiscussion } from "../../../features/comments/index.js";
 import { ReactionControls } from "../../../features/reactions/index.js";
 import { DeletePostButton } from "../../../features/post-management/index.js";
 import { selectCurrentUser } from "../../../features/auth/index.js";
-import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.js";
+import {
+  API_ERROR_MESSAGES,
+  getErrorMessage,
+} from "../../../shared/api/index.js";
 import styles from "./PostDetailsPage.module.css";
 
 export const PostDetailsPage = () => {
   const currentUser = useSelector(selectCurrentUser);
   const { isValidPostId, data: post, error, isLoading } = usePostRouteData();
-  const routeStatus = getPostRouteStatus({ isValidPostId, isLoading, error, post });
+  const routeStatus = getPostRouteStatus({
+    isValidPostId,
+    isLoading,
+    error,
+    post,
+  });
 
   if (routeStatus === "invalid") {
-    return <PostRouteMessage className={styles.error}>That question address is not valid.</PostRouteMessage>;
+    return (
+      <PostRouteMessage className={styles.error}>
+        That question address is not valid.
+      </PostRouteMessage>
+    );
   }
 
   if (routeStatus === "loading") {
-    return <PostRouteMessage className={styles.state} type="loading">Loading question…</PostRouteMessage>;
+    return (
+      <PostRouteMessage className={styles.state} type="loading">
+        Loading question…
+      </PostRouteMessage>
+    );
   }
 
   if (routeStatus === "unavailable") {
     return (
-      <WindowShell title="Question unavailable" className={styles.window} bodyClassName={styles.stateBody}>
-          <PostRouteMessage>{getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}</PostRouteMessage>
-          <Link to="/">Return to recent questions</Link>
+      <WindowShell
+        title="Question unavailable"
+        className={styles.window}
+        bodyClassName={styles.stateBody}
+      >
+        <PostRouteMessage>
+          {getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}
+        </PostRouteMessage>
+        <Link to="/">Return to recent questions</Link>
       </WindowShell>
     );
   }
@@ -48,31 +72,49 @@ export const PostDetailsPage = () => {
         className={styles.window}
         bodyClassName={styles.body}
         title="Question"
-        titleIcon={<span className={styles.titleIcon} aria-hidden="true">▤</span>}
+        titleIcon={
+          <span className={styles.titleIcon} aria-hidden="true">
+            ▤
+          </span>
+        }
       >
-          <div className={styles.heading}>
-            <div>
-              <h1>{post.title}</h1>
-              <PostMeta post={post} leading={<UserAvatar user={post.author} />} className={styles.meta} statusClassName={styles.status} />
+        <div className={styles.heading}>
+          <h1>{post.title}</h1>
+          <FavoriteButton post={post} />
+        </div>
+        <PostMeta
+          post={post}
+          leading={<UserAvatar user={post.author} />}
+          className={styles.meta}
+        />
+        <div className={styles.toolbar}>
+          <SharePostButton post={post} />
+          {permissions.canManage && (
+            <div className={styles.manage}>
+              <Link
+                className={`button ${styles.button}`}
+                to={`/posts/${post.id}/edit`}
+              >
+                Edit
+              </Link>
+              <DeletePostButton postId={post.id} />
             </div>
-            {permissions.canManage && (
-              <div className={styles.manage}>
-                <Link className={`button ${styles.button}`} to={`/posts/${post.id}/edit`}>Edit</Link>
-                <DeletePostButton postId={post.id} />
-              </div>
-            )}
-          </div>
-          <CategoryList categories={post.categories} className={styles.categories} />
-          <div className={styles.content}>{post.content}</div>
-          <ReactionControls
-            target="post"
-            targetId={post.id}
-            likeCount={post.like_count}
-            dislikeCount={post.dislike_count}
-            viewerReaction={post.viewer_reaction}
-            currentUser={currentUser}
-            canReact={permissions.canReact}
-          />
+          )}
+        </div>
+        <CategoryList
+          categories={post.categories}
+          className={styles.categories}
+        />
+        <div className={styles.content}>{post.content}</div>
+        <ReactionControls
+          target="post"
+          targetId={post.id}
+          likeCount={post.like_count}
+          dislikeCount={post.dislike_count}
+          viewerReaction={post.viewer_reaction}
+          currentUser={currentUser}
+          canReact={permissions.canReact}
+        />
       </WindowShell>
       <CommentDiscussion postId={post.id} postStatus={post.status} />
     </div>

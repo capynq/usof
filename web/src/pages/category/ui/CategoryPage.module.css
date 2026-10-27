@@ -1,8 +1,8 @@
 .page {
   display: grid;
-  width: min(100%, 64rem);
+  width: 100%;
   gap: 1rem;
-  margin: 0 auto;
+  margin: 0;
 }
 
 .category {
