@@ -1,3 +1,4 @@
+import { FormCompanion } from "../../../shared/ui/mascot/FormCompanion.jsx";
 import { AdminPostControls } from "./AdminPostControls.jsx";
 import { CategoryPicker } from "./CategoryPicker.jsx";
 import { PostFields } from "./PostFields.jsx";
@@ -10,7 +11,14 @@ export const PostForm = ({ post, isAdmin = false }) => {
 
   return (
     <form className={styles.form} onSubmit={form.submit}>
-      {isAdmin && form.isEditing && <AdminPostControls post={post} status={form.values.status} onChange={form.setField} />}
+      <FormCompanion context={isAdmin ? "manage" : "writing"} />
+      {isAdmin && form.isEditing && (
+        <AdminPostControls
+          post={post}
+          status={form.values.status}
+          onChange={form.setField}
+        />
+      )}
       {!isAdmin && <PostFields values={form.values} onChange={form.setField} />}
       <CategoryPicker
         categories={form.categories}
@@ -19,7 +27,11 @@ export const PostForm = ({ post, isAdmin = false }) => {
         selectedIds={form.values.categories}
         onToggle={form.toggleCategory}
       />
-      {form.formError && <p className={styles.error} role="alert">{form.formError}</p>}
+      {form.formError && (
+        <p className={styles.error} role="alert">
+          {form.formError}
+        </p>
+      )}
       <PostFormActions
         isEditing={form.isEditing}
         isSaving={form.isSaving}

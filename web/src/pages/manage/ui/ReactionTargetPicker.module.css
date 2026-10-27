@@ -1,0 +1,141 @@
+.picker {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.3fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 0.75rem 1rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.scopeLabel,
+.searchForm,
+.idForm {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.searchForm {
+  max-width: none;
+}
+
+.searchRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.5rem;
+}
+
+.searchRow input {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
+
+.searchRow button,
+.idForm button {
+  flex: 0 0 auto;
+}
+
+.results {
+  display: grid;
+  gap: 0.75rem;
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.result {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color-subtle);
+  background: #fff;
+}
+
+.resultText {
+  flex: 1 1 18rem;
+  min-width: 0;
+}
+
+.result h2,
+.result p,
+.resultCount,
+.empty {
+  margin: 0;
+}
+
+.result h2 {
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.result p {
+  margin-top: 0.35rem;
+  overflow-wrap: anywhere;
+}
+
+.byline {
+  color: var(--text-color-muted, #536273);
+  font-size: 0.9rem;
+}
+
+.idDisclosure {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color-subtle);
+}
+
+.idDisclosure summary {
+  width: fit-content;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.idForm {
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 0.75rem;
+}
+
+.idForm label {
+  grid-column: 1 / -1;
+}
+
+.idForm button {
+  justify-self: start;
+}
+
+.picker > :global([role="status"]),
+.picker > :global([role="alert"]),
+.empty,
+.resultCount {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  .picker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .searchRow {
+    flex-wrap: nowrap;
+  }
+
+  .searchRow input {
+    flex-basis: 0;
+  }
+
+  .results,
+  .idDisclosure,
+  .picker > :global([role="status"]),
+  .picker > :global([role="alert"]),
+  .empty,
+  .resultCount {
+    grid-column: 1;
+  }
+}

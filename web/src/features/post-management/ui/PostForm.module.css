@@ -8,6 +8,7 @@
   gap: 0.35rem;
   color: var(--form-label-text);
   font-weight: 700;
+  font-size: var(--form-label-size);
 }
 
 .field input,
@@ -15,7 +16,8 @@
 .field select {
   width: 100%;
   min-width: 0;
-  padding: 0.45rem 0.55rem;
+  min-height: var(--form-control-height);
+  padding: var(--form-control-padding);
   border: 1px solid var(--form-control-border);
   background: var(--surface-color-raised);
   box-shadow: inset 1px 1px var(--form-control-inset);
@@ -24,6 +26,7 @@
 }
 
 .field textarea {
+  min-height: 8rem;
   line-height: 1.55;
   resize: vertical;
 }
@@ -35,7 +38,9 @@
   padding: 0.8rem;
   border: 1px solid var(--form-panel-border);
   background: var(--form-panel-surface);
-  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--form-panel-inset);
+  box-shadow:
+    inset 1px 1px var(--surface-color-raised),
+    inset -1px -1px var(--form-panel-inset);
 }
 
 .categories legend {
@@ -93,14 +98,23 @@
 
 .save {
   border-color: var(--form-button-border);
-  background: linear-gradient(var(--form-button-gradient-start), var(--form-button-gradient-middle) 48%, var(--form-button-gradient-end));
+  background: linear-gradient(var(--form-button-gradient-start),
+      var(--form-button-gradient-middle) 48%,
+      var(--form-button-gradient-end));
   color: var(--text-color-on-primary);
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   text-shadow: 1px 1px var(--action-color-text-shadow);
 }
 
 @media (max-width: 520px) {
-  .actions > button {
+  .actions>button {
     flex: 1 1 auto;
   }
+}
+
+.category input+label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.75rem;
+  line-height: 1.4;
 }

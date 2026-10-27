@@ -3,7 +3,7 @@ import styles from "./PostForm.module.css";
 export const PostFields = ({ values, onChange }) => (
   <>
     <label className={styles.field}>
-      <span>Question title</span>
+      <span>Title</span>
       <input name="title" maxLength={200} required value={values.title} onChange={onChange} autoComplete="off" />
     </label>
     <label className={styles.field}>
