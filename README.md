@@ -1,6 +1,14 @@
 # Usof
 
-Usof is a programming question-and-answer StackOverflow-like community built with an Express and MySQL API and a React web interface with a Windows XP-inspired visual style.
+Usof is a website for programming questions and answers. Users can post questions, write replies, react to posts and save favorites. They can also search, filter and sort questions, and edit their profiles. Admins can manage users, categories and content.
+
+The frontend uses React, Redux Toolkit, React Router and xp.css. The backend uses Express and MySQL. The design is inspired by Windows XP.
+
+## Screenshots
+
+![Home page](web/docs/screenshots/home-desktop.png)
+
+![Question page](web/docs/screenshots/question-desktop.png)
 
 ## Requirements
 
@@ -8,33 +16,47 @@ Usof is a programming question-and-answer StackOverflow-like community built wit
 - npm 10 or newer
 - MySQL 8.0.16 or newer
 
-## Local development
+## Run locally
 
-From the repository root, install dependencies and copy the API environment example:
+1. Clone the repository and open its folder.
+2. Install dependencies and create the API configuration:
+
+   ```bash
+   npm install
+   cp api/.env.example api/.env
+   ```
+
+3. Set the MySQL values, `AUTH_SECRET` (at least 32 characters), `WEB_BASE_URL=http://localhost:5173`, and an explicit `SEED_PASSWORD` in `api/.env` before seeding an empty database.
+4. Create the database and seed data:
+
+   ```bash
+   npm run db:init
+   ```
+
+5. Start the API and frontend in separate terminals:
+
+   ```bash
+   npm run dev:api
+   ```
+
+   ```bash
+   npm run dev:web
+   ```
+
+Open the address shown by Vite, usually `http://localhost:5173`.
+
+The seeded admin account uses login `admin` and email `admin@example.test`; all seed accounts use the explicit `SEED_PASSWORD` value. The frontend admin panel is at `/manage`.
+
+In local development, confirmation and password reset links are saved in JSON files in `api/storage/mail`. Open the link from the matching file in your browser.
+
+## Build
 
 ```bash
-npm install
-cp api/.env.example api/.env
+npm run build
 ```
 
-Set the local MySQL credentials and a private `AUTH_SECRET` of at least 32 characters in `api/.env`, then initialize the configured database:
+The frontend build is saved in `web/dist`.
 
-```bash
-npm run db:init
-```
+## Documentation
 
-Run the API and web app in separate terminals:
-
-```bash
-npm run dev:api
-```
-
-```bash
-npm run dev:web
-```
-
-Open the Vite URL printed by the web development server. The API and avatar requests are proxied by Vite; AdminJS remains at the API origin under `/admin`.
-
-The Vite proxy targets `http://localhost:3000` by default. To use another API origin, copy `web/.env.example` to `web/.env` and change `VITE_API_URL`.
-
-The API uses `MAIL_MODE=file` by default for local development. Confirmation and password reset messages are saved to a private local outbox and are not sent by email.
+[Frontend progress and program algorithm](web/docs/cbl.md) · [Backend setup and API](api/README.md)
