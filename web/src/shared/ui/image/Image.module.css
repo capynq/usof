@@ -1,0 +1,16 @@
+.reveal {
+  animation: scan-in 540ms steps(6, end) both;
+}
+@keyframes scan-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+}

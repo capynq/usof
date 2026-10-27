@@ -1,4 +1,5 @@
 :root {
+  --layout-content-gutter: 1rem;
   --action-color-primary: #0054a6;
   --action-color-primary-hover: #246cbd;
   --action-color-primary-subtle: #dceeff;

@@ -7,10 +7,10 @@
 
 .action {
   display: inline-flex;
-  min-height: 1.9rem;
+  min-height: var(--button-min-height);
   align-items: center;
   justify-content: center;
-  padding: 0.25rem 0.7rem;
+  padding: var(--button-padding);
   border: 1px solid var(--action-color-border);
   border-radius: 3px;
   background: linear-gradient(180deg, var(--surface-color-raised) 0%, var(--link-button-surface-middle) 86%, var(--link-button-surface-end) 100%);

@@ -1,0 +1,140 @@
+.art {
+  display: block;
+  max-width: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  flex-shrink: 0;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 48px;
+  margin: 0;
+  color: var(--text-color-muted);
+  font:
+    0.75rem Tahoma,
+    sans-serif;
+}
+.footer .art {
+  width: 64px;
+  height: 48px;
+}
+.footer.clip {
+  align-self: start;
+  margin-top: -0.25rem;
+}
+.footer.scout {
+  border-bottom: 2px solid #c3c8b5;
+}
+.footer.wisp {
+  color: #6a5885;
+}
+.footer.byte {
+  font-family: "Perfect DOS VGA 437 Win", monospace;
+}
+.form {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  position: relative;
+  min-width: 0;
+  margin: 0.3rem 0 0.7rem;
+  padding: 0.2rem 0.5rem;
+}
+.form .art {
+  width: 96px;
+  height: 80px;
+}
+.form p {
+  margin: 0;
+  max-width: 46ch;
+  color: var(--text-color-secondary);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.form.clip {
+  padding-left: 0;
+  border-bottom: 1px dashed #c9bc91;
+}
+.form.clip p {
+  padding: 0.5rem 0.65rem;
+  background: #fff9e5;
+  border-left: 2px solid #d7c78e;
+}
+.form.wisp {
+  border-bottom: 1px solid #ded2ad;
+}
+.form.wisp p {
+  font-style: italic;
+  color: #5b5372;
+}
+.form.auth {
+  margin-top: -0.8rem;
+  padding-top: 0;
+  border-bottom: 0;
+  align-items: end;
+}
+.form.auth .art {
+  width: 86px;
+  height: 72px;
+}
+.form.auth p {
+  margin-bottom: 0.65rem;
+  font-style: normal;
+}
+.form.byte {
+  background: #edf3e9;
+  border-left: 3px solid #91aa8a;
+}
+.form.byte p {
+  color: #345449;
+  font-family: "Perfect DOS VGA 437 Win", monospace;
+}
+.state {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 0.5rem;
+  min-width: 0;
+}
+.state .art {
+  width: 96px;
+  height: 80px;
+}
+.state > div {
+  min-width: 0;
+}
+.state p {
+  margin: 0;
+}
+.state.empty {
+  background: linear-gradient(90deg, #fff9e8, transparent);
+}
+.state.error {
+  border-left: 3px solid var(--feedback-error-border);
+}
+@media (max-width: 420px) {
+  .form {
+    gap: 0.4rem;
+    padding-inline: 0;
+  }
+  .form .art {
+    width: 72px;
+    height: 60px;
+  }
+  .form p {
+    font-size: 0.78rem;
+  }
+  .state {
+    gap: 0.5rem;
+  }
+  .state .art {
+    width: 72px;
+    height: 60px;
+  }
+}
+
+.state.loading {
+  background: linear-gradient(90deg, #edf3e9, transparent);
+}

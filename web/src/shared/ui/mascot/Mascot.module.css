@@ -1,0 +1,24 @@
+.gallery {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #c9c2a3;
+}
+.crew {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.6rem;
+}
+.crew figure {
+  margin: 0;
+  padding: 0.8rem;
+  background: #f5f0de;
+  border: 1px solid #d5cdb5;
+  text-align: center;
+}
+.crew img {
+  image-rendering: pixelated;
+}
+.crew p {
+  font-size: 0.8rem;
+  margin: 0.3rem 0;
+}

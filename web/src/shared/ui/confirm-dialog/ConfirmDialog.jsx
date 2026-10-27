@@ -1,5 +1,6 @@
-import { useEffect, useId, useRef } from "react";
+import { useId } from "react";
 import styles from "./ConfirmDialog.module.css";
+import { Dialog } from "./Dialog.jsx";
 
 export const ConfirmDialog = ({
   open,
@@ -10,45 +11,25 @@ export const ConfirmDialog = ({
   onConfirm,
   onCancel,
 }) => {
-  const dialogRef = useRef(null);
-  const titleId = useId();
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) {
-      return;
-    }
-
-    if (open && !dialog.open) {
-      dialog.showModal();
-    }
-
-    if (!open && dialog.open) {
-      dialog.close();
-    }
-  }, [open]);
-
-  if (!open) {
-    return null;
-  }
+  const messageId = useId();
 
   return (
-    <dialog
-      className={`window ${styles.dialog}`}
-      ref={dialogRef}
-      aria-labelledby={titleId}
-      onCancel={onCancel}
-    >
-      <div className="title-bar">
-        <div className="title-bar-text" id={titleId}>{title}</div>
-      </div>
-      <div className={`window-body ${styles.body}`}>
-        <p>{message}</p>
+    <Dialog
+      open={open}
+      title={title}
+      busy={confirmDisabled}
+      onClose={onCancel}
+      className="window"
+      bodyClassName="window-body"
+      descriptionId={messageId}
+      footer={
         <div className={styles.actions}>
-          <button className="button" type="button" onClick={onCancel}>Cancel</button>
+          <button className="button" type="button" disabled={confirmDisabled} onClick={onCancel}>Cancel</button>
           <button className={`button ${styles.confirm}`} type="button" disabled={confirmDisabled} onClick={onConfirm}>{confirmLabel}</button>
         </div>
-      </div>
-    </dialog>
+      }
+    >
+      <p id={messageId}>{message}</p>
+    </Dialog>
   );
 };

@@ -1,0 +1,30 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 0.08rem 0.42rem;
+  border: 1px solid;
+  border-radius: 2px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.active {
+  border-color: #72946b;
+  background: #e4f1df;
+  color: #25471f;
+}
+
+.inactive {
+  border-color: #a98645;
+  background: #fbf0d5;
+  color: #513b12;
+}
+
+.removed {
+  border-color: #b47770;
+  background: #f7e5e2;
+  color: #602622;
+}

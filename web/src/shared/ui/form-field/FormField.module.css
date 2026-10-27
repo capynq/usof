@@ -12,7 +12,7 @@
 
 .label {
   color: var(--form-label-text);
-  font-size: 0.9rem;
+  font-size: var(--form-label-size);
   font-weight: 700;
 }
 
@@ -28,8 +28,8 @@
 
 .control input {
   width: 100%;
-  min-height: 2rem;
-  padding: 0.35rem 0.5rem;
+  min-height: var(--form-control-height);
+  padding: var(--form-control-padding);
   border: 1px solid var(--form-control-border);
   background: var(--surface-color-raised);
   box-shadow: inset 1px 1px var(--form-control-inset);
