@@ -1,3 +1,8 @@
+import { Navigate } from "react-router";
+import { AdminRoute } from "../features/auth/ui/AdminRoute.jsx";
+import { ManageLayout } from "../pages/manage/ui/ManageLayout.jsx";
+import { FavoritesPage } from "../pages/favorites/ui/FavoritesPage.jsx";
+import { CommentPermalinkPage } from "../pages/comment/ui/CommentPermalinkPage.jsx";
 import { createBrowserRouter } from "react-router";
 import { AccountPage } from "../pages/account/index.js";
 import { CategoryPage } from "../pages/category/index.js";
@@ -24,19 +29,154 @@ export const router = createBrowserRouter([
     errorElement: <RouteErrorFallback />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "about", element: <AboutPage /> },
-      { path: "posts/new", element: <ProtectedRoute><CreatePostPage /></ProtectedRoute> },
-      { path: "posts/:postId/edit", element: <ProtectedRoute><EditPostPage /></ProtectedRoute> },
-      { path: "posts/:postId", element: <PostDetailsPage /> },
-      { path: "categories/:categoryId", element: <CategoryPage /> },
-      { path: "users/:userId", element: <UserProfilePage /> },
-      { path: "login", element: <GuestRoute><LoginPage /></GuestRoute> },
-      { path: "register", element: <GuestRoute><RegisterPage /></GuestRoute> },
-      { path: "email-confirmation", element: <EmailConfirmationPage /> },
-      { path: "forgot-password", element: <ForgotPasswordPage /> },
-      { path: "reset-password", element: <ResetPasswordPage /> },
-      { path: "account", element: <ProtectedRoute><AccountPage /></ProtectedRoute> },
-      { path: "*", element: <NotFoundPage /> },
+      {
+        path: "manage",
+        handle: { mascotContext: "manage" },
+        element: (
+          <AdminRoute>
+            <ManageLayout />
+          </AdminRoute>
+        ),
+        children: [
+          { index: true, element: <Navigate to="users" replace /> },
+          {
+            path: "users",
+            lazy: async () => ({
+              Component: (await import("../pages/manage/ui/ManageUsers.jsx"))
+                .ManageUsers,
+            }),
+          },
+          {
+            path: "categories",
+            lazy: async () => ({
+              Component: (
+                await import("../pages/manage/ui/ManageCategories.jsx")
+              ).ManageCategories,
+            }),
+          },
+          {
+            path: "posts",
+            lazy: async () => ({
+              Component: (await import("../pages/manage/ui/ManagePosts.jsx"))
+                .ManagePosts,
+            }),
+          },
+          {
+            path: "comments",
+            lazy: async () => ({
+              Component: (await import("../pages/manage/ui/ManageComments.jsx"))
+                .ManageComments,
+            }),
+          },
+          {
+            path: "reactions",
+            lazy: async () => ({
+              Component: (
+                await import("../pages/manage/ui/ManageReactions.jsx")
+              ).ManageReactions,
+            }),
+          },
+        ],
+      },
+      {
+        path: "favorites",
+        handle: { mascotContext: "browse" },
+        element: (
+          <ProtectedRoute>
+            <FavoritesPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "comments/:commentId",
+        handle: { mascotContext: "writing" },
+        element: <CommentPermalinkPage />,
+      },
+      {
+        path: "about",
+        handle: { mascotContext: "browse" },
+        element: <AboutPage />,
+      },
+      {
+        path: "posts/new",
+        handle: { mascotContext: "writing" },
+        element: (
+          <ProtectedRoute>
+            <CreatePostPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "posts/:postId/edit",
+        handle: { mascotContext: "writing" },
+        element: (
+          <ProtectedRoute>
+            <EditPostPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "posts/:postId",
+        handle: { mascotContext: "writing" },
+        element: <PostDetailsPage />,
+      },
+      {
+        path: "categories/:categoryId",
+        handle: { mascotContext: "browse" },
+        element: <CategoryPage />,
+      },
+      {
+        path: "users/:userId",
+        handle: { mascotContext: "browse" },
+        element: <UserProfilePage />,
+      },
+      {
+        path: "login",
+        handle: { mascotContext: "account" },
+        element: (
+          <GuestRoute>
+            <LoginPage />
+          </GuestRoute>
+        ),
+      },
+      {
+        path: "register",
+        handle: { mascotContext: "account" },
+        element: (
+          <GuestRoute>
+            <RegisterPage />
+          </GuestRoute>
+        ),
+      },
+      {
+        path: "email-confirmation",
+        handle: { mascotContext: "account" },
+        element: <EmailConfirmationPage />,
+      },
+      {
+        path: "forgot-password",
+        handle: { mascotContext: "account" },
+        element: <ForgotPasswordPage />,
+      },
+      {
+        path: "reset-password",
+        handle: { mascotContext: "account" },
+        element: <ResetPasswordPage />,
+      },
+      {
+        path: "account",
+        handle: { mascotContext: "account" },
+        element: (
+          <ProtectedRoute>
+            <AccountPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "*",
+        handle: { mascotContext: "system" },
+        element: <NotFoundPage />,
+      },
     ],
   },
 ]);

@@ -10,10 +10,12 @@ const GUEST_LINKS = [
 
 export const GuestHeader = () => (
   <>
-    <Link className={styles.avatarButton} to="/login" aria-label="Sign in" title="Sign in">
-      <UserAvatar user={null} />
-    </Link>
-    <span className={styles.guestStatus}>Welcome, Guest</span>
+    <span className={styles.guestIdentity}>
+      <Link className={styles.avatarButton} to="/login" aria-label="Sign in" title="Sign in">
+        <UserAvatar user={null} />
+      </Link>
+      <span className={styles.guestStatus}>Welcome, Guest</span>
+    </span>
     <ActionButtonGroup actions={GUEST_LINKS} />
   </>
 );

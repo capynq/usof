@@ -1,0 +1,78 @@
+.panel {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  max-width: 48rem;
+  padding: 0.35rem 0.45rem;
+  border: 1px solid #c9bd93;
+  border-radius: 3px;
+  background: linear-gradient(#fffdf0, #f1ecd8);
+  box-shadow: inset 1px 1px #fff;
+}
+
+.panel > img {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+}
+
+.message {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--text-color-body);
+}
+
+.message p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.name {
+  color: var(--text-color-heading);
+  font-weight: 700;
+}
+
+.next {
+  display: grid;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  place-items: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.refreshIcon {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.greeting {
+  animation: hello 320ms steps(3, end);
+}
+
+@keyframes hello {
+  50% {
+    transform: translateY(-3px) rotate(-4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .greeting {
+    animation: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .panel {
+    align-items: flex-start;
+  }
+
+  .panel > img {
+    margin-top: 0.1rem;
+  }
+}

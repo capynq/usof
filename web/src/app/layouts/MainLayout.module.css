@@ -13,12 +13,12 @@
 .main {
   width: 100%;
   flex: 1;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem var(--layout-content-gutter);
   background: linear-gradient(180deg, var(--layout-surface-gradient-start), var(--layout-surface-gradient-end) 80%);
 }
 
 @media (max-width: 520px) {
   .main {
-    padding: 0.875rem 0.625rem 1.25rem;
+    padding: 0.875rem var(--layout-content-gutter) 1.25rem;
   }
 }

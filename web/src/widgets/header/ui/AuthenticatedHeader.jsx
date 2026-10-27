@@ -9,19 +9,28 @@ export const AuthenticatedHeader = ({ user }) => {
 
   return (
     <>
-      <Link className={styles.accountLink} to="/account">
+      <Link className={styles.accountLink} to={`/users/${user.id}`}>
         <UserAvatar user={user} />
         <span className={styles.identity}>
           <span className={styles.login}>{user.login}</span>
           <span className={styles.role}>{user.role}</span>
         </span>
       </Link>
-      <ActionButtonGroup actions={[{
-        id: "sign-out",
-        label: isLoading ? "Signing out…" : "Sign out",
-        onClick: logout,
-        disabled: isLoading,
-      }]} />
+      <ActionButtonGroup
+        actions={[
+          { to: "/account", label: "Settings" },
+          { to: "/favorites", label: "Favorites" },
+          ...(user.role === "admin"
+            ? [{ to: "/manage", label: "Manage" }]
+            : []),
+          {
+            id: "sign-out",
+            label: isLoading ? "Signing out…" : "Sign out",
+            onClick: logout,
+            disabled: isLoading,
+          },
+        ]}
+      />
     </>
   );
 };

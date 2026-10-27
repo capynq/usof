@@ -1,0 +1,26 @@
+{
+  "clip": [
+    "Show what you expected and what happened instead.",
+    "Mention what you already tried; it helps narrow things down.",
+    "A clear title is a handy signpost for future readers.",
+    "A tiny code example can explain a big mystery."
+  ],
+  "scout": [
+    "Search first; your answer might already be waiting nearby.",
+    "A category helps good questions find their people.",
+    "Save a useful question with its star for later.",
+    "One clue at a time: debugging is a little detective work."
+  ],
+  "wisp": [
+    "Nobody starts out knowing everything. Questions are how we learn.",
+    "A little context can make a tricky problem feel smaller.",
+    "Sharing the steps that helped you makes answers easier to learn from.",
+    "A patient explanation can make a new idea click."
+  ],
+  "byte": [
+    "A kind reply helps keep this place humming.",
+    "Give your question one last read before you publish.",
+    "Specific details make helpful answers easier to find.",
+    "A good answer can save someone else a debugging detour."
+  ]
+}

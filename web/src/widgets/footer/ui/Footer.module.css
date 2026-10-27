@@ -25,3 +25,8 @@
     min-width: auto;
   }
 }
+
+.footer {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}

@@ -1,3 +1,4 @@
+import { StateCompanion } from "../../shared/ui/mascot/StateCompanion.jsx";
 import styles from "./AuthGateStatus.module.css";
 import { WindowShell } from "../../shared/ui/window-shell/index.js";
 
@@ -13,7 +14,9 @@ export const StatusWindow = ({ status, children }) => {
       title={title}
       titleId={labelledBy}
     >
-      <p role={role}>{message}</p>
+      <StateCompanion kind={role === "alert" ? "error" : "loading"}>
+        <p role={role}>{message}</p>
+      </StateCompanion>
       {children}
     </WindowShell>
   );
