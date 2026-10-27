@@ -22,7 +22,7 @@ npm install
 cp api/.env.example api/.env
 ```
 
-Edit `api/.env`: set the database credentials, a private `AUTH_SECRET` of at least 32 characters, and `SEED_PASSWORD`. Then initialize and start the app:
+Edit `api/.env`: set the database credentials, a private `AUTH_SECRET` of at least 32 characters, and an explicit `SEED_PASSWORD` before seeding an empty database. Then initialize and start the app:
 
 ```bash
 npm run db:init
@@ -42,7 +42,7 @@ Open `http://localhost:3000/admin`. The exact origin must match `APP_BASE_URL`. 
 | `WEB_BASE_URL` | Frontend origin used for confirmation and password-reset links; defaults to `APP_BASE_URL` |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` | SMTP delivery settings |
 | `MAIL_MODE` | `file` for local JSON outbox messages, or `smtp` |
-| `SEED_PASSWORD` | Password assigned to all seed accounts |
+| `SEED_PASSWORD` | Required when seeding users; password assigned to all seed accounts (8 to 128 characters, no null bytes) |
 
 Production requires `MAIL_MODE=smtp`. File mode writes private JSON messages to `storage/mail`; it does not send email.
 
@@ -70,7 +70,7 @@ All API routes start with `/api`. JSON requests reject unknown/protected fields;
 
 ## Admin and security
 
-Open `/admin`; unauthenticated visitors go to `/admin/login`. Use the seeded `admin` account and `SEED_PASSWORD`. AdminJS exposes Users, Posts, Categories, Comments, and Reactions. Post moderation only changes categories/status; comment moderation only changes status.
+Open `/admin`; unauthenticated visitors go to `/admin/login`. Use the seeded `admin` account (`admin`) with the password configured through `SEED_PASSWORD`. AdminJS exposes Users, Posts, Categories, Comments, and Reactions. Post moderation only changes categories/status; comment moderation only changes status.
 
 The panel uses a signed, expiring, HttpOnly, SameSite=Strict cookie. Every request rechecks account existence, expiry, authentication version, and administrator role. Signing out invalidates that account's current tokens.
 

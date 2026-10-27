@@ -6,11 +6,22 @@ const seedDate = (month, index) =>
   `2026-${month}-${String(index + 1).padStart(2, "0")}`;
 
 export async function seed(pool, config) {
-  if (!config.seedPassword)
-    throw new Error("SEED_PASSWORD is required for seeding");
   await transaction(pool, async (connection) => {
     const [existing] = await connection.query("SELECT id FROM users LIMIT 1");
     if (existing.length) return;
+    const seedPassword = config.seedPassword;
+    if (!seedPassword) {
+      throw new Error("SEED_PASSWORD is required to seed users");
+    }
+    if (
+      seedPassword.length < 8 ||
+      seedPassword.length > 128 ||
+      seedPassword.includes("\0")
+    ) {
+      throw new Error(
+        "SEED_PASSWORD must be 8 to 128 characters and contain no null bytes",
+      );
+    }
     const users = [
       ["admin", "admin@example.test", "Admin", "admin"],
       ["test1", "test1@example.test", "Test1", "user"],
@@ -26,7 +37,7 @@ export async function seed(pool, config) {
         [
           login,
           email,
-          await hashPassword(config.seedPassword),
+          await hashPassword(seedPassword),
           fullName,
           role,
           date,
