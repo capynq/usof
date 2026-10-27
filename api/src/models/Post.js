@@ -42,14 +42,20 @@ const fullPostFields =
   "p.id,p.author_id,p.title,p.content,p.status,p.publish_date,p.updated_at";
 const summaryPostFields =
   "p.id,p.author_id,p.title,LEFT(p.content,320) AS excerpt,p.status,p.publish_date,p.updated_at";
-const reactionCountFields = "COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count";
-const attachSummaries = async (connection, posts) => {
+const reactionCountFields =
+  "COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count";
+const attachSummaries = async (connection, posts, viewer) => {
   if (!posts.length) {
     return posts;
   }
 
   const postIds = [...new Set(posts.map((post) => Number(post.id)))];
   const placeholders = postIds.map(() => "?").join(",");
+  const [favorites] = await connection.query(
+    `SELECT post_id FROM favorites WHERE user_id = ? AND post_id IN (${placeholders})`,
+    [viewer?.id || 0, ...postIds],
+  );
+  const favoriteIds = new Set(favorites.map((row) => Number(row.post_id)));
   const authorIds = [...new Set(posts.map((post) => Number(post.author_id)))];
   const authorPlaceholders = authorIds.map(() => "?").join(",");
   const [authors] = await connection.query(
@@ -81,10 +87,14 @@ const attachSummaries = async (connection, posts) => {
     categoriesByPost.set(postId, postCategories);
   }
   const commentCountsByPost = new Map(
-    commentCounts.map((row) => [Number(row.post_id), Number(row.comment_count)]),
+    commentCounts.map((row) => [
+      Number(row.post_id),
+      Number(row.comment_count),
+    ]),
   );
   return posts.map((post) => ({
     ...post,
+    is_favorite: post.is_favorite ?? favoriteIds.has(Number(post.id)),
     author: authorsById.get(Number(post.author_id)) ?? null,
     categories: categoriesByPost.get(Number(post.id)) ?? [],
     comment_count: commentCountsByPost.get(Number(post.id)) ?? 0,
@@ -120,8 +130,8 @@ const insertPostCategories = async (connection, postId, categories) => {
   );
 };
 
-const pageResult = async (connection, rows, page, pageSize, total) => ({
-  data: await attachSummaries(connection, rows),
+const pageResult = async (connection, rows, page, pageSize, total, viewer) => ({
+  data: await attachSummaries(connection, rows, viewer),
   meta: {
     page,
     page_size: pageSize,
@@ -192,7 +202,14 @@ export class Post {
       `SELECT COUNT(*) AS total FROM posts p ${condition}`,
       values,
     );
-    return pageResult(this.db, rows, queryOptions.page, queryOptions.pageSize, Number(counts[0].total));
+    return pageResult(
+      this.db,
+      rows,
+      queryOptions.page,
+      queryOptions.pageSize,
+      Number(counts[0].total),
+      viewer,
+    );
   }
 
   async listFavorites(query = {}, viewer) {
@@ -216,7 +233,14 @@ export class Post {
       `SELECT COUNT(*) AS total FROM favorites f JOIN posts p ON p.id = f.post_id ${condition}`,
       values,
     );
-    return pageResult(this.db, rows, queryOptions.page, queryOptions.pageSize, Number(counts[0].total));
+    return pageResult(
+      this.db,
+      rows,
+      queryOptions.page,
+      queryOptions.pageSize,
+      Number(counts[0].total),
+      viewer,
+    );
   }
 
   async addFavorite(id, user) {
@@ -258,7 +282,7 @@ export class Post {
       throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
     }
 
-    return (await attachSummaries(this.db, rows))[0];
+    return (await attachSummaries(this.db, rows, viewer))[0];
   }
 
   async categories(id, viewer) {

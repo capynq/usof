@@ -1,4 +1,3 @@
-/** Canonical application error codes returned by the API. */
 export const ERROR_CODES = Object.freeze({
   ACCOUNT_UNCONFIRMED: "ACCOUNT_UNCONFIRMED",
   CATEGORY_EXISTS: "CATEGORY_EXISTS",

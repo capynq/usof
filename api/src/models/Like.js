@@ -36,7 +36,11 @@ const targetVisible = (row, target, user) =>
 
 const requireVisibleTarget = (row, target, user) => {
   if (!targetVisible(row, target, user)) {
-    throw new AppError(404, ERROR_CODES.TARGET_NOT_FOUND, "Reaction target not found");
+    throw new AppError(
+      404,
+      ERROR_CODES.TARGET_NOT_FOUND,
+      "Reaction target not found",
+    );
   }
 };
 
@@ -60,10 +64,18 @@ export class Like {
     const targets = await targetRows(this.db, target, id);
     requireVisibleTarget(targets[0], target, viewer);
     const [rows] = await this.db.query(
-      `SELECT l.id,l.author_id,l.type,l.created_at FROM likes l WHERE l.${spec.foreignKey} = ? ORDER BY l.created_at, l.id`,
+      `SELECT l.id,l.author_id,l.type,l.created_at,u.login,u.full_name,u.profile_picture FROM likes l JOIN users u ON u.id = l.author_id WHERE l.${spec.foreignKey} = ? ORDER BY l.created_at, l.id`,
       [id],
     );
-    return rows;
+    return rows.map(({ login, full_name, profile_picture, ...reaction }) => ({
+      ...reaction,
+      author: {
+        id: Number(reaction.author_id),
+        login,
+        full_name,
+        profile_picture,
+      },
+    }));
   }
 
   async listAll(viewer) {
