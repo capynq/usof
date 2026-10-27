@@ -21,11 +21,24 @@ export const ProfileAvatarForm = ({ user }) => {
     setNotice(null);
 
     if (!avatar) {
-      setNotice({ type: "error", message: "Choose a JPEG, PNG, or WebP image first." });
+      setNotice({
+        type: "error",
+        message: "Choose a JPEG, PNG, or WebP image first.",
+      });
+      return;
+    }
+    if (!["image/jpeg", "image/png", "image/webp"].includes(avatar.type)) {
+      setNotice({
+        type: "error",
+        message: "Choose a JPEG, PNG, or WebP image.",
+      });
       return;
     }
     if (avatar.size > MAX_AVATAR_SIZE) {
-      setNotice({ type: "error", message: "The image must be 2 MB or smaller." });
+      setNotice({
+        type: "error",
+        message: "The image must be 2 MB or smaller.",
+      });
       return;
     }
 
@@ -33,14 +46,23 @@ export const ProfileAvatarForm = ({ user }) => {
     formData.append("avatar", avatar);
 
     try {
-      const updatedUser = await updateAvatar({ userId: user.id, formData }).unwrap();
+      const updatedUser = await updateAvatar({
+        userId: user.id,
+        formData,
+      }).unwrap();
       dispatch(sessionRestored(updatedUser));
       form.reset();
-      setNotice({ type: "success", message: "Your profile picture has been updated." });
+      setNotice({
+        type: "success",
+        message: "Your profile picture has been updated.",
+      });
     } catch (error) {
       setNotice({
         type: "error",
-        message: getErrorMessage(error, "Your profile picture could not be updated."),
+        message: getErrorMessage(
+          error,
+          "Your profile picture could not be updated.",
+        ),
       });
     }
   };
@@ -59,7 +81,9 @@ export const ProfileAvatarForm = ({ user }) => {
           accept: "image/jpeg,image/png,image/webp",
         }}
       />
-      {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
+      {notice && (
+        <FormFeedback type={notice.type}>{notice.message}</FormFeedback>
+      )}
       <button className="button" type="submit" disabled={avatarState.isLoading}>
         {avatarState.isLoading ? "Uploading…" : "Upload picture"}
       </button>

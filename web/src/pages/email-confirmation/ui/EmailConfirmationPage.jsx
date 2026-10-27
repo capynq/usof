@@ -17,6 +17,7 @@ export const EmailConfirmationPage = () => {
   const pageState = getEmailConfirmationPageState({
     token: searchParams.get("token"),
     registrationDelivery: location.state?.registrationDelivery,
+    emailChangeDeliveryFailed: location.state?.emailChangeDeliveryFailed,
   });
 
   return (
@@ -27,6 +28,11 @@ export const EmailConfirmationPage = () => {
       </div>
       {pageState.registrationMessage && (
         <AuthNotice type="success">{pageState.registrationMessage}</AuthNotice>
+      )}
+      {pageState.emailChangeDeliveryFailureMessage && (
+        <AuthNotice type="error">
+          {pageState.emailChangeDeliveryFailureMessage}
+        </AuthNotice>
       )}
       {pageState.showInstructions && (
         <AuthNotice>Open the link from your confirmation message, or request a new one below.</AuthNotice>

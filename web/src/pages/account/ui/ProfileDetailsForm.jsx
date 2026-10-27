@@ -1,3 +1,4 @@
+import { LOGIN_PATTERN } from "../../../shared/lib/regexPatterns.js";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { sessionRestored } from "../../../features/auth/model/authSlice.js";
@@ -40,7 +41,10 @@ export const ProfileDetailsForm = ({ user }) => {
         },
       }).unwrap();
       dispatch(sessionRestored(updatedUser));
-      setNotice({ type: "success", message: "Your profile details have been saved." });
+      setNotice({
+        type: "success",
+        message: "Your profile details have been saved.",
+      });
     } catch (error) {
       setNotice({
         type: "error",
@@ -61,6 +65,8 @@ export const ProfileDetailsForm = ({ user }) => {
           value: values.login,
           onChange: updateField,
           autoComplete: "username",
+          pattern: LOGIN_PATTERN.source,
+          title: "Use letters, numbers, underscores, or hyphens.",
           minLength: 3,
           maxLength: 40,
           required: true,
@@ -79,8 +85,14 @@ export const ProfileDetailsForm = ({ user }) => {
           maxLength: 120,
         }}
       />
-      {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
-      <button className="button" type="submit" disabled={profileState.isLoading}>
+      {notice && (
+        <FormFeedback type={notice.type}>{notice.message}</FormFeedback>
+      )}
+      <button
+        className="button"
+        type="submit"
+        disabled={profileState.isLoading}
+      >
         Save profile
       </button>
     </form>

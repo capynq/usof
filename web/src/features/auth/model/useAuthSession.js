@@ -15,23 +15,36 @@ export const useAuthSession = () => {
   const dispatch = useDispatch();
   const auth = useSelector(selectAuth);
   const { data, error } = useGetCurrentUserQuery(undefined, {
-    skip: auth.status !== AUTH_STATUS.restoring,
+    skip: !auth.token || auth.status === AUTH_STATUS.restoreError,
     refetchOnMountOrArgChange: true,
   });
 
   useEffect(() => {
-    if (auth.status === AUTH_STATUS.restoring && data) {
+    if (
+      [AUTH_STATUS.restoring, AUTH_STATUS.authenticated].includes(
+        auth.status,
+      ) &&
+      data
+    ) {
       dispatch(sessionRestored(data));
     }
   }, [auth.status, data, dispatch]);
 
   useEffect(() => {
-    if (auth.status === AUTH_STATUS.restoring && error && error.status !== 401) {
+    if (
+      auth.status === AUTH_STATUS.restoring &&
+      error &&
+      error.status !== 401
+    ) {
       dispatch(sessionRestoreFailed());
     }
   }, [auth.status, dispatch, error]);
 
-  useSessionExpiry({ dispatch, expiresAt: auth.expiresAt, status: auth.status });
+  useSessionExpiry({
+    dispatch,
+    expiresAt: auth.expiresAt,
+    status: auth.status,
+  });
 
   const retryRestore = () => dispatch(sessionRestoreStarted());
 

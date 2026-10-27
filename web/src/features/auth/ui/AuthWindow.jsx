@@ -1,3 +1,4 @@
+import { FormCompanion } from "../../../shared/ui/mascot/FormCompanion.jsx";
 import { WindowShell } from "../../../shared/ui/window-shell/index.js";
 import styles from "./AuthWindow.module.css";
 
@@ -10,6 +11,7 @@ export const AuthWindow = ({ title, Icon, children, className = "" }) => {
       className={`${styles.window} ${className}`}
       bodyClassName={styles.body}
     >
+      <FormCompanion context="account" placement="auth" />
       {children}
     </WindowShell>
   );

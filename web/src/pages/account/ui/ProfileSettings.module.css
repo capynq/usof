@@ -20,22 +20,17 @@
 
 .form {
   display: grid;
-  justify-items: start;
   gap: 0.65rem;
   padding: 0.8rem;
   border: 1px solid var(--border-color-subtle);
   background: var(--surface-color-neutral);
 }
 
-.field {
-  width: min(100%, 34rem);
+.form > p {
+  margin: 0;
 }
 
 .field :global(label) {
   color: var(--text-color-secondary);
-  font-size: 0.82rem;
-}
-
-.form input[type="file"] {
-  max-width: 100%;
+  font-size: var(--form-label-size);
 }

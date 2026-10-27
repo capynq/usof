@@ -54,8 +54,8 @@
 }
 
 .primaryButton {
-  min-height: 2.1rem;
-  padding: 0.35rem 0.9rem;
+  min-height: var(--button-min-height);
+  padding: var(--button-padding);
   border-color: var(--form-button-border);
   background: linear-gradient(var(--form-button-gradient-start), var(--form-button-gradient-middle) 48%, var(--form-button-gradient-end));
   box-shadow: inset 1px 1px var(--header-shadow-highlight), inset -1px -1px var(--action-color-shadow-strong);
@@ -74,8 +74,6 @@
 
 .secondaryButton {
   justify-self: start;
-  min-height: 2rem;
-  padding: 0.3rem 0.7rem;
 }
 
 .note,

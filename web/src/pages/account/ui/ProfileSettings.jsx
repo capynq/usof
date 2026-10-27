@@ -1,3 +1,5 @@
+import { ProfileEmailForm } from "./ProfileEmailForm.jsx";
+import { FormCompanion } from "../../../shared/ui/mascot/FormCompanion.jsx";
 import styles from "./ProfileSettings.module.css";
 import { ProfileAvatarForm } from "./ProfileAvatarForm.jsx";
 import { ProfileDetailsForm } from "./ProfileDetailsForm.jsx";
@@ -6,9 +8,12 @@ export const ProfileSettings = ({ user }) => (
   <section className={styles.settings} aria-labelledby="profile-settings-title">
     <h2 id="profile-settings-title">Edit your public profile</h2>
     <p className={styles.intro}>
-      Your login and display name appear beside your questions. Email changes require a separate confirmation flow.
+      Your login and display name appear beside your questions. Email changes
+      require a separate confirmation flow.
     </p>
+    <FormCompanion context="account" />
     <ProfileDetailsForm user={user} />
     <ProfileAvatarForm user={user} />
+    <ProfileEmailForm user={user} />
   </section>
 );

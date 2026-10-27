@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import {
   AuthField,
@@ -12,10 +13,18 @@ import { getErrorMessage } from "../../../shared/api/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const ResetPasswordForm = ({ token }) => {
-  const [resetPassword, { data, error, isLoading }] = useResetPasswordMutation();
+  const [notice, setNotice] = useState("");
+  const [resetPassword, { error, isLoading }] = useResetPasswordMutation();
 
-  const submit = (values) => {
-    resetPassword({ token, new_password: values.new_password });
+  const submit = async (values) => {
+    try {
+      const result = await resetPassword({
+        token,
+        new_password: values.new_password,
+      }).unwrap();
+      setNotice(result.message);
+    } catch {
+    }
   };
   const form = useValidatedAuthForm({
     initialValues: RESET_INITIAL_VALUES,
@@ -23,13 +32,16 @@ export const ResetPasswordForm = ({ token }) => {
     onSubmit: submit,
   });
 
+  if (notice) {
+    return (
+      <AuthNotice type="success">
+        {notice} <Link to="/login">Sign in</Link>
+      </AuthNotice>
+    );
+  }
+
   return (
     <form className={styles.form} noValidate onSubmit={form.handleSubmit}>
-      {data?.message && (
-        <AuthNotice type="success">
-          {data.message} <Link to="/login">Sign in</Link>
-        </AuthNotice>
-      )}
       {error && (
         <AuthNotice type="error">
           {getErrorMessage(error, "This reset link is invalid or has expired.")}
@@ -57,7 +69,11 @@ export const ResetPasswordForm = ({ token }) => {
         type="password"
         value={form.values.password_confirmation}
       />
-      <AuthFormActions isLoading={isLoading} label="Save new password" loadingLabel="Saving…" />
+      <AuthFormActions
+        isLoading={isLoading}
+        label="Save new password"
+        loadingLabel="Saving…"
+      />
     </form>
   );
 };

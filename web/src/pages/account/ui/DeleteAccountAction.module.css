@@ -1,0 +1,10 @@
+.dangerZone {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #b98b7b;
+  background: #fff6ef;
+}
+
+.dangerZone h2 {
+  font-size: 1.1rem;
+}
