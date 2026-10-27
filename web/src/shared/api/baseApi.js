@@ -16,6 +16,9 @@ export const baseApi = createApi({
   }),
   tagTypes: [
     "CurrentUser",
+    "FavoriteList",
+    "ReactionList",
+    "AdminList",
     "Post",
     "PostList",
     "Comment",

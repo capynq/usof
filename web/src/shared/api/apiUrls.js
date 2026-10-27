@@ -1,4 +1,8 @@
 export const API_URLS = {
+  favorites: {
+    list: "/favorites",
+    details: (postId) => `/favorites/${postId}`,
+  },
   posts: {
     list: "/posts",
     details: (postId) => `/posts/${postId}`,

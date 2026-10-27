@@ -1,60 +1,43 @@
-import { API_URLS, baseApi } from "../../../shared/api/index.js";
+import {
+  API_URLS,
+  baseApi,
+  unwrapResponse,
+} from "../../../shared/api/index.js";
+import { reactionTags } from "../model/reactionTags.js";
 
+const reactionUrl = (target, id) =>
+  target === "post"
+    ? API_URLS.posts.reactions(id)
+    : API_URLS.comments.reactions(id);
 export const reactionsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getReactions: builder.query({
+      query: ({ target, targetId }) => reactionUrl(target, targetId),
+      transformResponse: unwrapResponse,
+      providesTags: (_result, _error, { target, targetId }) => [
+        { type: "ReactionList", id: `${target}-${targetId}` },
+      ],
+    }),
     createReaction: builder.mutation({
       query: ({ target, targetId, type }) => ({
-        url:
-          target === "post"
-            ? API_URLS.posts.reactions(targetId)
-            : API_URLS.comments.reactions(targetId),
+        url: reactionUrl(target, targetId),
         method: "POST",
         body: { type },
       }),
-      invalidatesTags: (_result, _error, { target, targetId, postId }) => {
-        if (target === "post") {
-          return [
-            { type: "Post", id: targetId },
-            { type: "PostList", id: "LIST" }
-          ];
-        }
-
-        return [
-          { type: "Comment", id: targetId },
-          { type: "CommentList", id: postId },
-          { type: "Post", id: postId },
-        ];
-      },
+      invalidatesTags: reactionTags,
     }),
     deleteReaction: builder.mutation({
-      query: ({ target, targetId }) => ({
-        url:
-          target === "post"
-            ? API_URLS.posts.reactions(targetId)
-            : API_URLS.comments.reactions(targetId),
+      query: ({ target, targetId, authorId }) => ({
+        url: reactionUrl(target, targetId),
         method: "DELETE",
+        ...(authorId ? { params: { author_id: authorId } } : {}),
       }),
-      invalidatesTags: (_result, _error, { target, targetId, postId, skipRefresh }) => {
-        if (skipRefresh) {
-          return [];
-        }
-
-        if (target === "post") {
-          return [
-            { type: "Post", id: targetId },
-            { type: "PostList", id: "LIST" },
-          ];
-        }
-
-        return [
-          { type: "Comment", id: targetId },
-          { type: "CommentList", id: postId },
-          { type: "Post", id: postId },
-        ];
-      },
+      invalidatesTags: reactionTags,
     }),
   }),
 });
-
-export const { useCreateReactionMutation, useDeleteReactionMutation } =
-  reactionsApi;
+export const {
+  useGetReactionsQuery,
+  useCreateReactionMutation,
+  useDeleteReactionMutation,
+} = reactionsApi;
