@@ -12,12 +12,14 @@
   gap: 0.3rem;
   color: var(--form-label-text);
   font-weight: 700;
+  font-size: var(--form-label-size);
 }
 
 .label textarea {
   width: 100%;
   min-width: 0;
-  padding: 0.45rem 0.55rem;
+  min-height: var(--form-control-height);
+  padding: var(--form-control-padding);
   border: 1px solid var(--form-control-border);
   background: var(--surface-color-raised);
   box-shadow: inset 1px 1px var(--form-control-inset);
@@ -35,8 +37,8 @@
 
 .submit {
   justify-self: start;
-  min-height: 2rem;
-  padding: 0.3rem 0.7rem;
+  min-height: var(--button-min-height);
+  padding: var(--button-padding);
   border-color: var(--form-button-border);
   background: linear-gradient(var(--form-button-gradient-start), var(--form-button-gradient-middle) 48%, var(--form-button-gradient-end));
   color: var(--text-color-on-primary);

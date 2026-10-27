@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { ReactionListDialog } from "./ReactionListDialog.jsx";
 import { Link } from "react-router";
 import { REACTION_OPTIONS } from "../model/constants.js";
 import { useReactionController } from "../model/useReactionController.js";
@@ -28,6 +30,7 @@ export const ReactionControls = ({
     currentUser,
     canReact,
   });
+  const [showReactions, setShowReactions] = useState(false);
   const reactionCounts = { like: likeCount, dislike: dislikeCount };
 
   return (
@@ -44,9 +47,31 @@ export const ReactionControls = ({
           onClick={() => changeReaction(type)}
         />
       ))}
+      <button
+        type="button"
+        disabled={!canReact}
+        onClick={() => setShowReactions(true)}
+      >
+        View reactions
+      </button>
+      <ReactionListDialog
+        open={showReactions}
+        onClose={() => setShowReactions(false)}
+        target={target}
+        targetId={targetId}
+        postId={postId}
+      />
       {!currentUser && <Link to="/login">Sign in to react</Link>}
-      {currentUser && !canReact && <span className={styles.error}>Reactions are closed on inactive content.</span>}
-      {errorMessage && <span className={styles.error} role="alert">{errorMessage}</span>}
+      {currentUser && !canReact && (
+        <span className={styles.error}>
+          Reactions are closed on inactive content.
+        </span>
+      )}
+      {errorMessage && (
+        <span className={styles.error} role="alert">
+          {errorMessage}
+        </span>
+      )}
     </div>
   );
 };

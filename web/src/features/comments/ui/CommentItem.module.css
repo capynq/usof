@@ -3,6 +3,15 @@
   list-style: none;
 }
 
+:global([id^="comment-"]) {
+  scroll-margin-top: 1rem;
+}
+
+:global([id^="comment-"]:target) {
+  outline: 2px solid #e6bc42;
+  outline-offset: 3px;
+}
+
 .comment {
   display: grid;
   min-width: 0;
@@ -25,13 +34,6 @@
   color: var(--text-color-emphasis);
   font-size: 0.88rem;
   font-weight: 700;
-}
-
-.status {
-  padding: 0.05rem 0.3rem;
-  border: 1px solid var(--feedback-info-border);
-  background: var(--feedback-info-surface);
-  color: var(--feedback-info-text);
 }
 
 .content,
@@ -57,8 +59,8 @@
 }
 
 .actionButton {
-  min-height: 2rem;
-  padding: 0.25rem 0.55rem;
+  min-height: var(--button-min-height);
+  padding: var(--button-padding);
   font-size: 0.82rem;
 }
 

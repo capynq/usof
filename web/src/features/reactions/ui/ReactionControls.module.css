@@ -7,10 +7,10 @@
 
 .button {
   display: inline-flex;
-  min-height: 2rem;
+  min-height: var(--button-min-height);
   align-items: center;
   gap: 0.35rem;
-  padding: 0.25rem 0.55rem;
+  padding: var(--button-padding);
   border: 1px solid var(--border-color-control);
   background: linear-gradient(var(--link-button-surface-middle), var(--link-button-surface-end));
   color: var(--text-color-emphasis);

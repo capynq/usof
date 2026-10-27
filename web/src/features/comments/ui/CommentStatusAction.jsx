@@ -16,16 +16,27 @@ export const CommentStatusAction = ({ comment, postId }) => {
         status: comment.status === "active" ? "inactive" : "active",
       }).unwrap();
     } catch (error) {
-      setErrorMessage(getErrorMessage(error, "Comment status could not be changed."));
+      setErrorMessage(
+        getErrorMessage(error, "Comment status could not be changed."),
+      );
     }
   };
 
   return (
-    <>
-      <button className={`button ${styles.actionButton}`} type="button" disabled={isLoading} onClick={toggleStatus}>
+    <div className="inline-action">
+      <button
+        className={`button ${styles.actionButton}`}
+        type="button"
+        disabled={isLoading}
+        onClick={toggleStatus}
+      >
         {comment.status === "active" ? "Hide comment" : "Restore comment"}
       </button>
-      {errorMessage && <p className={`${styles.error} ${styles.actionError}`} role="alert">{errorMessage}</p>}
-    </>
+      {errorMessage && (
+        <p className={`${styles.error} ${styles.actionError}`} role="alert">
+          {errorMessage}
+        </p>
+      )}
+    </div>
   );
 };

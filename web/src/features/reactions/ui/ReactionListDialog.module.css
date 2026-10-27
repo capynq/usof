@@ -1,0 +1,35 @@
+.reactionList {
+  display: grid;
+  gap: 0.7rem;
+  padding-left: 0;
+  max-height: 40vh;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.reactionList li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.targetContext {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color-subtle);
+  background: #f7f9fb;
+  overflow-wrap: anywhere;
+}
+
+.targetContext p {
+  margin: 0;
+}
+
+.targetContext h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}

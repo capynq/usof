@@ -1,15 +1,28 @@
-import { API_URLS, baseApi, unwrapResponse } from "../../../shared/api/index.js";
+import {
+  API_URLS,
+  baseApi,
+  unwrapResponse,
+} from "../../../shared/api/index.js";
 
 export const commentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getComment: builder.query({
+      query: (id) => API_URLS.comments.details(id),
+      transformResponse: unwrapResponse,
+      providesTags: (_result, _error, id) => [{ type: "Comment", id }],
+    }),
     updateComment: builder.mutation({
-      query: ({ commentId, ...body }) => ({
+      query: ({ commentId, status }) => ({
         url: API_URLS.comments.details(commentId),
         method: "PATCH",
-        body,
+        body: { status },
       }),
       transformResponse: unwrapResponse,
       invalidatesTags: (_result, _error, { commentId, postId }) => [
+        "AdminList",
+        "FavoriteList",
+        "User",
+        "CurrentUser",
         { type: "Comment", id: commentId },
         { type: "CommentList", id: postId },
         { type: "Post", id: postId },
@@ -22,6 +35,10 @@ export const commentApi = baseApi.injectEndpoints({
         method: "DELETE",
       }),
       invalidatesTags: (_result, _error, { commentId, postId }) => [
+        "AdminList",
+        "FavoriteList",
+        "User",
+        "CurrentUser",
         { type: "Comment", id: commentId },
         { type: "CommentList", id: postId },
         { type: "Post", id: postId },
@@ -44,6 +61,10 @@ export const commentApi = baseApi.injectEndpoints({
       }),
       transformResponse: unwrapResponse,
       invalidatesTags: (_result, _error, { postId }) => [
+        "AdminList",
+        "FavoriteList",
+        "User",
+        "CurrentUser",
         { type: "CommentList", id: postId },
         { type: "Post", id: postId },
         { type: "PostList", id: "LIST" },
@@ -53,6 +74,7 @@ export const commentApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useGetCommentQuery,
   useCreateCommentMutation,
   useDeleteCommentMutation,
   useGetPostCommentsQuery,
