@@ -5,7 +5,7 @@ import { hashPassword } from "../src/utils/password.js";
 const seedDate = (month, index) =>
   `2026-${month}-${String(index + 1).padStart(2, "0")}`;
 
-export async function seed(pool, config) {
+export const seed = async (pool, config) => {
   await transaction(pool, async (connection) => {
     const [existing] = await connection.query("SELECT id FROM users LIMIT 1");
     if (existing.length) return;
@@ -149,4 +149,4 @@ export async function seed(pool, config) {
     await Like.lockUsers(connection);
     await Like.recalculate(connection);
   });
-}
+};

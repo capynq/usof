@@ -7,7 +7,7 @@ const operations = [
   () => { const value = null; return value.missing; },
 ];
 
-export default function ErrorPreview() {
+const ErrorPreview = () => {
   const [error, setError] = useState(null);
 
   if (error) throw error;
@@ -28,4 +28,6 @@ export default function ErrorPreview() {
       <p>Development only: opens the error screen with a random JavaScript error.</p>
     </div>
   );
-}
+};
+
+export default ErrorPreview;
