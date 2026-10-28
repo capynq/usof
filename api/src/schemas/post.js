@@ -33,6 +33,7 @@ export const postQuery = strictObject({
   page: optional(pipe(idInput, maxValue(1000000))),
   page_size: optional(pipe(idInput, maxValue(100))),
   sort: optional(pipe(string(), regex(POST_SORT_PATTERN))),
+  direction: optional(pipe(string(), regex(/^(asc|desc)$/))),
   categories: optional(categoriesQuery),
   search: optional(text(1, 100)),
   author_id: optional(idInput),

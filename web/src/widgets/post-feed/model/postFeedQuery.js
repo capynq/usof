@@ -35,7 +35,9 @@ const readFilters = (searchParams, canFilterStatus) => {
     category: CATEGORY_ID_PATTERN.test(rawCategory) ? rawCategory : "",
     date_from: isDate(dateFrom) ? dateFrom : "",
     date_to: isDate(dateTo) ? dateTo : "",
-    sort: searchParams.get("sort") === "likes" ? "likes" : "date",
+    sort: searchParams.get("sort") === "likes"
+      ? searchParams.get("direction") === "asc" ? "likes-asc" : "likes"
+      : "date",
     status,
   };
 };
@@ -63,7 +65,8 @@ export const getPostFeedQueryState = ({
     (filters.category ? Number(filters.category) : undefined);
 
   const queryArgs = {
-    sort: filters.sort,
+    sort: filters.sort === "date" ? "date" : "likes",
+    ...(filters.sort === "likes-asc" ? { direction: "asc" } : {}),
     page,
     page_size: pageSize,
     summary: true,
@@ -88,7 +91,8 @@ export const getPostFeedFilterParams = (
       category: lockedCategoryId ? undefined : values.category,
       date_from: values.date_from,
       date_to: values.date_to,
-      sort: values.sort === "date" ? undefined : values.sort,
+      sort: values.sort === "likes" || values.sort === "likes-asc" ? "likes" : undefined,
+      direction: values.sort === "likes-asc" ? "asc" : undefined,
       status: user ? values.status : undefined,
       page_size:
         pageSize === RECENT_POST_PAGE_SIZE ? undefined : String(pageSize),

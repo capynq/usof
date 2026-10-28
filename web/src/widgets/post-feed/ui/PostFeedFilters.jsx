@@ -15,7 +15,7 @@ const defaultValues = {
 const getActiveFilters = (values, { lockCategory, isHome }) => [
   !isHome && values.search.trim() ? `Search: ${values.search.trim()}` : "",
   !lockCategory && values.category ? "Category" : "",
-  values.sort === "likes" ? "Most liked" : "",
+  values.sort === "likes" ? "Most liked" : values.sort === "likes-asc" ? "Fewest likes" : "",
   values.status ? `Status: ${values.status}` : "",
   values.date_from || values.date_to ? "Date range" : "",
 ].filter(Boolean);
@@ -115,6 +115,7 @@ export const PostFeedFilters = ({
             <SelectControl name="sort" value={values.sort} onChange={updateField}>
               <option value="date">Newest first</option>
               <option value="likes">Most liked</option>
+              <option value="likes-asc">Fewest likes</option>
             </SelectControl>
           </label>
           {canFilterStatus && (
