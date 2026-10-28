@@ -36,3 +36,13 @@
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   font-size: 0.8rem !important;
 }
+
+.preview {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--shadow-color-card);
+}
+
+.preview p {
+  margin: 0.5rem 0 0;
+}

@@ -1,6 +1,11 @@
+import { lazy, Suspense } from "react";
 import { MascotGallery } from "../../../shared/ui/mascot/MascotGallery.jsx";
 import styles from "./AboutPage.module.css";
 import { WindowShell } from "../../../shared/ui/window-shell/index.js";
+
+const ErrorPreview = import.meta.env.DEV
+  ? lazy(() => import("./ErrorPreview.jsx"))
+  : null;
 
 export const AboutPage = () => {
   return (
@@ -34,6 +39,11 @@ export const AboutPage = () => {
         respectful so the next person can learn from it too.
       </p>
       <MascotGallery />
+      {ErrorPreview && (
+        <Suspense fallback={null}>
+          <ErrorPreview />
+        </Suspense>
+      )}
     </WindowShell>
   );
 };
