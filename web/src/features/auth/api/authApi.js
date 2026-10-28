@@ -17,9 +17,11 @@ export const authApi = baseApi.injectEndpoints({
         body,
       }),
       transformResponse: unwrapResponse,
-      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_, { dispatch, getState, queryFulfilled }) => {
+        const generation = getState().auth.generation;
         try {
           const { data } = await queryFulfilled;
+          if (getState().auth.generation !== generation) return;
           const expiresAt = saveStoredSession(data.token, data.expires_in);
           dispatch(sessionEstablished({ ...data, expiresAt }));
         } catch {
@@ -40,9 +42,10 @@ export const authApi = baseApi.injectEndpoints({
         url: API_URLS.auth.logout,
         method: "POST",
       }),
-      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_, { dispatch, getState, queryFulfilled }) => {
+        const token = getState().auth.token;
         await queryFulfilled.catch(() => undefined);
-        endAuthSession(dispatch);
+        if (getState().auth.token === token) endAuthSession(dispatch);
       },
     }),
     confirmEmail: builder.mutation({
@@ -75,10 +78,11 @@ export const authApi = baseApi.injectEndpoints({
         body: { new_password },
       }),
       transformResponse: unwrapResponse,
-      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (_, { dispatch, getState, queryFulfilled }) => {
+        const generation = getState().auth.generation;
         try {
           await queryFulfilled;
-          endAuthSession(dispatch);
+          if (getState().auth.generation === generation) endAuthSession(dispatch);
         } catch {
           return;
         }

@@ -2,7 +2,8 @@ import { ERROR_CODES } from "../constants/errorCodes.js";
 import { fileURLToPath } from "node:url";
 import { AppError } from "../errors/AppError.js";
 import { adminCookieName } from "../middleware/adminSession.js";
-import { MILLISECONDS_PER_HOUR } from "../constants/dates.js";
+import { MILLISECONDS_PER_SECOND } from "../constants/dates.js";
+import { AUTH_SESSION_SECONDS } from "../constants/auth.js";
 
 const view = (name) =>
   fileURLToPath(new URL(`../views/${name}`, import.meta.url));
@@ -27,7 +28,7 @@ export const adminAuthController = (auth, config) => {
         secure: config.production,
         sameSite: "strict",
         path: "/admin",
-        maxAge: MILLISECONDS_PER_HOUR,
+        maxAge: AUTH_SESSION_SECONDS * MILLISECONDS_PER_SECOND,
       });
       response.json({ data: { redirect: "/admin" } });
     },

@@ -6,9 +6,13 @@ import {
   sessionRestoreFailed,
   sessionRestoreStarted,
   sessionRestored,
+  sessionSynced,
+  sessionEnded,
 } from "./authSlice.js";
-import { AUTH_STATUS } from "./constants.js";
+import { AUTH_STATUS, SESSION_STORAGE_KEY } from "./constants.js";
 import { endAuthSession } from "./endAuthSession.js";
+import { readStoredSession } from "./sessionStorage.js";
+import { baseApi } from "../../../shared/api/index.js";
 import { useSessionExpiry } from "./useSessionExpiry.js";
 
 export const useAuthSession = () => {
@@ -39,6 +43,30 @@ export const useAuthSession = () => {
       dispatch(sessionRestoreFailed());
     }
   }, [auth.status, dispatch, error]);
+
+  useEffect(() => {
+    const syncSession = (event) => {
+      if (event.storageArea !== window.localStorage ||
+          (event.key !== SESSION_STORAGE_KEY && event.key !== null)) return;
+      try {
+        window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      } catch {
+        try {
+          window.sessionStorage.setItem(
+            SESSION_STORAGE_KEY,
+            event.newValue ?? JSON.stringify({ tabLocal: true, ended: true }),
+          );
+        } catch { }
+      }
+      const session = readStoredSession();
+      if (session?.token === auth.token && session?.expiresAt === auth.expiresAt) return;
+      dispatch(baseApi.util.resetApiState());
+      if (session?.token) dispatch(sessionSynced(session));
+      else dispatch(sessionEnded());
+    };
+    window.addEventListener("storage", syncSession);
+    return () => window.removeEventListener("storage", syncSession);
+  }, [auth.token, auth.expiresAt, dispatch]);
 
   useSessionExpiry({
     dispatch,

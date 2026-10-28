@@ -1,10 +1,8 @@
 import { ERROR_CODES } from "../constants/errorCodes.js";
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { AppError } from "../errors/AppError.js";
-import {
-  SECONDS_PER_HOUR,
-  MILLISECONDS_PER_SECOND,
-} from "../constants/dates.js";
+import { MILLISECONDS_PER_SECOND } from "../constants/dates.js";
+import { AUTH_SESSION_SECONDS } from "../constants/auth.js";
 import {
   AUTH_TOKEN_SIGNATURE_PATTERN,
   URL_SAFE_CHARACTERS_PATTERN,
@@ -17,7 +15,7 @@ export const signAuthToken = (user, secret) => {
       uid: user.id,
       version: user.auth_version,
       iat: now,
-      exp: now + SECONDS_PER_HOUR,
+      exp: now + AUTH_SESSION_SECONDS,
     }),
   ).toString("base64url");
   const signature = createHmac("sha256", secret)
@@ -66,7 +64,7 @@ export const verifyAuthToken = (token, secret) => {
     payload.iat > now ||
     payload.exp <= now ||
     payload.exp <= payload.iat ||
-    payload.exp - payload.iat > SECONDS_PER_HOUR
+    payload.exp - payload.iat > AUTH_SESSION_SECONDS
   )
     return fail();
   return payload;

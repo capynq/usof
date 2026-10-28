@@ -7,7 +7,7 @@ import {
   resetPassword,
   confirmToken,
 } from "../schemas/index.js";
-import { SECONDS_PER_HOUR } from "../constants/dates.js";
+import { AUTH_SESSION_SECONDS } from "../constants/auth.js";
 
 export const createAuthService = (users, mailer, config) => {
   const send = async (method, body, kind) => {
@@ -41,7 +41,7 @@ export const createAuthService = (users, mailer, config) => {
       return {
         token: signAuthToken(user, config.authSecret),
         user: await users.get(user.id, user),
-        expires_in: SECONDS_PER_HOUR,
+        expires_in: AUTH_SESSION_SECONDS,
         token_type: "Bearer",
       };
     },

@@ -16,10 +16,14 @@ authListener.startListening({
   matcher: isRejectedWithValue,
   effect: (action, listenerApi) => {
     const isLoginFailure = action.meta?.arg?.endpointName === "login";
-    const isUnauthorized = action.payload?.status === 401;
-    const hasSession = Boolean(listenerApi.getState().auth.token);
+    const isUnauthorized = action.payload?.status === 401 ||
+      action.payload?.originalStatus === 401;
+    const token = listenerApi.getState().auth.token;
+    const hasSession = Boolean(token);
+    const requestAuthorization = action.meta?.baseQueryMeta?.request?.headers?.get("Authorization");
 
-    if (!isUnauthorized || !hasSession || isLoginFailure) {
+    if (!isUnauthorized || !hasSession || isLoginFailure ||
+        requestAuthorization !== `Bearer ${token}`) {
       return;
     }
 
