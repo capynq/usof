@@ -12,10 +12,10 @@ export const commentApi = baseApi.injectEndpoints({
       providesTags: (_result, _error, id) => [{ type: "Comment", id }],
     }),
     updateComment: builder.mutation({
-      query: ({ commentId, status }) => ({
+      query: ({ commentId, status, content }) => ({
         url: API_URLS.comments.details(commentId),
         method: "PATCH",
-        body: { status },
+        body: status !== undefined ? { status } : { content },
       }),
       transformResponse: unwrapResponse,
       invalidatesTags: (_result, _error, { commentId, postId }) => [

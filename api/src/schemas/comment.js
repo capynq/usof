@@ -5,4 +5,7 @@ export const createComment = strictObject({
   content: text(1, 10000),
   parent_id: optional(union([id, idInput])),
 });
-export const updateComment = strictObject({ status });
+export const updateComment = union([
+  strictObject({ status }),
+  strictObject({ content: text(1, 10000) }),
+]);

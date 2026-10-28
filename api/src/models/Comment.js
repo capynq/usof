@@ -283,6 +283,14 @@ export class Comment {
           input.status,
           id,
         ]);
+      } else {
+        if (Number(comment.author_id) !== Number(user.id)) {
+          throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
+        }
+        await connection.query("UPDATE comments SET content = ? WHERE id = ?", [
+          input.content,
+          id,
+        ]);
       }
 
       return presentComment(await privateComment(connection, id));

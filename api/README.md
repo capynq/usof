@@ -62,8 +62,8 @@ All API routes start with `/api`. JSON requests reject unknown/protected fields;
 
 - Guests can read active content. Authors can read their inactive posts; admins can read all inactive content. Inactive comments are admin-only, and hidden resources return `404`.
 - Users create posts and comments on active posts and manage their own content. Admins manage categories, roles, visibility, and moderation, but cannot edit post titles/content or comment text.
-- Posts accept 1–100 category IDs; titles are 1–200 characters and content is 1–50,000. Comments are 1–10,000 characters and immutable. Categories are unique, 1–100-character titles with optional 2,000-character descriptions.
-- `GET /posts` supports `sort=likes|date`, category IDs, inclusive `date_from`/`date_to`, `status`, `page`, and `page_size`. Like sorting is descending by positive likes, then publication date and ID.
+- Posts accept 1–100 category IDs; titles are 1–200 characters and content is 1–50,000. Comment authors can edit their text, which is 1–10,000 characters; authors and admins can change comment status. Categories are unique, 1–100-character titles with optional 2,000-character descriptions.
+- `GET /posts` supports `sort=likes|date`, `direction=asc|desc`, category IDs, inclusive `date_from`/`date_to`, `status`, `page`, and `page_size`. Sorting defaults to descending; like sorting uses positive likes, then publication date and ID descending.
 - One user may react once per post or comment. A duplicate reaction returns `409`; delete it before changing its type. Ratings equal received likes minus dislikes and are recalculated transactionally.
 - Favorites are private to the authenticated user. `GET /favorites` is paginated with `page` and `page_size`; active posts are visible, plus the caller's own inactive posts. It accepts only those pagination parameters. Adding and removing a favorite are idempotent and return `204`.
 - Avatars accept one JPEG, PNG, or WebP up to 2 MiB. Server-generated names are stored under `storage/avatars`; only controlled `/avatars/...` URLs reach MySQL.

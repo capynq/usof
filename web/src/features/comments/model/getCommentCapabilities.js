@@ -5,6 +5,7 @@ export const getCommentCapabilities = (comment, { postStatus, canReply, currentU
   return {
     canReact: isAdmin || (postStatus === "active" && comment.status === "active"),
     canDelete: (isOwner || isAdmin) && !comment.is_deleted,
+    canEdit: Boolean(currentUser) && isOwner && !comment.is_deleted,
     canModerate: isAdmin && !comment.is_deleted,
     canReply: canReply &&
       comment.status === "active" &&

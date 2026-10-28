@@ -1,6 +1,7 @@
 import { getCommentCapabilities } from "../model/getCommentCapabilities.js";
 import { CommentActions } from "./CommentActions.jsx";
 import { CommentHeader } from "./CommentHeader.jsx";
+import { CommentEdit } from "./CommentEdit.jsx";
 import styles from "./CommentItem.module.css";
 
 export const CommentBody = ({
@@ -21,7 +22,11 @@ export const CommentBody = ({
   return (
     <article className={styles.comment} aria-label={label}>
       <CommentHeader comment={comment} />
-      <p className={contentClassName}>{comment.content}</p>
+      {capabilities.canEdit && !isUnavailable ? (
+        <CommentEdit comment={comment} postId={postId} />
+      ) : (
+        <p className={contentClassName}>{comment.content}</p>
+      )}
       {!isUnavailable && (
         <CommentActions
           comment={comment}
