@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { useId, useState } from "react";
 import { useGetPostsQuery } from "../../../entities/post/index.js";
 import { useGetManagementListQuery } from "../api/managementApi.js";
@@ -43,6 +44,7 @@ export const ReactionTargetPicker = ({ onSelect }) => {
     : commentPage.totalPages;
   const isFetching = target === "post" ? postsQuery.isFetching : commentsQuery.isFetching;
   const error = target === "post" ? postsQuery.error : commentsQuery.error;
+  const { visible: showInitialLoading, completing } = useMinimumLoading(isFetching && Boolean(submittedSearch), error);
   const hasSearch = Boolean(submittedSearch);
   const total = target === "post"
     ? postsQuery.data?.meta?.total ?? 0
@@ -104,12 +106,12 @@ export const ReactionTargetPicker = ({ onSelect }) => {
         </div>
       </form>
 
-      {isFetching && hasSearch && <p role="status">Searching {target === "post" ? "questions" : "comments"}…</p>}
+      {(isFetching || showInitialLoading) && hasSearch && <LoadingIndicator completing={completing}>Searching {target === "post" ? "questions" : "comments"}…</LoadingIndicator>}
       {error && hasSearch && <p role="alert">{getErrorMessage(error, "Content could not be loaded.")}</p>}
-      {hasSearch && !isFetching && !error && results.length === 0 && (
+      {hasSearch && !isFetching && !showInitialLoading && !error && results.length === 0 && (
         <p className={styles.empty}>No {target === "post" ? "questions" : "comments"} match this search.</p>
       )}
-      {hasSearch && !isFetching && !error && results.length > 0 && (
+      {hasSearch && !isFetching && !showInitialLoading && !error && results.length > 0 && (
         <>
           <p className={styles.resultCount} aria-live="polite">{total} matching {target === "post" ? "questions" : "comments"}</p>
           <ul className={styles.results}>

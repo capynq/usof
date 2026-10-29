@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { useId } from "react";
 import { getErrorMessage } from "../../../shared/api/index.js";
 import styles from "./PostForm.module.css";
@@ -10,19 +11,20 @@ export const CategoryPicker = ({
   onToggle,
 }) => {
   const idPrefix = useId();
+  const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
   return (
     <fieldset className={styles.categories}>
       <legend>Categories</legend>
-      {isLoading && <p>Loading categories…</p>}
-      {!isLoading && error && (
+      {showLoading && <LoadingIndicator completing={completing}>Loading categories…</LoadingIndicator>}
+      {!showLoading && error && (
         <p className={styles.error} role="alert">
           {getErrorMessage(error, "Categories could not be loaded.")}
         </p>
       )}
-      {!isLoading && !error && categories?.length === 0 && (
+      {!showLoading && !error && categories?.length === 0 && (
         <p>No categories are available yet.</p>
       )}
-      {!isLoading && !error && categories?.length > 0 && (
+      {!showLoading && !error && categories?.length > 0 && (
         <div className={styles.categoryList}>
           {categories.map((category) => (
             <div className={styles.category} key={category.id}>
