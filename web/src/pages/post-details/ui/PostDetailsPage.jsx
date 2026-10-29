@@ -17,10 +17,7 @@ import { CommentDiscussion } from "../../../features/comments/index.js";
 import { ReactionControls } from "../../../features/reactions/index.js";
 import { DeletePostButton } from "../../../features/post-management/index.js";
 import { selectCurrentUser } from "../../../features/auth/index.js";
-import {
-  API_ERROR_MESSAGES,
-  getErrorMessage,
-} from "../../../shared/api/index.js";
+import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.js";
 import styles from "./PostDetailsPage.module.css";
 
 export const PostDetailsPage = () => {
@@ -43,11 +40,7 @@ export const PostDetailsPage = () => {
   }
 
   if (routeStatus === "loading") {
-    return (
-      <LoadingIndicator completing={completing}>
-        Loading question…
-      </LoadingIndicator>
-    );
+    return <LoadingIndicator completing={completing}>Loading question…</LoadingIndicator>;
   }
 
   if (routeStatus === "unavailable") {
@@ -84,29 +77,19 @@ export const PostDetailsPage = () => {
           <h1>{post.title}</h1>
           <FavoriteButton post={post} />
         </div>
-        <PostMeta
-          post={post}
-          leading={<UserAvatar user={post.author} />}
-          className={styles.meta}
-        />
+        <PostMeta post={post} leading={<UserAvatar user={post.author} />} className={styles.meta} />
         <div className={styles.toolbar}>
           <SharePostButton post={post} />
           {permissions.canManage && (
             <div className={styles.manage}>
-              <Link
-                className={`button ${styles.button}`}
-                to={`/posts/${post.id}/edit`}
-              >
+              <Link className={`button ${styles.button}`} to={`/posts/${post.id}/edit`}>
                 Edit
               </Link>
               <DeletePostButton postId={post.id} />
             </div>
           )}
         </div>
-        <CategoryList
-          categories={post.categories}
-          className={styles.categories}
-        />
+        <CategoryList categories={post.categories} className={styles.categories} />
         <div className={styles.content}>{post.content}</div>
         <ReactionControls
           target="post"

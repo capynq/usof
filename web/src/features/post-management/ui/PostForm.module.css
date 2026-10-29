@@ -102,21 +102,23 @@
 
 .save {
   border-color: var(--form-button-border);
-  background: linear-gradient(var(--form-button-gradient-start),
-      var(--form-button-gradient-middle) 48%,
-      var(--form-button-gradient-end));
+  background: linear-gradient(
+    var(--form-button-gradient-start),
+    var(--form-button-gradient-middle) 48%,
+    var(--form-button-gradient-end)
+  );
   color: var(--text-color-on-primary);
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   text-shadow: 1px 1px var(--action-color-text-shadow);
 }
 
 @media (max-width: 520px) {
-  .actions>button {
+  .actions > button {
     flex: 1 1 auto;
   }
 }
 
-.category input+label {
+.category input + label {
   display: inline-flex;
   align-items: center;
   min-height: 1.75rem;

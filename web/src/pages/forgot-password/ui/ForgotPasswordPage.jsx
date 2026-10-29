@@ -20,6 +20,7 @@ export const ForgotPasswordPage = () => {
   const submit = async (values) => {
     await requestReset({ email: values.email.trim() });
   };
+
   const form = useValidatedAuthForm({
     initialValues: EMAIL_INITIAL_VALUES,
     validator: validateEmailRequest,
@@ -49,7 +50,11 @@ export const ForgotPasswordPage = () => {
           type="email"
           value={form.values.email}
         />
-        <AuthFormActions isLoading={isLoading} label="Request reset link" loadingLabel="Requesting…" />
+        <AuthFormActions
+          isLoading={isLoading}
+          label="Request reset link"
+          loadingLabel="Requesting…"
+        />
       </form>
       <AuthLinks links={AUTH_LINKS.forgotPassword} />
     </AuthWindow>

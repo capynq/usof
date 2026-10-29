@@ -8,26 +8,20 @@ export const parse = (schema, input, label = "input") => {
   const details = flatten(result.issues);
   const message = result.issues[0]?.message || `${label} is invalid`;
   const error = new AppError(400, ERROR_CODES.VALIDATION_ERROR, message);
-  error.fieldErrors =
-    details.nested ?? (details.root ? { [label]: details.root } : {});
+  error.fieldErrors = details.nested ?? (details.root ? { [label]: details.root } : {});
   throw error;
 };
 
-export const assertNonEmpty = (
-  input,
-  message = "At least one field is required",
-) => {
+export const assertNonEmpty = (input, message = "At least one field is required") => {
   if (!input || Object.keys(input).length === 0)
     throw new AppError(400, ERROR_CODES.VALIDATION_ERROR, message);
+
   return input;
 };
 
 export const assertDateRange = (input) => {
   if (input.date_from && input.date_to && input.date_from > input.date_to)
-    throw new AppError(
-      400,
-      ERROR_CODES.VALIDATION_ERROR,
-      "date_from must not be after date_to",
-    );
+    throw new AppError(400, ERROR_CODES.VALIDATION_ERROR, "date_from must not be after date_to");
+
   return input;
 };

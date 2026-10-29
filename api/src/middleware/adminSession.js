@@ -13,38 +13,28 @@ export const adminSession = (users, config) => {
       .find((value) => value.startsWith(`${adminCookieName}=`))
       ?.slice(adminCookieName.length + 1);
     let payload;
+
     try {
       payload = verifyAuthToken(token, config.authSecret);
     } catch {
       if (request.path.startsWith("/api/"))
-        throw new AppError(
-          401,
-          ERROR_CODES.UNAUTHENTICATED,
-          "Administrator login required",
-        );
+        throw new AppError(401, ERROR_CODES.UNAUTHENTICATED, "Administrator login required");
+
       return response.redirect("/admin/login");
     }
+
     const user = await users.findAuthById(payload.uid);
-    if (
-      !user ||
-      !user.email_confirmed ||
-      user.auth_version !== payload.version
-    ) {
+
+    if (!user || !user.email_confirmed || user.auth_version !== payload.version) {
       response.clearCookie(adminCookieName, { path: "/admin" });
       if (request.path.startsWith("/api/"))
-        throw new AppError(
-          401,
-          ERROR_CODES.UNAUTHENTICATED,
-          "Administrator session expired",
-        );
+        throw new AppError(401, ERROR_CODES.UNAUTHENTICATED, "Administrator session expired");
+
       return response.redirect("/admin/login");
     }
+
     if (user.role !== "admin")
-      throw new AppError(
-        403,
-        ERROR_CODES.FORBIDDEN,
-        "Administrator access required",
-      );
+      throw new AppError(403, ERROR_CODES.FORBIDDEN, "Administrator access required");
     request.user = {
       id: user.id,
       email: user.email,
@@ -67,5 +57,6 @@ export const sameOrigin = (config) => (request, response, next) => {
       "Admin forms must be submitted from APP_BASE_URL",
     );
   }
+
   next();
 };

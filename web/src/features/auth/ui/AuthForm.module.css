@@ -22,7 +22,9 @@
   padding: 0.8rem;
   border: 1px solid var(--form-panel-border);
   background: var(--form-panel-surface);
-  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--form-panel-inset);
+  box-shadow:
+    inset 1px 1px var(--surface-color-raised),
+    inset -1px -1px var(--form-panel-inset);
 }
 
 .actionPanel p,
@@ -34,7 +36,9 @@
 
 .secondaryPanel {
   background: var(--form-secondary-surface);
-  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--form-secondary-inset);
+  box-shadow:
+    inset 1px 1px var(--surface-color-raised),
+    inset -1px -1px var(--form-secondary-inset);
 }
 
 .secondaryPanel h2 {
@@ -57,15 +61,25 @@
   min-height: var(--button-min-height);
   padding: var(--button-padding);
   border-color: var(--form-button-border);
-  background: linear-gradient(var(--form-button-gradient-start), var(--form-button-gradient-middle) 48%, var(--form-button-gradient-end));
-  box-shadow: inset 1px 1px var(--header-shadow-highlight), inset -1px -1px var(--action-color-shadow-strong);
+  background: linear-gradient(
+    var(--form-button-gradient-start),
+    var(--form-button-gradient-middle) 48%,
+    var(--form-button-gradient-end)
+  );
+  box-shadow:
+    inset 1px 1px var(--header-shadow-highlight),
+    inset -1px -1px var(--action-color-shadow-strong);
   color: var(--text-color-on-primary);
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   text-shadow: 1px 1px var(--action-color-text-shadow);
 }
 
 .primaryButton:hover:not(:disabled) {
-  background: linear-gradient(var(--form-button-hover-start), var(--form-button-hover-middle) 48%, var(--action-color-primary-hover));
+  background: linear-gradient(
+    var(--form-button-hover-start),
+    var(--form-button-hover-middle) 48%,
+    var(--action-color-primary-hover)
+  );
 }
 
 .primaryButton:disabled {

@@ -1,10 +1,7 @@
 import { DeleteAccountAction } from "./DeleteAccountAction.jsx";
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
-import {
-  getUserDisplayName,
-  UserAvatar,
-} from "../../../entities/user/index.js";
+import { getUserDisplayName, UserAvatar } from "../../../entities/user/index.js";
 import { AccountIcon } from "../../../shared/ui/icons/index.js";
 import { ACCOUNT_DETAIL_LABELS } from "../model/constants.js";
 import { getAccountDetailValue } from "../model/getAccountDetailValue.js";

@@ -6,6 +6,7 @@ for (const form of document.forms) {
     const button = form.querySelector("button");
     button.disabled = true;
     message.textContent = "";
+
     try {
       const response = await fetch(form.action, {
         method: "POST",
@@ -13,8 +14,7 @@ for (const form of document.forms) {
         body: JSON.stringify(Object.fromEntries(new FormData(form))),
       });
       const result = await response.json();
-      if (!response.ok)
-        throw new Error(result.error?.message ?? "Request failed");
+      if (!response.ok) throw new Error(result.error?.message ?? "Request failed");
       if (result.data.redirect) location.assign(result.data.redirect);
       else message.textContent = result.data.message;
     } catch (error) {

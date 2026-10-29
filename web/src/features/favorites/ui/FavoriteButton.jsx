@@ -14,9 +14,11 @@ export const FavoriteButton = ({ post }) => {
     : saved
       ? "Remove question from favorites"
       : "Save question";
+
   if (!user) {
     return null;
   }
+
   return (
     <div className={styles.root}>
       <button

@@ -18,6 +18,7 @@ export const Dialog = ({
 
   useEffect(() => {
     const dialog = dialogRef.current;
+
     if (!dialog) {
       return undefined;
     }
@@ -33,6 +34,7 @@ export const Dialog = ({
       if (dialog.open) {
         dialog.close();
       }
+
       previousFocusRef.current?.focus?.();
       previousFocusRef.current = null;
     };

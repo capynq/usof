@@ -10,14 +10,22 @@ export const CategoryPage = () => {
   const { categoryId: rawCategoryId } = useParams();
   const categoryId = Number(rawCategoryId);
   const isValidCategoryId = Number.isSafeInteger(categoryId) && categoryId > 0;
-  const { data: category, error, isLoading } = useGetCategoryQuery(categoryId, {
+  const {
+    data: category,
+    error,
+    isLoading,
+  } = useGetCategoryQuery(categoryId, {
     skip: !isValidCategoryId,
   });
 
   const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
 
   if (!isValidCategoryId) {
-    return <p className={styles.error} role="alert">That category address is not valid.</p>;
+    return (
+      <p className={styles.error} role="alert">
+        That category address is not valid.
+      </p>
+    );
   }
 
   if (showLoading) {
@@ -25,7 +33,11 @@ export const CategoryPage = () => {
   }
 
   if (error || !category) {
-    return <p className={styles.error} role="alert">This category could not be found.</p>;
+    return (
+      <p className={styles.error} role="alert">
+        This category could not be found.
+      </p>
+    );
   }
 
   return (

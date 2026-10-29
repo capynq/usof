@@ -10,7 +10,9 @@ export const ReactionButton = ({ label, symbol, count, isSelected, disabled, tit
     title={title}
     onClick={onClick}
   >
-    <span className={styles.symbol} aria-hidden="true">{symbol}</span>
+    <span className={styles.symbol} aria-hidden="true">
+      {symbol}
+    </span>
     <span>{label}</span>
     <span className={styles.count}>{count}</span>
   </button>

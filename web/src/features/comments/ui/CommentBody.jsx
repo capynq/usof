@@ -4,13 +4,7 @@ import { CommentHeader } from "./CommentHeader.jsx";
 import { CommentEdit } from "./CommentEdit.jsx";
 import styles from "./CommentItem.module.css";
 
-export const CommentBody = ({
-  comment,
-  postId,
-  postStatus,
-  canReply,
-  currentUser,
-}) => {
+export const CommentBody = ({ comment, postId, postStatus, canReply, currentUser }) => {
   const isUnavailable = comment.is_deleted || comment.is_context_placeholder;
   const capabilities = getCommentCapabilities(comment, {
     postStatus,
@@ -19,6 +13,7 @@ export const CommentBody = ({
   });
   const label = `Comment by ${comment.author?.login || "user"}`;
   const contentClassName = isUnavailable ? styles.removed : styles.content;
+
   return (
     <article className={styles.comment} aria-label={label}>
       <CommentHeader comment={comment} />

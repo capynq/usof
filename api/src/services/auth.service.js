@@ -13,6 +13,7 @@ export const createAuthService = (users, mailer, config) => {
   const send = async (method, body, kind) => {
     const input = parse(emailRequest, body, "email");
     const result = await users[method](input.email);
+
     if (!result) {
       return null;
     }
@@ -22,6 +23,7 @@ export const createAuthService = (users, mailer, config) => {
       user: result.user,
     };
   };
+
   return {
     me: (user) => users.get(user.id, user),
     register: async (body) => {
@@ -31,6 +33,7 @@ export const createAuthService = (users, mailer, config) => {
         email: input.email,
         password: input.password,
       });
+
       return {
         user: result.user,
         delivery: await mailer(result.user.email, "confirmation", result.token),
@@ -38,6 +41,7 @@ export const createAuthService = (users, mailer, config) => {
     },
     login: async (body) => {
       const user = await users.login(parse(credentials, body, "credentials"));
+
       return {
         token: signAuthToken(user, config.authSecret),
         user: await users.get(user.id, user),
@@ -46,14 +50,13 @@ export const createAuthService = (users, mailer, config) => {
       };
     },
     logout: (user) => users.logout(user?.id),
-    confirm: async (rawToken) =>
-      users.confirm(parse(confirmToken, rawToken, "confirm_token")),
-    requestConfirmation: (body) =>
-      send("requestConfirmation", body, "confirmation"),
+    confirm: async (rawToken) => users.confirm(parse(confirmToken, rawToken, "confirm_token")),
+    requestConfirmation: (body) => send("requestConfirmation", body, "confirmation"),
     requestReset: (body) => send("requestReset", body, "password reset"),
     reset: async (rawToken, body) => {
       const token = parse(confirmToken, rawToken, "confirm_token");
       const input = parse(resetPassword, body, "reset password");
+
       return users.reset(token, input.new_password);
     },
   };

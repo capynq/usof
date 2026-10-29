@@ -9,5 +9,6 @@ export const commentsRoutes = (controller, authenticate, optional, admin) => {
   router.delete("/:comment_id/like", authenticate, controller.deleteLike);
   router.patch("/:comment_id", authenticate, controller.update);
   router.delete("/:comment_id", authenticate, controller.delete);
+
   return router;
 };

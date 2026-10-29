@@ -9,6 +9,7 @@ export const CommentStatusAction = ({ comment, postId }) => {
 
   const toggleStatus = async () => {
     setErrorMessage(null);
+
     try {
       await updateComment({
         commentId: comment.id,
@@ -16,9 +17,7 @@ export const CommentStatusAction = ({ comment, postId }) => {
         status: comment.status === "active" ? "inactive" : "active",
       }).unwrap();
     } catch (error) {
-      setErrorMessage(
-        getErrorMessage(error, "Comment status could not be changed."),
-      );
+      setErrorMessage(getErrorMessage(error, "Comment status could not be changed."));
     }
   };
 

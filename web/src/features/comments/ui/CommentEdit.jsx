@@ -13,6 +13,7 @@ export const CommentEdit = ({ comment, postId }) => {
   const submit = async (event) => {
     event.preventDefault();
     setErrorMessage(null);
+
     try {
       await updateComment({ commentId: comment.id, postId, content: content.trim() }).unwrap();
       setEditing(false);
@@ -25,11 +26,17 @@ export const CommentEdit = ({ comment, postId }) => {
     return (
       <>
         <p className={itemStyles.content}>{comment.content}</p>
-        <button className={`button ${itemStyles.actionButton}`} type="button" onClick={() => {
-          setContent(comment.content);
-          setErrorMessage(null);
-          setEditing(true);
-        }}>Edit</button>
+        <button
+          className={`button ${itemStyles.actionButton}`}
+          type="button"
+          onClick={() => {
+            setContent(comment.content);
+            setErrorMessage(null);
+            setEditing(true);
+          }}
+        >
+          Edit
+        </button>
       </>
     );
   }
@@ -38,12 +45,36 @@ export const CommentEdit = ({ comment, postId }) => {
     <form className={formStyles.form} onSubmit={submit}>
       <label className={formStyles.label}>
         <span>Edit comment</span>
-        <textarea required maxLength={10000} rows={4} value={content} disabled={isLoading} onChange={(event) => setContent(event.currentTarget.value)} />
+        <textarea
+          required
+          maxLength={10000}
+          rows={4}
+          value={content}
+          disabled={isLoading}
+          onChange={(event) => setContent(event.currentTarget.value)}
+        />
       </label>
-      {errorMessage && <p className={formStyles.error} role="alert">{errorMessage}</p>}
+      {errorMessage && (
+        <p className={formStyles.error} role="alert">
+          {errorMessage}
+        </p>
+      )}
       <div>
-        <button className={`button ${formStyles.submit}`} type="submit" disabled={isLoading || !content.trim()}>{isLoading ? "Saving…" : "Save"}</button>{" "}
-        <button className="button" type="button" disabled={isLoading} onClick={() => setEditing(false)}>Cancel</button>
+        <button
+          className={`button ${formStyles.submit}`}
+          type="submit"
+          disabled={isLoading || !content.trim()}
+        >
+          {isLoading ? "Saving…" : "Save"}
+        </button>{" "}
+        <button
+          className="button"
+          type="button"
+          disabled={isLoading}
+          onClick={() => setEditing(false)}
+        >
+          Cancel
+        </button>
       </div>
     </form>
   );

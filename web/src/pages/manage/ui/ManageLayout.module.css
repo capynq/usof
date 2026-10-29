@@ -70,7 +70,10 @@
   border: 1px solid #6685a5;
   background: #fff;
   color: #0054a6;
-  font: 0.875rem Tahoma, Arial, sans-serif;
+  font:
+    0.875rem Tahoma,
+    Arial,
+    sans-serif;
   text-decoration: none;
 }
 
@@ -116,7 +119,10 @@
   padding: 0.3rem 0.45rem;
   border: 1px solid #6685a5;
   background: #fff;
-  font: 1rem Tahoma, Arial, sans-serif;
+  font:
+    1rem Tahoma,
+    Arial,
+    sans-serif;
 }
 
 .managementBody :global(.management-search-hint) {
@@ -229,7 +235,8 @@
 }
 
 .managementBody :global(.management-list[data-resource="comments"]) {
-  --management-columns: 2.5rem minmax(12rem, 1.7fr) minmax(7rem, 0.65fr) minmax(6.5rem, 0.55fr) 12rem;
+  --management-columns: 2.5rem minmax(12rem, 1.7fr) minmax(7rem, 0.65fr) minmax(6.5rem, 0.55fr)
+    12rem;
 }
 
 .managementBody :global(.management-list[data-resource="comments"] .management-comment-excerpt) {

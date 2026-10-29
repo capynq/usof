@@ -6,8 +6,7 @@ import { hashPassword, verifyPassword } from "../utils/password.js";
 import { createSecureToken, hashSecureToken } from "../utils/secureToken.js";
 import { Like } from "./Like.js";
 
-const publicFields =
-  "id,login,full_name,role,profile_picture,rating,created_at,updated_at";
+const publicFields = "id,login,full_name,role,profile_picture,rating,created_at,updated_at";
 const safeFields = `${publicFields},email`;
 const authFields =
   "id,login,email,password_hash,full_name,role,email_confirmed,auth_version,profile_picture,rating,created_at,updated_at";
@@ -29,6 +28,7 @@ const safe = (row, viewer) => {
     email_confirmed,
     ...user
   } = row;
+
   if (!isAdmin(viewer) && !sameUser(viewer, row.id)) {
     delete user.email;
   }
@@ -38,11 +38,7 @@ const safe = (row, viewer) => {
 
 const duplicate = (error) => {
   if (error.code === "ER_DUP_ENTRY") {
-    throw new AppError(
-      409,
-      ERROR_CODES.USER_EXISTS,
-      "Login or email already exists",
-    );
+    throw new AppError(409, ERROR_CODES.USER_EXISTS, "Login or email already exists");
   }
 
   throw error;
@@ -54,17 +50,14 @@ export class User {
   }
 
   async list(viewer) {
-    const [rows] = await this.db.query(
-      `SELECT ${safeFields} FROM users ORDER BY id`,
-    );
+    const [rows] = await this.db.query(`SELECT ${safeFields} FROM users ORDER BY id`);
+
     return rows.map((row) => safe(row, viewer));
   }
 
   async get(id, viewer) {
-    const [rows] = await this.db.query(
-      `SELECT ${safeFields} FROM users WHERE id = ?`,
-      [id],
-    );
+    const [rows] = await this.db.query(`SELECT ${safeFields} FROM users WHERE id = ?`, [id]);
+
     if (!rows[0]) {
       throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
     }
@@ -73,10 +66,8 @@ export class User {
   }
 
   async getPublic(id) {
-    const [rows] = await this.db.query(
-      `SELECT ${publicFields} FROM users WHERE id = ?`,
-      [id],
-    );
+    const [rows] = await this.db.query(`SELECT ${publicFields} FROM users WHERE id = ?`, [id]);
+
     if (!rows[0]) {
       throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
     }
@@ -85,10 +76,8 @@ export class User {
   }
 
   async findAuthById(id) {
-    const [rows] = await this.db.query(
-      `SELECT ${authFields} FROM users WHERE id = ?`,
-      [id],
-    );
+    const [rows] = await this.db.query(`SELECT ${authFields} FROM users WHERE id = ?`, [id]);
+
     return rows[0] || null;
   }
 
@@ -98,20 +87,13 @@ export class User {
       [login, email],
     );
     const user = rows[0];
+
     if (!user || !(await verifyPassword(password, user.password_hash))) {
-      throw new AppError(
-        401,
-        ERROR_CODES.INVALID_CREDENTIALS,
-        "Invalid credentials",
-      );
+      throw new AppError(401, ERROR_CODES.INVALID_CREDENTIALS, "Invalid credentials");
     }
 
     if (!user.email_confirmed) {
-      throw new AppError(
-        403,
-        ERROR_CODES.ACCOUNT_UNCONFIRMED,
-        "Account is not confirmed",
-      );
+      throw new AppError(403, ERROR_CODES.ACCOUNT_UNCONFIRMED, "Account is not confirmed");
     }
 
     return user;
@@ -119,20 +101,19 @@ export class User {
 
   async register(input) {
     const confirmation = createSecureToken();
+
     return transaction(this.db, async (connection) => {
       const [existing] = await connection.query(
         "SELECT id FROM users WHERE login = ? OR email = ? FOR UPDATE",
         [input.login, input.email],
       );
+
       if (existing.length) {
-        throw new AppError(
-          409,
-          ERROR_CODES.USER_EXISTS,
-          "Login or email already exists",
-        );
+        throw new AppError(409, ERROR_CODES.USER_EXISTS, "Login or email already exists");
       }
 
       let result;
+
       try {
         [result] = await connection.query(
           "INSERT INTO users (login,email,password_hash,full_name,role,email_confirmed,email_confirmation_token_hash,email_confirmation_expires_at) VALUES (?,?,?,?, 'user',FALSE,?,?)",
@@ -148,10 +129,11 @@ export class User {
       } catch (error) {
         duplicate(error);
       }
-      const [rows] = await connection.query(
-        `SELECT ${safeFields} FROM users WHERE id = ?`,
-        [result.insertId],
-      );
+
+      const [rows] = await connection.query(`SELECT ${safeFields} FROM users WHERE id = ?`, [
+        result.insertId,
+      ]);
+
       return {
         user: safe(rows[0], { id: result.insertId }),
         token: confirmation.token,
@@ -165,15 +147,13 @@ export class User {
         "SELECT id FROM users WHERE login = ? OR email = ? FOR UPDATE",
         [input.login, input.email],
       );
+
       if (existing.length) {
-        throw new AppError(
-          409,
-          ERROR_CODES.USER_EXISTS,
-          "Login or email already exists",
-        );
+        throw new AppError(409, ERROR_CODES.USER_EXISTS, "Login or email already exists");
       }
 
       let result;
+
       try {
         [result] = await connection.query(
           "INSERT INTO users (login,email,password_hash,full_name,role,email_confirmed) VALUES (?,?,?,?,?,TRUE)",
@@ -188,10 +168,11 @@ export class User {
       } catch (error) {
         duplicate(error);
       }
-      const [rows] = await connection.query(
-        `SELECT ${safeFields} FROM users WHERE id = ?`,
-        [result.insertId],
-      );
+
+      const [rows] = await connection.query(`SELECT ${safeFields} FROM users WHERE id = ?`, [
+        result.insertId,
+      ]);
+
       return safe(rows[0], { id: result.insertId, role: "admin" });
     });
   }
@@ -202,22 +183,19 @@ export class User {
         "SELECT id FROM users WHERE email_confirmation_token_hash = ? AND email_confirmation_expires_at > UTC_TIMESTAMP() FOR UPDATE",
         [hashSecureToken(token)],
       );
+
       if (!rows[0]) {
-        throw new AppError(
-          400,
-          ERROR_CODES.INVALID_TOKEN,
-          "Invalid or expired confirmation token",
-        );
+        throw new AppError(400, ERROR_CODES.INVALID_TOKEN, "Invalid or expired confirmation token");
       }
 
       await connection.query(
         "UPDATE users SET email_confirmed = TRUE,email_confirmation_token_hash = NULL,email_confirmation_expires_at = NULL WHERE id = ?",
         [rows[0].id],
       );
-      const [users] = await connection.query(
-        `SELECT ${safeFields} FROM users WHERE id = ?`,
-        [rows[0].id],
-      );
+      const [users] = await connection.query(`SELECT ${safeFields} FROM users WHERE id = ?`, [
+        rows[0].id,
+      ]);
+
       return safe(users[0], { id: rows[0].id });
     });
   }
@@ -227,6 +205,7 @@ export class User {
       "SELECT id FROM users WHERE email = ? AND email_confirmed = FALSE",
       [email],
     );
+
     if (!rows[0]) {
       return null;
     }
@@ -236,6 +215,7 @@ export class User {
       "UPDATE users SET email_confirmation_token_hash = ?,email_confirmation_expires_at = ? WHERE id = ?",
       [confirmation.hash, confirmation.expiresAt, rows[0].id],
     );
+
     return {
       user: await this.get(rows[0].id, { id: rows[0].id }),
       token: confirmation.token,
@@ -243,9 +223,8 @@ export class User {
   }
 
   async requestReset(email) {
-    const [rows] = await this.db.query("SELECT id FROM users WHERE email = ?", [
-      email,
-    ]);
+    const [rows] = await this.db.query("SELECT id FROM users WHERE email = ?", [email]);
+
     if (!rows[0]) {
       return null;
     }
@@ -255,6 +234,7 @@ export class User {
       "UPDATE users SET password_reset_token_hash = ?,password_reset_expires_at = ? WHERE id = ?",
       [reset.hash, reset.expiresAt, rows[0].id],
     );
+
     return {
       user: await this.get(rows[0].id, { id: rows[0].id }),
       token: reset.token,
@@ -267,22 +247,19 @@ export class User {
         "SELECT id FROM users WHERE password_reset_token_hash = ? AND password_reset_expires_at > UTC_TIMESTAMP() FOR UPDATE",
         [hashSecureToken(token)],
       );
+
       if (!rows[0]) {
-        throw new AppError(
-          400,
-          ERROR_CODES.INVALID_TOKEN,
-          "Invalid or expired reset token",
-        );
+        throw new AppError(400, ERROR_CODES.INVALID_TOKEN, "Invalid or expired reset token");
       }
 
       await connection.query(
         "UPDATE users SET password_hash = ?,password_reset_token_hash = NULL,password_reset_expires_at = NULL,auth_version = auth_version + 1 WHERE id = ?",
         [await hashPassword(newPassword), rows[0].id],
       );
-      const [users] = await connection.query(
-        `SELECT ${safeFields} FROM users WHERE id = ?`,
-        [rows[0].id],
-      );
+      const [users] = await connection.query(`SELECT ${safeFields} FROM users WHERE id = ?`, [
+        rows[0].id,
+      ]);
+
       return safe(users[0], { id: rows[0].id });
     });
   }
@@ -292,6 +269,7 @@ export class User {
       "UPDATE users SET auth_version = auth_version + 1 WHERE id = ?",
       [id],
     );
+
     if (!result.affectedRows) {
       throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
     }
@@ -301,11 +279,7 @@ export class User {
 
   async update(id, input, user) {
     if (!user) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
+      throw new AppError(401, ERROR_CODES.UNAUTHORIZED, "Authentication required");
     }
 
     if (!isAdmin(user) && !sameUser(user, id)) {
@@ -317,12 +291,14 @@ export class User {
         "SELECT id,email FROM users WHERE id = ? FOR UPDATE",
         [id],
       );
+
       if (!targets[0]) {
         throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
       }
 
       const fields = [];
       const values = [];
+
       for (const key of ["login", "full_name"]) {
         if (input[key] !== undefined) {
           fields.push(`${key} = ?`);
@@ -334,7 +310,9 @@ export class User {
         fields.push("role = ?");
         values.push(input.role);
       }
+
       let confirmation = null;
+
       if (input.email !== undefined && input.email !== targets[0].email) {
         confirmation = createSecureToken();
         fields.push(
@@ -351,30 +329,25 @@ export class User {
 
       if (fields.length) {
         try {
-          await connection.query(
-            `UPDATE users SET ${fields.join(", ")} WHERE id = ?`,
-            [...values, id],
-          );
+          await connection.query(`UPDATE users SET ${fields.join(", ")} WHERE id = ?`, [
+            ...values,
+            id,
+          ]);
         } catch (error) {
           duplicate(error);
         }
       }
-      const [rows] = await connection.query(
-        `SELECT ${safeFields} FROM users WHERE id = ?`,
-        [id],
-      );
+
+      const [rows] = await connection.query(`SELECT ${safeFields} FROM users WHERE id = ?`, [id]);
       const updatedUser = safe(rows[0], user);
+
       return confirmation ? { user: updatedUser, token: confirmation.token } : updatedUser;
     });
   }
 
   async delete(id, user) {
     if (!user) {
-      throw new AppError(
-        401,
-        ERROR_CODES.UNAUTHORIZED,
-        "Authentication required",
-      );
+      throw new AppError(401, ERROR_CODES.UNAUTHORIZED, "Authentication required");
     }
 
     if (!isAdmin(user) && !sameUser(user, id)) {
@@ -387,12 +360,14 @@ export class User {
         "SELECT profile_picture FROM users WHERE id = ? FOR UPDATE",
         [id],
       );
+
       if (!rows[0]) {
         throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
       }
 
       await connection.query("DELETE FROM users WHERE id = ?", [id]);
       await Like.recalculate(connection);
+
       return {
         avatarPaths: rows[0].profile_picture ? [rows[0].profile_picture] : [],
       };
@@ -405,18 +380,14 @@ export class User {
         "SELECT profile_picture FROM users WHERE id = ? FOR UPDATE",
         [id],
       );
+
       if (!rows[0]) {
         throw new AppError(404, ERROR_CODES.USER_NOT_FOUND, "User not found");
       }
 
-      await connection.query(
-        "UPDATE users SET profile_picture = ? WHERE id = ?",
-        [path, id],
-      );
-      const [users] = await connection.query(
-        `SELECT ${safeFields} FROM users WHERE id = ?`,
-        [id],
-      );
+      await connection.query("UPDATE users SET profile_picture = ? WHERE id = ?", [path, id]);
+      const [users] = await connection.query(`SELECT ${safeFields} FROM users WHERE id = ?`, [id]);
+
       return { user: safe(users[0], { id }), oldPath: rows[0].profile_picture };
     });
   }

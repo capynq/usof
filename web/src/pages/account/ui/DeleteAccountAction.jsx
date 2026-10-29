@@ -13,25 +13,25 @@ export const DeleteAccountAction = ({ user }) => {
   const [remove, state] = useDeleteOwnAccountMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const submit = async (event) => {
     event.preventDefault();
+
     if (confirmation !== user.login || state.isLoading) {
       return;
     }
+
     try {
       await remove(user.id).unwrap();
       await navigate("/", { replace: true, flushSync: true });
       endAuthSession(dispatch);
-    } catch {
-    }
+    } catch {}
   };
+
   return (
     <section className={styles.dangerZone}>
       <h2>Delete account</h2>
-      <p>
-        This permanently removes your account, questions, comments, reactions,
-        and favorites.
-      </p>
+      <p>This permanently removes your account, questions, comments, reactions, and favorites.</p>
       <button
         type="button"
         onClick={() => {
@@ -60,17 +60,9 @@ export const DeleteAccountAction = ({ user }) => {
             />
           </label>
           {state.error && (
-            <p role="alert">
-              {getErrorMessage(
-                state.error,
-                "Your account could not be deleted.",
-              )}
-            </p>
+            <p role="alert">{getErrorMessage(state.error, "Your account could not be deleted.")}</p>
           )}
-          <button
-            type="submit"
-            disabled={confirmation !== user.login || state.isLoading}
-          >
+          <button type="submit" disabled={confirmation !== user.login || state.isLoading}>
             {state.isLoading ? "Deleting…" : "Permanently delete account"}
           </button>
         </form>

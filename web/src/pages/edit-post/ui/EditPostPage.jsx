@@ -20,7 +20,11 @@ export const EditPostPage = () => {
   const routeStatus = getPostRouteStatus({ isValidPostId, isLoading: showLoading, error, post });
 
   if (routeStatus === "invalid") {
-    return <PostRouteMessage className={styles.error}>That question address is not valid.</PostRouteMessage>;
+    return (
+      <PostRouteMessage className={styles.error}>
+        That question address is not valid.
+      </PostRouteMessage>
+    );
   }
 
   if (routeStatus === "loading") {
@@ -28,7 +32,11 @@ export const EditPostPage = () => {
   }
 
   if (routeStatus === "unavailable") {
-    return <PostRouteMessage className={styles.error}>{getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}</PostRouteMessage>;
+    return (
+      <PostRouteMessage className={styles.error}>
+        {getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}
+      </PostRouteMessage>
+    );
   }
 
   const permissions = getPostPermissions(post, currentUser);
@@ -36,8 +44,8 @@ export const EditPostPage = () => {
   if (!permissions.canManage) {
     return (
       <WindowShell title="Edit question" className={styles.window} bodyClassName={styles.body}>
-          <PostRouteMessage>You can edit only your own questions.</PostRouteMessage>
-          <Link to={`/posts/${post.id}`}>Return to the question</Link>
+        <PostRouteMessage>You can edit only your own questions.</PostRouteMessage>
+        <Link to={`/posts/${post.id}`}>Return to the question</Link>
       </WindowShell>
     );
   }
@@ -48,11 +56,15 @@ export const EditPostPage = () => {
       bodyClassName={styles.body}
       labelledBy="edit-post-title"
       title="Edit question"
-      titleIcon={<span className={styles.titleIcon} aria-hidden="true">✎</span>}
+      titleIcon={
+        <span className={styles.titleIcon} aria-hidden="true">
+          ✎
+        </span>
+      }
     >
-        <h1 id="edit-post-title">Edit question</h1>
-        <PostForm post={post} isAdmin={permissions.isAdmin} />
-        <Link to={`/posts/${post.id}`}>Cancel and return</Link>
+      <h1 id="edit-post-title">Edit question</h1>
+      <PostForm post={post} isAdmin={permissions.isAdmin} />
+      <Link to={`/posts/${post.id}`}>Cancel and return</Link>
     </WindowShell>
   );
 };

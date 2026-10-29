@@ -7,6 +7,7 @@ export const hashSecureToken = (token) => {
 
 export const createSecureToken = () => {
   const token = randomBytes(32).toString("hex");
+
   return {
     token,
     hash: hashSecureToken(token),

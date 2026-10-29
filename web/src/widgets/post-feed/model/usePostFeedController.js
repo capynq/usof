@@ -15,51 +15,33 @@ export const usePostFeedController = ({ lockedCategoryId, authorId }) => {
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const searchKey = searchParams.toString();
-  const currentSearchParams = useMemo(
-    () => new URLSearchParams(searchKey),
-    [searchKey],
-  );
+  const currentSearchParams = useMemo(() => new URLSearchParams(searchKey), [searchKey]);
   const user = useSelector(selectCurrentUser);
   const { data: categories } = useGetCategoriesQuery();
-  const { filters, page, pageSize, queryArgs, canFilterStatus } =
-    getPostFeedQueryState({
-      searchParams: currentSearchParams,
-      user,
-      lockedCategoryId,
-      authorId,
-    });
+  const { filters, page, pageSize, queryArgs, canFilterStatus } = getPostFeedQueryState({
+    searchParams: currentSearchParams,
+    user,
+    lockedCategoryId,
+    authorId,
+  });
   const postsQuery = useGetPostsQuery(queryArgs);
 
   useEffect(() => {
     const meta = postsQuery.data?.meta;
-    if (
-      meta &&
-      !postsQuery.isFetching &&
-      page > Math.max(1, meta.total_pages)
-    ) {
-      setSearchParams(
-        getPostFeedPageParams(searchKey, Math.max(1, meta.total_pages)),
-        { replace: true },
-      );
+
+    if (meta && !postsQuery.isFetching && page > Math.max(1, meta.total_pages)) {
+      setSearchParams(getPostFeedPageParams(searchKey, Math.max(1, meta.total_pages)), {
+        replace: true,
+      });
     }
-  }, [
-    postsQuery.data,
-    postsQuery.isFetching,
-    page,
-    searchKey,
-    setSearchParams,
-  ]);
+  }, [postsQuery.data, postsQuery.isFetching, page, searchKey, setSearchParams]);
 
   const applyFilters = (values) => {
-    setSearchParams(
-      getPostFeedFilterParams(values, { lockedCategoryId, user, pageSize }),
-    );
+    setSearchParams(getPostFeedFilterParams(values, { lockedCategoryId, user, pageSize }));
   };
 
   const changePageSize = (event) => {
-    setSearchParams(
-      getPostFeedPageSizeParams(searchKey, event.currentTarget.value),
-    );
+    setSearchParams(getPostFeedPageSizeParams(searchKey, event.currentTarget.value));
   };
 
   const changePage = (nextPage) => {
@@ -74,11 +56,7 @@ export const usePostFeedController = ({ lockedCategoryId, authorId }) => {
     canFilterStatus,
     lockCategory: Boolean(lockedCategoryId),
     isHome: location.pathname === "/",
-    searchScope: lockedCategoryId
-      ? "this category"
-      : authorId
-        ? "this user"
-        : "these questions",
+    searchScope: lockedCategoryId ? "this category" : authorId ? "this user" : "these questions",
     page,
     pageSize,
     postsQuery,

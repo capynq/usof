@@ -3,7 +3,7 @@ import styles from "./ActionButtonGroup.module.css";
 
 export const ActionButtonGroup = ({ actions, className = "" }) => (
   <div className={`${styles.group} ${className}`}>
-    {actions.map(({ id, label, to, onClick, disabled = false, ...props }) => (
+    {actions.map(({ id, label, to, onClick, disabled = false, ...props }) =>
       to ? (
         <Link key={id ?? to} className={styles.action} to={to} {...props}>
           {label}
@@ -19,7 +19,7 @@ export const ActionButtonGroup = ({ actions, className = "" }) => (
         >
           {label}
         </button>
-      )
-    ))}
+      ),
+    )}
   </div>
 );

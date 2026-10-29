@@ -3,19 +3,16 @@ import { useId } from "react";
 import { getErrorMessage } from "../../../shared/api/index.js";
 import styles from "./PostForm.module.css";
 
-export const CategoryPicker = ({
-  categories,
-  error,
-  isLoading,
-  selectedIds,
-  onToggle,
-}) => {
+export const CategoryPicker = ({ categories, error, isLoading, selectedIds, onToggle }) => {
   const idPrefix = useId();
   const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
+
   return (
     <fieldset className={styles.categories}>
       <legend>Categories</legend>
-      {showLoading && <LoadingIndicator completing={completing}>Loading categories…</LoadingIndicator>}
+      {showLoading && (
+        <LoadingIndicator completing={completing}>Loading categories…</LoadingIndicator>
+      )}
       {!showLoading && error && (
         <p className={styles.error} role="alert">
           {getErrorMessage(error, "Categories could not be loaded.")}
@@ -34,9 +31,7 @@ export const CategoryPicker = ({
                 checked={selectedIds.includes(Number(category.id))}
                 onChange={() => onToggle(Number(category.id))}
               />
-              <label htmlFor={`${idPrefix}-${category.id}`}>
-                {category.title}
-              </label>
+              <label htmlFor={`${idPrefix}-${category.id}`}>{category.title}</label>
             </div>
           ))}
         </div>

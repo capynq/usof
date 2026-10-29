@@ -12,10 +12,18 @@ export const UserProfileSummary = ({ user }) => (
     <UserAvatar user={user} size="large" />
     <div className={styles.identity}>
       <h1 id="profile-title">{getUserDisplayName(user)}</h1>
-      <p>@{user.login} · {user.role}</p>
+      <p>
+        @{user.login} · {user.role}
+      </p>
       <dl className={styles.facts}>
-        <div><dt>Rating</dt><dd>{user.rating}</dd></div>
-        <div><dt>Member since</dt><dd>{formatMemberDate(user.created_at)}</dd></div>
+        <div>
+          <dt>Rating</dt>
+          <dd>{user.rating}</dd>
+        </div>
+        <div>
+          <dt>Member since</dt>
+          <dd>{formatMemberDate(user.created_at)}</dd>
+        </div>
       </dl>
     </div>
   </WindowShell>

@@ -3,10 +3,12 @@ import styles from "./ProfileSettings.module.css";
 
 export const AppearanceSettings = () => {
   const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || "blue");
+
   const changeTheme = (event) => {
     const nextTheme = event.target.value;
     setTheme(nextTheme);
     document.documentElement.dataset.theme = nextTheme;
+
     try {
       localStorage.setItem("usof-theme", nextTheme);
     } catch {}

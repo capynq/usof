@@ -16,20 +16,15 @@ export const ReactionControls = ({
   currentUser,
   canReact = true,
 }) => {
-  const {
-    isBusy,
-    isAvailable,
-    availabilityMessage,
-    errorMessage,
-    changeReaction,
-  } = useReactionController({
-    target,
-    targetId,
-    postId,
-    viewerReaction,
-    currentUser,
-    canReact,
-  });
+  const { isBusy, isAvailable, availabilityMessage, errorMessage, changeReaction } =
+    useReactionController({
+      target,
+      targetId,
+      postId,
+      viewerReaction,
+      currentUser,
+      canReact,
+    });
   const [showReactions, setShowReactions] = useState(false);
   const reactionCounts = { like: likeCount, dislike: dislikeCount };
 
@@ -64,9 +59,7 @@ export const ReactionControls = ({
       />
       {!currentUser && <Link to="/login">Sign in to react</Link>}
       {currentUser && !canReact && (
-        <span className={styles.error}>
-          Reactions are closed on inactive content.
-        </span>
+        <span className={styles.error}>Reactions are closed on inactive content.</span>
       )}
       {errorMessage && (
         <span className={styles.error} role="alert">

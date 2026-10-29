@@ -34,6 +34,7 @@ export const RegisterPage = () => {
       return;
     }
   };
+
   const form = useValidatedAuthForm({
     initialValues: REGISTER_INITIAL_VALUES,
     validator: validateRegistration,
@@ -48,8 +49,12 @@ export const RegisterPage = () => {
       </div>
       {error && (
         <AuthNotice type="error">
-          {getErrorMessage(error, "The account could not be created. Check the form and try again.")}
-          {error.data?.error?.code === "EMAIL_UNAVAILABLE" && " Your account is saved; you can request a new confirmation link."}
+          {getErrorMessage(
+            error,
+            "The account could not be created. Check the form and try again.",
+          )}
+          {error.data?.error?.code === "EMAIL_UNAVAILABLE" &&
+            " Your account is saved; you can request a new confirmation link."}
         </AuthNotice>
       )}
       <form className={styles.form} noValidate onSubmit={form.handleSubmit}>
@@ -95,7 +100,12 @@ export const RegisterPage = () => {
           type="password"
           value={form.values.password_confirmation}
         />
-        <AuthFormActions isLoading={isLoading} label="Create account" loadingLabel="Creating account…" note="We’ll send a confirmation link to this address." />
+        <AuthFormActions
+          isLoading={isLoading}
+          label="Create account"
+          loadingLabel="Creating account…"
+          note="We’ll send a confirmation link to this address."
+        />
       </form>
       <AuthLinks links={AUTH_LINKS.register} />
     </AuthWindow>

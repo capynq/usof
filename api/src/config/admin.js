@@ -14,5 +14,6 @@ export const createAdmin = async (services) => {
     },
   });
   await admin.initialize();
+
   return admin;
 };

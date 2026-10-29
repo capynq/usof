@@ -4,6 +4,7 @@ import styles from "./PassiveMascot.module.css";
 
 export const FormCompanion = ({ context = "writing", placement = "form" }) => {
   const mascot = getMascotPresentation(context);
+
   return (
     <aside
       className={`${styles.form} ${styles[mascot.id]} ${placement === "auth" ? styles.auth : ""}`}

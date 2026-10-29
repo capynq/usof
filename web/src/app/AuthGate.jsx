@@ -4,7 +4,10 @@ import { AuthGateStatus } from "./ui/AuthGateStatus.jsx";
 
 export const AuthGate = ({ children }) => {
   const { status, error, retryRestore, signInAgain } = useAuthSession();
-  const { visible: showRestoring, completing } = useMinimumLoading(status === AUTH_STATUS.restoring, status === AUTH_STATUS.restoreError);
+  const { visible: showRestoring, completing } = useMinimumLoading(
+    status === AUTH_STATUS.restoring,
+    status === AUTH_STATUS.restoreError,
+  );
   const isResolvingSession = showRestoring || status === AUTH_STATUS.restoreError;
 
   if (isResolvingSession) {

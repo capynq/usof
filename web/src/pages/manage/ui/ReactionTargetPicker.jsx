@@ -17,6 +17,7 @@ const authorName = (record) =>
 
 const availabilityLabel = (record, target) => {
   if (target === "comment" && record.is_deleted) return "Removed";
+
   return record.status === "inactive" ? "Inactive" : "";
 };
 
@@ -39,16 +40,16 @@ export const ReactionTargetPicker = ({ onSelect }) => {
   const commentPage = paginateReactionTargets(comments, page);
   const postRecords = postsQuery.data?.data ?? [];
   const results = target === "post" ? postRecords : commentPage.records;
-  const totalPages = target === "post"
-    ? postsQuery.data?.meta?.total_pages ?? 1
-    : commentPage.totalPages;
+  const totalPages =
+    target === "post" ? (postsQuery.data?.meta?.total_pages ?? 1) : commentPage.totalPages;
   const isFetching = target === "post" ? postsQuery.isFetching : commentsQuery.isFetching;
   const error = target === "post" ? postsQuery.error : commentsQuery.error;
-  const { visible: showInitialLoading, completing } = useMinimumLoading(isFetching && Boolean(submittedSearch), error);
+  const { visible: showInitialLoading, completing } = useMinimumLoading(
+    isFetching && Boolean(submittedSearch),
+    error,
+  );
   const hasSearch = Boolean(submittedSearch);
-  const total = target === "post"
-    ? postsQuery.data?.meta?.total ?? 0
-    : commentPage.total;
+  const total = target === "post" ? (postsQuery.data?.meta?.total ?? 0) : commentPage.total;
 
   const changeTarget = (value) => {
     setTarget(value);
@@ -64,14 +65,22 @@ export const ReactionTargetPicker = ({ onSelect }) => {
     setPage(1);
   };
 
-  const selectRecord = (record) => onSelect({
-    target,
-    targetId: Number(record.id),
-    postId: target === "comment" ? Number(record.post_id) : undefined,
-    context: target === "post"
-      ? { kind: "question", id: record.id, title: record.title, author: authorName(record) }
-      : { kind: "comment", id: record.id, postId: record.post_id, excerpt: getReactionTargetExcerpt(record), author: authorName(record) },
-  });
+  const selectRecord = (record) =>
+    onSelect({
+      target,
+      targetId: Number(record.id),
+      postId: target === "comment" ? Number(record.post_id) : undefined,
+      context:
+        target === "post"
+          ? { kind: "question", id: record.id, title: record.title, author: authorName(record) }
+          : {
+              kind: "comment",
+              id: record.id,
+              postId: record.post_id,
+              excerpt: getReactionTargetExcerpt(record),
+              author: authorName(record),
+            },
+    });
 
   const submitId = (event) => {
     event.preventDefault();
@@ -106,27 +115,53 @@ export const ReactionTargetPicker = ({ onSelect }) => {
         </div>
       </form>
 
-      {(isFetching || showInitialLoading) && hasSearch && <LoadingIndicator completing={completing}>Searching {target === "post" ? "questions" : "comments"}…</LoadingIndicator>}
-      {error && hasSearch && <p role="alert">{getErrorMessage(error, "Content could not be loaded.")}</p>}
+      {(isFetching || showInitialLoading) && hasSearch && (
+        <LoadingIndicator completing={completing}>
+          Searching {target === "post" ? "questions" : "comments"}…
+        </LoadingIndicator>
+      )}
+      {error && hasSearch && (
+        <p role="alert">{getErrorMessage(error, "Content could not be loaded.")}</p>
+      )}
       {hasSearch && !isFetching && !showInitialLoading && !error && results.length === 0 && (
-        <p className={styles.empty}>No {target === "post" ? "questions" : "comments"} match this search.</p>
+        <p className={styles.empty}>
+          No {target === "post" ? "questions" : "comments"} match this search.
+        </p>
       )}
       {hasSearch && !isFetching && !showInitialLoading && !error && results.length > 0 && (
         <>
-          <p className={styles.resultCount} aria-live="polite">{total} matching {target === "post" ? "questions" : "comments"}</p>
+          <p className={styles.resultCount} aria-live="polite">
+            {total} matching {target === "post" ? "questions" : "comments"}
+          </p>
           <ul className={styles.results}>
             {results.map((record) => (
               <li className={styles.result} key={record.id}>
                 <div className={styles.resultText}>
-                  <h2>{target === "post" ? record.title : `Comment ${record.id} on question ${record.post_id}`}</h2>
+                  <h2>
+                    {target === "post"
+                      ? record.title
+                      : `Comment ${record.id} on question ${record.post_id}`}
+                  </h2>
                   {target === "comment" && <p>{getReactionTargetExcerpt(record)}</p>}
-                  <p className={styles.byline}>By {authorName(record)} · ID {record.id}{availabilityLabel(record, target) ? ` · ${availabilityLabel(record, target)}` : ""}</p>
+                  <p className={styles.byline}>
+                    By {authorName(record)} · ID {record.id}
+                    {availabilityLabel(record, target)
+                      ? ` · ${availabilityLabel(record, target)}`
+                      : ""}
+                  </p>
                 </div>
-                <button type="button" onClick={() => selectRecord(record)}>View reactions</button>
+                <button type="button" onClick={() => selectRecord(record)}>
+                  View reactions
+                </button>
               </li>
             ))}
           </ul>
-          <Pagination page={target === "post" ? page : commentPage.page} totalPages={totalPages} onPageChange={setPage} label="Reaction target pages" />
+          <Pagination
+            page={target === "post" ? page : commentPage.page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            label="Reaction target pages"
+          />
         </>
       )}
 

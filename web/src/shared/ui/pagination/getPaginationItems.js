@@ -11,8 +11,7 @@ export const getPaginationItems = (page, totalPages) => {
   return orderedPages.flatMap((value, index) => {
     const previous = orderedPages[index - 1];
     if (!previous || value - previous === 1) return [value];
-    return value - previous === 2
-      ? [previous + 1, value]
-      : [`ellipsis-${value}`, value];
+
+    return value - previous === 2 ? [previous + 1, value] : [`ellipsis-${value}`, value];
   });
 };

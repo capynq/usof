@@ -6,6 +6,7 @@ export const useUserProfileController = () => {
   const userId = Number(rawUserId);
   const isValidUserId = Number.isInteger(userId) && userId > 0;
   const query = useGetPublicUserQuery(userId, { skip: !isValidUserId });
+
   return {
     isValidUserId,
     user: query.data,

@@ -1,10 +1,5 @@
 import { Link, useSearchParams } from "react-router";
-import {
-  AUTH_LINKS,
-  AuthLinks,
-  AuthNotice,
-  AuthWindow,
-} from "../../../features/auth/index.js";
+import { AUTH_LINKS, AuthLinks, AuthNotice, AuthWindow } from "../../../features/auth/index.js";
 import { KeyIcon } from "../../../shared/ui/icons/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 import { ResetPasswordForm } from "./ResetPasswordForm.jsx";
@@ -21,7 +16,8 @@ export const ResetPasswordPage = () => {
       </div>
       {!token && (
         <AuthNotice type="error">
-          This reset link is missing its token. <Link to="/forgot-password">Request another link</Link>.
+          This reset link is missing its token.{" "}
+          <Link to="/forgot-password">Request another link</Link>.
         </AuthNotice>
       )}
       {token && <ResetPasswordForm token={token} />}

@@ -47,11 +47,13 @@ export const validateLogin = (values) => {
 export const validateRegistration = (values) => {
   const errors = validateLogin(values);
   Object.assign(errors, validatePasswordConfirmation(values));
+
   return errors;
 };
 
 export const validateEmailRequest = (values) => {
   const emailError = validateEmail(values.email);
+
   return emailError ? { email: emailError } : {};
 };
 

@@ -5,27 +5,21 @@ import { AppError } from "../errors/AppError.js";
 const admin = (context) => {
   const currentAdmin = context?.currentAdmin;
   if (currentAdmin?.role === "admin") return currentAdmin;
-  throw new ValidationError(
-    {},
-    { message: "Administrator access is required." },
-  );
+  throw new ValidationError({}, { message: "Administrator access is required." });
 };
 
 const validation = (error, field = "base") => {
   if (error instanceof ValidationError) return error;
-  const message =
-    error instanceof AppError
-      ? error.message
-      : "The record could not be saved.";
+  const message = error instanceof AppError ? error.message : "The record could not be saved.";
   const fields = {};
-  if (
-    error instanceof AppError &&
-    error.code === ERROR_CODES.VALIDATION_ERROR
-  ) {
+
+  if (error instanceof AppError && error.code === ERROR_CODES.VALIDATION_ERROR) {
     for (const [name, messages] of Object.entries(error.fieldErrors ?? {}))
       fields[name] = { message: messages[0] };
   }
+
   if (!Object.keys(fields).length) fields[field] = { message };
+
   return new ValidationError(fields, { message });
 };
 
@@ -42,16 +36,20 @@ const equal = (left, right) => {
   if (left === null || left === undefined)
     return right === null || right === undefined || right === "";
   if (right === null || right === undefined) return left === "";
+
   if (left instanceof Date || right instanceof Date) {
     const leftTime = new Date(left).getTime();
     const rightTime = new Date(right).getTime();
+
     return Number.isFinite(leftTime) && leftTime === rightTime;
   }
+
   return String(left) === String(right);
 };
 
 const writable = (params, current, names) => {
   const result = {};
+
   for (const [name, value] of Object.entries(params)) {
     if (names.includes(name)) {
       result[name] = value;
@@ -61,12 +59,14 @@ const writable = (params, current, names) => {
       });
     }
   }
+
   return result;
 };
 
 const categoryIds = (value) => {
   if (Array.isArray(value)) return value;
   if (typeof value !== "string") return value;
+
   return value
     .split(",")
     .map((item) => item.trim())
@@ -90,29 +90,17 @@ const sortRows = (rows, sort = {}) => {
   const { sortBy, direction = "asc" } = sort;
   if (!sortBy) return rows;
   const multiplier = direction === "desc" ? -1 : 1;
+
   return [...rows].sort(
     (left, right) =>
-      String(left[sortBy] ?? "").localeCompare(
-        String(right[sortBy] ?? ""),
-        undefined,
-        { numeric: true },
-      ) * multiplier,
+      String(left[sortBy] ?? "").localeCompare(String(right[sortBy] ?? ""), undefined, {
+        numeric: true,
+      }) * multiplier,
   );
 };
 
 class ModelResource extends BaseResource {
-  constructor({
-    id,
-    fields,
-    options,
-    list,
-    get,
-    create,
-    update,
-    remove,
-    page,
-    count,
-  }) {
+  constructor({ id, fields, options, list, get, create, update, remove, page, count }) {
     super();
     this.resourceId = id;
     this.fields = fields.map(
@@ -151,23 +139,24 @@ class ModelResource extends BaseResource {
   async count(_filter, context) {
     const viewer = admin(context);
     if (this.handlers.count) return this.handlers.count(viewer);
+
     return (await this.handlers.list(viewer)).length;
   }
 
   async find(_filter, options = {}, context) {
     const viewer = admin(context);
     if (this.handlers.page)
-      return (await this.handlers.page(viewer, options)).map((row) =>
-        this.build(row),
-      );
+      return (await this.handlers.page(viewer, options)).map((row) => this.build(row));
     const rows = sortRows(await this.handlers.list(viewer), options.sort);
     const offset = Number(options.offset) || 0;
     const limit = Number(options.limit) || 10;
+
     return rows.slice(offset, offset + limit).map((row) => this.build(row));
   }
 
   async findOne(id, context) {
     const viewer = admin(context);
+
     try {
       return this.build(await this.handlers.get(id, viewer));
     } catch (error) {
@@ -178,24 +167,29 @@ class ModelResource extends BaseResource {
 
   async findMany(ids, context) {
     const rows = await Promise.all(ids.map((id) => this.findOne(id, context)));
+
     return rows.filter(Boolean);
   }
 
   async create(params, context) {
     const viewer = admin(context);
+
     return write(() => this.handlers.create(params, viewer), "base");
   }
 
   async update(id, params, context) {
     const viewer = admin(context);
+
     return write(async () => {
       const current = await this.handlers.get(id, viewer);
+
       return this.handlers.update(id, params, current, viewer);
     }, "base");
   }
 
   async delete(id, context) {
     const viewer = admin(context);
+
     return write(() => this.handlers.remove(id, viewer), "base");
   }
 }
@@ -289,14 +283,7 @@ export const adminResources = (services) => {
         "created_at",
         "updated_at",
       ],
-      newProperties: [
-        "login",
-        "email",
-        "full_name",
-        "role",
-        "password",
-        "password_confirmation",
-      ],
+      newProperties: ["login", "email", "full_name", "role", "password", "password_confirmation"],
       editProperties: ["login", "email", "full_name", "role"],
       filterProperties: [],
       properties: {
@@ -334,6 +321,7 @@ export const adminResources = (services) => {
         writable(params, current, ["login", "email", "full_name", "role"]),
         viewer,
       );
+
       return result.user ?? result;
     },
     remove: (id, viewer) => services.users.delete(id, viewer),
@@ -345,14 +333,7 @@ export const adminResources = (services) => {
     options: {
       sort: { sortBy: "like_count", direction: "desc" },
       navigation: { name: "Content" },
-      listProperties: [
-        "id",
-        "title",
-        "author_id",
-        "status",
-        "like_count",
-        "publish_date",
-      ],
+      listProperties: ["id", "title", "author_id", "status", "like_count", "publish_date"],
       showProperties: [
         "id",
         "title",
@@ -390,11 +371,7 @@ export const adminResources = (services) => {
         offset < 0 ||
         offset % pageSize !== 0
       )
-        throw new AppError(
-          400,
-          ERROR_CODES.VALIDATION_ERROR,
-          "Invalid page offset",
-        );
+        throw new AppError(400, ERROR_CODES.VALIDATION_ERROR, "Invalid page offset");
       const result = await services.posts.list(
         {
           page: offset / pageSize + 1,
@@ -404,11 +381,11 @@ export const adminResources = (services) => {
         viewer,
         { direction: options.sort?.direction === "asc" ? "asc" : "desc" },
       );
+
       return result.data.map(formatPost);
     },
     count: async (viewer) =>
-      (await services.posts.list({ page: "1", page_size: "1" }, viewer)).meta
-        .total,
+      (await services.posts.list({ page: "1", page_size: "1" }, viewer)).meta.total,
     get: async (id, viewer) => formatPost(await services.posts.get(id, viewer)),
     create: async (params, viewer) =>
       formatPost(
@@ -422,8 +399,8 @@ export const adminResources = (services) => {
       ),
     update: async (id, params, current, viewer) => {
       const input = writable(params, current, ["categories", "status"]);
-      if (Object.hasOwn(input, "categories"))
-        input.categories = categoryIds(input.categories);
+      if (Object.hasOwn(input, "categories")) input.categories = categoryIds(input.categories);
+
       return formatPost(await services.posts.update(id, input, viewer));
     },
     remove: (id, viewer) => services.posts.delete(id, viewer),
@@ -435,13 +412,7 @@ export const adminResources = (services) => {
     options: {
       navigation: { name: "Content" },
       listProperties: ["id", "title", "description"],
-      showProperties: [
-        "id",
-        "title",
-        "description",
-        "created_at",
-        "updated_at",
-      ],
+      showProperties: ["id", "title", "description", "created_at", "updated_at"],
       newProperties: ["title", "description"],
       editProperties: ["title", "description"],
       filterProperties: [],
@@ -449,15 +420,9 @@ export const adminResources = (services) => {
     },
     list: () => services.categories.list(),
     get: (id) => services.categories.get(id),
-    create: (params) =>
-      services.categories.create(
-        writable(params, {}, ["title", "description"]),
-      ),
+    create: (params) => services.categories.create(writable(params, {}, ["title", "description"])),
     update: (id, params, current) =>
-      services.categories.update(
-        id,
-        writable(params, current, ["title", "description"]),
-      ),
+      services.categories.update(id, writable(params, current, ["title", "description"])),
     remove: (id) => services.categories.delete(id),
   });
 
@@ -493,18 +458,11 @@ export const adminResources = (services) => {
     get: (id, viewer) => services.comments.get(id, viewer),
     create: (params, viewer) => {
       const input = writable(params, {}, ["post_id", "content"]);
-      return services.comments.create(
-        input.post_id,
-        { content: input.content },
-        viewer,
-      );
+
+      return services.comments.create(input.post_id, { content: input.content }, viewer);
     },
     update: (id, params, current, viewer) =>
-      services.comments.update(
-        id,
-        writable(params, current, ["status"]),
-        viewer,
-      ),
+      services.comments.update(id, writable(params, current, ["status"]), viewer),
     remove: (id, viewer) => services.comments.delete(id, viewer),
   });
 
@@ -513,14 +471,7 @@ export const adminResources = (services) => {
     fields: fields.reactions,
     options: {
       navigation: { name: "Content" },
-      listProperties: [
-        "id",
-        "author_id",
-        "target",
-        "target_id",
-        "type",
-        "created_at",
-      ],
+      listProperties: ["id", "author_id", "target", "target_id", "type", "created_at"],
       showProperties: [
         "id",
         "author_id",
@@ -550,19 +501,13 @@ export const adminResources = (services) => {
       },
       actions: protectedActions(false),
     },
-    list: async (viewer) =>
-      (await services.reactions.listAll(viewer)).map(formatReaction),
-    get: async (id, viewer) =>
-      formatReaction(await services.reactions.get(id, viewer)),
+    list: async (viewer) => (await services.reactions.listAll(viewer)).map(formatReaction),
+    get: async (id, viewer) => formatReaction(await services.reactions.get(id, viewer)),
     create: async (params, viewer) => {
       const input = writable(params, {}, ["target", "target_id", "type"]);
+
       return formatReaction(
-        await services.reactions.create(
-          input.target,
-          input.target_id,
-          input.type,
-          viewer,
-        ),
+        await services.reactions.create(input.target, input.target_id, input.type, viewer),
       );
     },
     update: () => {
@@ -570,6 +515,7 @@ export const adminResources = (services) => {
     },
     remove: async (id, viewer) => {
       const reaction = await services.reactions.get(id, viewer);
+
       return services.reactions.delete(
         reaction.post_id ? "post" : "comment",
         reaction.post_id ?? reaction.comment_id,
@@ -583,17 +529,21 @@ export const adminResources = (services) => {
     const { newProperties, ...options } = resource.options;
     options.actions.new.layout = newProperties;
     options.actions.edit.layout = options.editProperties;
+
     if (resource.id() === "Users") {
       const scrub = (response) => {
         if (response.record?.params) {
           delete response.record.params.password;
           delete response.record.params.password_confirmation;
         }
+
         return response;
       };
+
       options.actions.new.after = scrub;
       options.actions.edit.after = scrub;
     }
+
     return { resource, options };
   });
 };

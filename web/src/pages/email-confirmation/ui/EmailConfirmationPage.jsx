@@ -1,10 +1,5 @@
 import { useLocation, useSearchParams } from "react-router";
-import {
-  AUTH_LINKS,
-  AuthLinks,
-  AuthNotice,
-  AuthWindow,
-} from "../../../features/auth/index.js";
+import { AUTH_LINKS, AuthLinks, AuthNotice, AuthWindow } from "../../../features/auth/index.js";
 import { EnvelopeIcon } from "../../../shared/ui/icons/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 import { getEmailConfirmationPageState } from "../model/getEmailConfirmationPageState.js";
@@ -30,12 +25,12 @@ export const EmailConfirmationPage = () => {
         <AuthNotice type="success">{pageState.registrationMessage}</AuthNotice>
       )}
       {pageState.emailChangeDeliveryFailureMessage && (
-        <AuthNotice type="error">
-          {pageState.emailChangeDeliveryFailureMessage}
-        </AuthNotice>
+        <AuthNotice type="error">{pageState.emailChangeDeliveryFailureMessage}</AuthNotice>
       )}
       {pageState.showInstructions && (
-        <AuthNotice>Open the link from your confirmation message, or request a new one below.</AuthNotice>
+        <AuthNotice>
+          Open the link from your confirmation message, or request a new one below.
+        </AuthNotice>
       )}
       {pageState.token && <EmailConfirmationAction token={pageState.token} />}
       <ResendConfirmationForm />

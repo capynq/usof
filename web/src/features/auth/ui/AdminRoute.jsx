@@ -5,6 +5,7 @@ import { ProtectedRoute } from "./ProtectedRoute.jsx";
 
 export const AdminRoute = ({ children }) => {
   const user = useSelector(selectCurrentUser);
+
   return (
     <ProtectedRoute>
       {user?.role === "admin" ? (

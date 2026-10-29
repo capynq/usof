@@ -6,6 +6,7 @@ import styles from "./HomeTip.module.css";
 export const HelpMascot = () => {
   const { characterId, tip, nextTip } = useHomeTipController();
   const mascot = MASCOTS[characterId];
+
   return (
     <aside className={styles.panel} data-home-tip data-character={characterId}>
       <MascotArt
@@ -14,13 +15,10 @@ export const HelpMascot = () => {
         pose="welcome"
         className={styles.greeting}
       />
-      <div
-        className={styles.message}
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <p><span className={styles.name}>{mascot.name}:</span> {tip}</p>
+      <div className={styles.message} role="status" aria-live="polite" aria-atomic="true">
+        <p>
+          <span className={styles.name}>{mascot.name}:</span> {tip}
+        </p>
       </div>
       <button
         className={styles.next}

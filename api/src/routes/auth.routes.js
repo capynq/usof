@@ -10,5 +10,6 @@ export const authRoutes = (controller, authenticate) => {
   router.post("/email-confirm", controller.resendConfirmation);
   router.post("/password-reset", controller.requestReset);
   router.post("/password-reset/:confirm_token", controller.reset);
+
   return router;
 };

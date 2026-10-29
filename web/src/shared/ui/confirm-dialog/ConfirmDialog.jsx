@@ -24,8 +24,17 @@ export const ConfirmDialog = ({
       descriptionId={messageId}
       footer={
         <div className={styles.actions}>
-          <button className="button" type="button" disabled={confirmDisabled} onClick={onCancel}>Cancel</button>
-          <button className={`button ${styles.confirm}`} type="button" disabled={confirmDisabled} onClick={onConfirm}>{confirmLabel}</button>
+          <button className="button" type="button" disabled={confirmDisabled} onClick={onCancel}>
+            Cancel
+          </button>
+          <button
+            className={`button ${styles.confirm}`}
+            type="button"
+            disabled={confirmDisabled}
+            onClick={onConfirm}
+          >
+            {confirmLabel}
+          </button>
         </div>
       }
     >

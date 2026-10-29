@@ -13,11 +13,7 @@ export const PostForm = ({ post, isAdmin = false }) => {
     <form className={styles.form} onSubmit={form.submit}>
       <FormCompanion context={isAdmin ? "manage" : "writing"} />
       {isAdmin && form.isEditing && (
-        <AdminPostControls
-          post={post}
-          status={form.values.status}
-          onChange={form.setField}
-        />
+        <AdminPostControls post={post} status={form.values.status} onChange={form.setField} />
       )}
       {!isAdmin && <PostFields values={form.values} onChange={form.setField} />}
       <CategoryPicker

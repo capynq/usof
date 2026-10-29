@@ -1,7 +1,4 @@
-import {
-  DATABASE_NAME_PATTERN,
-  DECIMAL_PORT_PATTERN,
-} from "../constants/regex.js";
+import { DATABASE_NAME_PATTERN, DECIMAL_PORT_PATTERN } from "../constants/regex.js";
 
 export const loadConfig = (source = process.env) => {
   const required = (name) => {
@@ -14,11 +11,8 @@ export const loadConfig = (source = process.env) => {
 
   const port = (name, fallback) => {
     const value = source[name] ?? String(fallback);
-    if (
-      !DECIMAL_PORT_PATTERN.test(value) ||
-      Number(value) < 1 ||
-      Number(value) > 65535
-    ) {
+
+    if (!DECIMAL_PORT_PATTERN.test(value) || Number(value) < 1 || Number(value) > 65535) {
       throw new Error(`Invalid configuration: ${name}`);
     }
 
@@ -34,12 +28,11 @@ export const loadConfig = (source = process.env) => {
   const authSecret = required("AUTH_SECRET");
 
   if (authSecret.length < 32 || authSecret.startsWith("replace-")) {
-    throw new Error(
-      "AUTH_SECRET must be a new random secret of at least 32 characters",
-    );
+    throw new Error("AUTH_SECRET must be a new random secret of at least 32 characters");
   }
 
   const baseUrl = new URL(required("APP_BASE_URL"));
+
   if (
     !["http:", "https:"].includes(baseUrl.protocol) ||
     baseUrl.username ||
@@ -52,6 +45,7 @@ export const loadConfig = (source = process.env) => {
   }
 
   const webBaseUrl = new URL(source.WEB_BASE_URL ?? baseUrl.origin);
+
   if (
     !["http:", "https:"].includes(webBaseUrl.protocol) ||
     webBaseUrl.username ||
@@ -66,13 +60,8 @@ export const loadConfig = (source = process.env) => {
   const production = source.NODE_ENV === "production";
   const mailMode = source.MAIL_MODE ?? (production ? "smtp" : "file");
 
-  if (
-    !["file", "smtp"].includes(mailMode) ||
-    (production && mailMode !== "smtp")
-  ) {
-    throw new Error(
-      "MAIL_MODE must be smtp in production or file for development",
-    );
+  if (!["file", "smtp"].includes(mailMode) || (production && mailMode !== "smtp")) {
+    throw new Error("MAIL_MODE must be smtp in production or file for development");
   }
 
   const smtp = {

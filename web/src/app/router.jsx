@@ -42,38 +42,31 @@ export const router = createBrowserRouter([
           {
             path: "users",
             lazy: async () => ({
-              Component: (await import("../pages/manage/ui/ManageUsers.jsx"))
-                .ManageUsers,
+              Component: (await import("../pages/manage/ui/ManageUsers.jsx")).ManageUsers,
             }),
           },
           {
             path: "categories",
             lazy: async () => ({
-              Component: (
-                await import("../pages/manage/ui/ManageCategories.jsx")
-              ).ManageCategories,
+              Component: (await import("../pages/manage/ui/ManageCategories.jsx")).ManageCategories,
             }),
           },
           {
             path: "posts",
             lazy: async () => ({
-              Component: (await import("../pages/manage/ui/ManagePosts.jsx"))
-                .ManagePosts,
+              Component: (await import("../pages/manage/ui/ManagePosts.jsx")).ManagePosts,
             }),
           },
           {
             path: "comments",
             lazy: async () => ({
-              Component: (await import("../pages/manage/ui/ManageComments.jsx"))
-                .ManageComments,
+              Component: (await import("../pages/manage/ui/ManageComments.jsx")).ManageComments,
             }),
           },
           {
             path: "reactions",
             lazy: async () => ({
-              Component: (
-                await import("../pages/manage/ui/ManageReactions.jsx")
-              ).ManageReactions,
+              Component: (await import("../pages/manage/ui/ManageReactions.jsx")).ManageReactions,
             }),
           },
         ],

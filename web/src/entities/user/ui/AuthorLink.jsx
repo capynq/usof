@@ -6,11 +6,7 @@ export const AuthorLink = ({ user, children, className, ariaLabel }) => {
   const content = children ?? getUserDisplayName(user, "View profile");
 
   if (!user?.id) {
-    return (
-      <span className={className}>
-        {children ?? getUserDisplayName(user)}
-      </span>
-    );
+    return <span className={className}>{children ?? getUserDisplayName(user)}</span>;
   }
 
   return (

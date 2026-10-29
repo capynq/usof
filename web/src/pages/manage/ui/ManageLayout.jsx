@@ -4,16 +4,11 @@ import styles from "./ManageLayout.module.css";
 
 const sections = ["users", "categories", "posts", "comments", "reactions"];
 export const ManageLayout = () => (
-  <WindowShell
-    title="Usof community management"
-    bodyClassName={styles.managementBody}
-  >
+  <WindowShell title="Usof community management" bodyClassName={styles.managementBody}>
     <nav className="management-nav" aria-label="Management sections">
       {sections.map((section) => (
         <NavLink key={section} to={`/manage/${section}`}>
-          {section === "users"
-            ? "Members"
-            : section[0].toUpperCase() + section.slice(1)}
+          {section === "users" ? "Members" : section[0].toUpperCase() + section.slice(1)}
         </NavLink>
       ))}
     </nav>

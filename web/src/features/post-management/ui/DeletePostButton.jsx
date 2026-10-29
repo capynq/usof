@@ -23,7 +23,11 @@ export const DeletePostButton = ({ postId }) => {
       >
         Delete question
       </button>
-      {deletion.errorMessage && <p className={styles.error} role="alert">{deletion.errorMessage}</p>}
+      {deletion.errorMessage && (
+        <p className={styles.error} role="alert">
+          {deletion.errorMessage}
+        </p>
+      )}
       {deletion.isConfirming && (
         <ConfirmDialog
           open={deletion.isConfirming}

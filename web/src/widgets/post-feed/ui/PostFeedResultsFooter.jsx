@@ -15,7 +15,11 @@ export const PostFeedResultsFooter = ({
     <label className={styles.pageSizeField}>
       <span>Questions per page</span>
       <SelectControl value={pageSize} onChange={onPageSizeChange}>
-        {POST_FEED_PAGE_SIZES.map((size) => <option key={size} value={size}>{size}</option>)}
+        {POST_FEED_PAGE_SIZES.map((size) => (
+          <option key={size} value={size}>
+            {size}
+          </option>
+        ))}
       </SelectControl>
     </label>
     {!isLoading && !error && data?.meta?.total_pages > 1 && (

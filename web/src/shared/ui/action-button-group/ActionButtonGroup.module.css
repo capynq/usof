@@ -13,7 +13,12 @@
   padding: var(--button-padding);
   border: 1px solid var(--action-color-border);
   border-radius: 3px;
-  background: linear-gradient(180deg, var(--surface-color-raised) 0%, var(--link-button-surface-middle) 86%, var(--link-button-surface-end) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--surface-color-raised) 0%,
+    var(--link-button-surface-middle) 86%,
+    var(--link-button-surface-end) 100%
+  );
   color: var(--text-color-default);
   font-family: var(--sans-serif, Tahoma, Arial, sans-serif);
   font-size: 0.6875rem;
@@ -22,19 +27,33 @@
 }
 
 .action:hover:not(:disabled) {
-  box-shadow: inset -1px 1px var(--link-button-hover-highlight), inset 1px 2px var(--link-button-hover-shadow), inset -2px 2px var(--link-button-hover-shadow-strong), inset 2px -2px var(--link-button-hover-border);
+  box-shadow:
+    inset -1px 1px var(--link-button-hover-highlight),
+    inset 1px 2px var(--link-button-hover-shadow),
+    inset -2px 2px var(--link-button-hover-shadow-strong),
+    inset 2px -2px var(--link-button-hover-border);
   color: var(--text-color-default);
   text-decoration: none;
 }
 
 .action:active:not(:disabled) {
-  background: linear-gradient(180deg, var(--link-button-active-start) 0%, var(--link-button-active-middle) 8%, var(--link-button-active-end) 94%, var(--link-button-active-highlight) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--link-button-active-start) 0%,
+    var(--link-button-active-middle) 8%,
+    var(--link-button-active-end) 94%,
+    var(--link-button-active-highlight) 100%
+  );
   box-shadow: none;
 }
 
 .action:focus-visible {
-  box-shadow: inset -1px 1px var(--link-button-focus-start), inset 1px 2px var(--link-button-focus-middle), inset -2px 2px var(--link-button-focus-end),
-    inset 1px -1px var(--action-color-focus), inset 2px -2px var(--action-color-focus);
+  box-shadow:
+    inset -1px 1px var(--link-button-focus-start),
+    inset 1px 2px var(--link-button-focus-middle),
+    inset -2px 2px var(--link-button-focus-end),
+    inset 1px -1px var(--action-color-focus),
+    inset 2px -2px var(--action-color-focus);
 }
 
 .action:disabled {

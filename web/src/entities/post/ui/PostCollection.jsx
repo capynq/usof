@@ -1,10 +1,7 @@
 import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { StateCompanion } from "../../../shared/ui/mascot/StateCompanion.jsx";
 import { PostPreview } from "./PostPreview.jsx";
-import {
-  API_ERROR_MESSAGES,
-  getErrorMessage,
-} from "../../../shared/api/index.js";
+import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.js";
 
 export const PostCollection = ({
   posts,
@@ -51,11 +48,7 @@ export const PostCollection = ({
   return (
     <div className={listClassName}>
       {posts.map((post) => (
-        <PostPreview
-          key={post.id}
-          post={post}
-          actions={renderActions?.(post)}
-        />
+        <PostPreview key={post.id} post={post} actions={renderActions?.(post)} />
       ))}
     </div>
   );

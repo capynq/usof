@@ -7,9 +7,7 @@ import { isAdmin, requireAuthenticatedUser } from "./access.js";
 
 const visible = (post, viewer) =>
   post &&
-  (post.status === "active" ||
-    isAdmin(viewer) ||
-    Number(post.author_id) === Number(viewer?.id));
+  (post.status === "active" || isAdmin(viewer) || Number(post.author_id) === Number(viewer?.id));
 const integerIds = (values) => [
   ...new Set(
     (Array.isArray(values) ? values : [])
@@ -21,29 +19,24 @@ const integerIds = (values) => [
 
 const options = (query) => ({
   page: Math.max(1, Number.parseInt(query.page, 10) || 1),
-  pageSize: Math.min(
-    100,
-    Math.max(1, Number.parseInt(query.page_size, 10) || 20),
-  ),
+  pageSize: Math.min(100, Math.max(1, Number.parseInt(query.page_size, 10) || 20)),
   sort: query.sort === "date" ? "date" : "likes",
   direction: query.direction === "asc" ? "ASC" : "DESC",
   authorId: query.author_id ? Number.parseInt(query.author_id, 10) : null,
   search: query.search?.trim() || null,
   summary: query.summary === true,
   categories: integerIds(query.categories),
-  dateFrom: DATE_ONLY_PATTERN.test(query.date_from || "")
-    ? query.date_from
-    : null,
+  dateFrom: DATE_ONLY_PATTERN.test(query.date_from || "") ? query.date_from : null,
   dateTo: DATE_ONLY_PATTERN.test(query.date_to || "") ? query.date_to : null,
   status: ["active", "inactive"].includes(query.status) ? query.status : null,
 });
 
-const fullPostFields =
-  "p.id,p.author_id,p.title,p.content,p.status,p.publish_date,p.updated_at";
+const fullPostFields = "p.id,p.author_id,p.title,p.content,p.status,p.publish_date,p.updated_at";
 const summaryPostFields =
   "p.id,p.author_id,p.title,LEFT(p.content,320) AS excerpt,p.status,p.publish_date,p.updated_at";
 const reactionCountFields =
   "COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count";
+
 const attachSummaries = async (connection, posts, viewer) => {
   if (!posts.length) {
     return posts;
@@ -62,9 +55,7 @@ const attachSummaries = async (connection, posts, viewer) => {
     `SELECT id,login,full_name,role,profile_picture,rating,created_at FROM users WHERE id IN (${authorPlaceholders})`,
     authorIds,
   );
-  const authorsById = new Map(
-    authors.map((author) => [Number(author.id), author]),
-  );
+  const authorsById = new Map(authors.map((author) => [Number(author.id), author]));
   const [categories] = await connection.query(
     `SELECT pc.post_id,c.id,c.title,c.description,c.created_at,c.updated_at FROM post_categories pc JOIN categories c ON c.id = pc.category_id WHERE pc.post_id IN (${placeholders}) ORDER BY c.title,c.id`,
     postIds,
@@ -74,6 +65,7 @@ const attachSummaries = async (connection, posts, viewer) => {
     postIds,
   );
   const categoriesByPost = new Map();
+
   for (const category of categories) {
     const postId = Number(category.post_id);
     const postCategories = categoriesByPost.get(postId) ?? [];
@@ -86,12 +78,11 @@ const attachSummaries = async (connection, posts, viewer) => {
     });
     categoriesByPost.set(postId, postCategories);
   }
+
   const commentCountsByPost = new Map(
-    commentCounts.map((row) => [
-      Number(row.post_id),
-      Number(row.comment_count),
-    ]),
+    commentCounts.map((row) => [Number(row.post_id), Number(row.comment_count)]),
   );
+
   return posts.map((post) => ({
     ...post,
     is_favorite: post.is_favorite ?? favoriteIds.has(Number(post.id)),
@@ -110,12 +101,9 @@ const ensureCategories = async (connection, categories) => {
     `SELECT id FROM categories WHERE id IN (${categories.map(() => "?").join(",")})`,
     categories,
   );
+
   if (rows.length !== categories.length) {
-    throw new AppError(
-      400,
-      ERROR_CODES.INVALID_CATEGORY,
-      "One or more categories do not exist",
-    );
+    throw new AppError(400, ERROR_CODES.INVALID_CATEGORY, "One or more categories do not exist");
   }
 };
 
@@ -149,6 +137,7 @@ export class Post {
     const queryOptions = options(query);
     const where = [];
     const values = [];
+
     if (!isAdmin(viewer)) {
       where.push("(p.status = 'active' OR p.author_id = ?)");
       values.push(viewer?.id || 0);
@@ -165,9 +154,7 @@ export class Post {
     }
 
     if (queryOptions.search) {
-      where.push(
-        "(INSTR(LOWER(p.title), LOWER(?)) > 0 OR INSTR(LOWER(p.content), LOWER(?)) > 0)",
-      );
+      where.push("(INSTR(LOWER(p.title), LOWER(?)) > 0 OR INSTR(LOWER(p.content), LOWER(?)) > 0)");
       values.push(queryOptions.search, queryOptions.search);
     }
 
@@ -202,6 +189,7 @@ export class Post {
       `SELECT COUNT(*) AS total FROM posts p ${condition}`,
       values,
     );
+
     return pageResult(
       this.db,
       rows,
@@ -218,6 +206,7 @@ export class Post {
     const queryOptions = options(query);
     const where = ["f.user_id = ?"];
     const values = [viewer.id];
+
     if (!isAdmin(viewer)) {
       where.push("(p.status = 'active' OR p.author_id = ?)");
       values.push(viewer.id);
@@ -233,6 +222,7 @@ export class Post {
       `SELECT COUNT(*) AS total FROM favorites f JOIN posts p ON p.id = f.post_id ${condition}`,
       values,
     );
+
     return pageResult(
       this.db,
       rows,
@@ -251,6 +241,7 @@ export class Post {
         "SELECT id,author_id,status FROM posts WHERE id = ? FOR UPDATE",
         [id],
       );
+
       if (!visible(posts[0], user)) {
         throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
       }
@@ -266,10 +257,10 @@ export class Post {
     requireAuthenticatedUser(user);
 
     return transaction(this.db, async (connection) => {
-      await connection.query(
-        "DELETE FROM favorites WHERE user_id = ? AND post_id = ?",
-        [user.id, id],
-      );
+      await connection.query("DELETE FROM favorites WHERE user_id = ? AND post_id = ?", [
+        user.id,
+        id,
+      ]);
     });
   }
 
@@ -278,6 +269,7 @@ export class Post {
       `SELECT ${fullPostFields},COUNT(CASE WHEN l.type = 'like' THEN l.id END) AS like_count,COUNT(CASE WHEN l.type = 'dislike' THEN l.id END) AS dislike_count,COUNT(l.id) AS reaction_count,MAX(CASE WHEN l.author_id = ? THEN l.type END) AS viewer_reaction FROM posts p LEFT JOIN likes l ON l.post_id = p.id WHERE p.id = ? GROUP BY p.id`,
       [viewer?.id || 0, id],
     );
+
     if (!visible(rows[0], viewer)) {
       throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
     }
@@ -303,17 +295,16 @@ export class Post {
 
       return result.insertId;
     });
+
     return this.get(createdId, user);
   }
 
   async update(id, input, user) {
     requireAuthenticatedUser(user);
 
-    const [posts] = await this.db.query(
-      "SELECT id,author_id,status FROM posts WHERE id = ?",
-      [id],
-    );
+    const [posts] = await this.db.query("SELECT id,author_id,status FROM posts WHERE id = ?", [id]);
     const post = posts[0];
+
     if (!visible(post, user)) {
       throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
     }
@@ -324,6 +315,7 @@ export class Post {
 
     const fields = [];
     const values = [];
+
     if (isAdmin(user)) {
       if (input.status !== undefined) {
         fields.push("status = ?");
@@ -343,22 +335,20 @@ export class Post {
 
     await transaction(this.db, async (connection) => {
       if (fields.length) {
-        await connection.query(
-          `UPDATE posts SET ${fields.join(", ")} WHERE id = ?`,
-          [...values, id],
-        );
+        await connection.query(`UPDATE posts SET ${fields.join(", ")} WHERE id = ?`, [
+          ...values,
+          id,
+        ]);
       }
 
       if (input.categories !== undefined) {
         const categories = integerIds(input.categories);
         await ensureCategories(connection, categories);
-        await connection.query(
-          "DELETE FROM post_categories WHERE post_id = ?",
-          [id],
-        );
+        await connection.query("DELETE FROM post_categories WHERE post_id = ?", [id]);
         await insertPostCategories(connection, id, categories);
       }
     });
+
     return this.get(id, user);
   }
 
@@ -371,6 +361,7 @@ export class Post {
         "SELECT id,author_id FROM posts WHERE id = ? FOR UPDATE",
         [id],
       );
+
       if (!rows[0]) {
         throw new AppError(404, ERROR_CODES.POST_NOT_FOUND, "Post not found");
       }
@@ -381,6 +372,7 @@ export class Post {
 
       await connection.query("DELETE FROM posts WHERE id = ?", [id]);
       await Like.recalculate(connection);
+
       return { id: Number(id) };
     });
   }

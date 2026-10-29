@@ -23,9 +23,9 @@ export const ResetPasswordForm = ({ token }) => {
         new_password: values.new_password,
       }).unwrap();
       setNotice(result.message);
-    } catch {
-    }
+    } catch {}
   };
+
   const form = useValidatedAuthForm({
     initialValues: RESET_INITIAL_VALUES,
     validator: validatePasswordReset,
@@ -69,11 +69,7 @@ export const ResetPasswordForm = ({ token }) => {
         type="password"
         value={form.values.password_confirmation}
       />
-      <AuthFormActions
-        isLoading={isLoading}
-        label="Save new password"
-        loadingLabel="Saving…"
-      />
+      <AuthFormActions isLoading={isLoading} label="Save new password" loadingLabel="Saving…" />
     </form>
   );
 };

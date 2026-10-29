@@ -14,7 +14,11 @@
   width: 100%;
   flex: 1;
   padding: 1.5rem var(--layout-content-gutter);
-  background: linear-gradient(180deg, var(--layout-surface-gradient-start), var(--layout-surface-gradient-end) 80%);
+  background: linear-gradient(
+    180deg,
+    var(--layout-surface-gradient-start),
+    var(--layout-surface-gradient-end) 80%
+  );
 }
 
 @media (max-width: 520px) {

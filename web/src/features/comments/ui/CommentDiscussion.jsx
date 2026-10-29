@@ -8,7 +8,10 @@ import styles from "./CommentDiscussion.module.css";
 
 export const CommentDiscussion = ({ postId, postStatus }) => {
   const discussion = useCommentDiscussionController({ postId, postStatus });
-  const { visible: showLoading, completing } = useMinimumLoading(discussion.isLoading, discussion.error);
+  const { visible: showLoading, completing } = useMinimumLoading(
+    discussion.isLoading,
+    discussion.error,
+  );
   useCommentAnchor(discussion.comments, !showLoading && !discussion.error);
 
   return (
@@ -17,9 +20,7 @@ export const CommentDiscussion = ({ postId, postStatus }) => {
         <h2 id="discussion-title">Discussion</h2>
         <span>{discussion.comments?.length ?? 0} comments</span>
       </div>
-      {discussion.canReply && discussion.currentUser && (
-        <CommentForm postId={postId} />
-      )}
+      {discussion.canReply && discussion.currentUser && <CommentForm postId={postId} />}
       <CommentDiscussionNotices
         canReply={discussion.canReply}
         currentUser={discussion.currentUser}
@@ -28,17 +29,15 @@ export const CommentDiscussion = ({ postId, postStatus }) => {
         completing={completing}
         commentTree={discussion.commentTree}
       />
-      {!showLoading &&
-        !discussion.error &&
-        discussion.commentTree.length > 0 && (
-          <CommentList
-            comments={discussion.commentTree}
-            postId={postId}
-            postStatus={postStatus}
-            canReply={discussion.canReply}
-            currentUser={discussion.currentUser}
-          />
-        )}
+      {!showLoading && !discussion.error && discussion.commentTree.length > 0 && (
+        <CommentList
+          comments={discussion.commentTree}
+          postId={postId}
+          postStatus={postStatus}
+          canReply={discussion.canReply}
+          currentUser={discussion.currentUser}
+        />
+      )}
     </section>
   );
 };

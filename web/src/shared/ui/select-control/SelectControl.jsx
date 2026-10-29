@@ -1,3 +1,1 @@
-export const SelectControl = ({ children, ...props }) => (
-  <select {...props}>{children}</select>
-);
+export const SelectControl = ({ children, ...props }) => <select {...props}>{children}</select>;

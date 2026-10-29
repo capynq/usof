@@ -3,15 +3,8 @@ import { ModalDialog } from "../../../shared/ui/confirm-dialog/ModalDialog.jsx";
 import { useUserEditor } from "../model/useUserEditor.js";
 
 export const UserEditor = ({ record, onClose }) => {
-  const {
-    values,
-    error,
-    isCreating,
-    isLoading,
-    change,
-    changeAndClearError,
-    submit,
-  } = useUserEditor({ record, onClose });
+  const { values, error, isCreating, isLoading, change, changeAndClearError, submit } =
+    useUserEditor({ record, onClose });
 
   return (
     <ModalDialog

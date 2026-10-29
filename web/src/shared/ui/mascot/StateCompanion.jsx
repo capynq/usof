@@ -4,6 +4,7 @@ import styles from "./PassiveMascot.module.css";
 
 export const StateCompanion = ({ kind = "empty", children }) => {
   const characterId = kind === "empty" ? "scout" : "byte";
+
   return (
     <div
       className={`${styles.state} ${styles[kind]}`}

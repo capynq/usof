@@ -8,9 +8,7 @@ const isDevelopment = import.meta.env.DEV;
 export const RouteErrorFallback = () => {
   const error = useRouteError();
   const [copyFeedback, setCopyFeedback] = useState("");
-  const details = isDevelopment
-    ? formatRouteError(error, isRouteErrorResponse)
-    : "";
+  const details = isDevelopment ? formatRouteError(error, isRouteErrorResponse) : "";
 
   const copyDetails = async () => {
     try {
@@ -24,19 +22,30 @@ export const RouteErrorFallback = () => {
   return (
     <main className={styles.screen}>
       <section className={styles.content} aria-labelledby="route-error-title">
-        <h1 id="route-error-title">A problem has been detected and Usof has stopped displaying this page.</h1>
-        <p>If this is the first time you have seen this screen, reload the page. If it appears again, return to Usof home.</p>
+        <h1 id="route-error-title">
+          A problem has been detected and Usof has stopped displaying this page.
+        </h1>
+        <p>
+          If this is the first time you have seen this screen, reload the page. If it appears again,
+          return to Usof home.
+        </p>
         <p>Any unsaved changes on this page may be lost.</p>
         <div className={styles.actions}>
-          <button type="button" onClick={() => window.location.reload()}>Reload page</button>
+          <button type="button" onClick={() => window.location.reload()}>
+            Reload page
+          </button>
           <Link to="/">Back to Usof home</Link>
         </div>
         {isDevelopment && (
           <section className={styles.details} aria-labelledby="error-details-title">
             <h2 id="error-details-title">Technical information:</h2>
             <pre>{details}</pre>
-            <button type="button" onClick={copyDetails}>Copy error details</button>
-            <p className={styles.feedback} role="status">{copyFeedback}</p>
+            <button type="button" onClick={copyDetails}>
+              Copy error details
+            </button>
+            <p className={styles.feedback} role="status">
+              {copyFeedback}
+            </p>
           </section>
         )}
       </section>

@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { getErrorMessage } from "../../../shared/api/index.js";
-import {
-  useCreatePostMutation,
-  useUpdatePostMutation,
-} from "../../../entities/post/index.js";
+import { useCreatePostMutation, useUpdatePostMutation } from "../../../entities/post/index.js";
 import { useGetCategoriesQuery } from "../../../entities/category/index.js";
 import { EMPTY_POST_VALUES } from "./constants.js";
 import { buildPostPayload, toggleCategorySelection } from "./postForm.js";
@@ -24,7 +21,11 @@ export const usePostFormController = ({ post, isAdmin }) => {
   const navigate = useNavigate();
   const [values, setValues] = useState(() => getInitialValues(post));
   const [formError, setFormError] = useState(null);
-  const { data: categories, error: categoriesError, isLoading: categoriesLoading } = useGetCategoriesQuery();
+  const {
+    data: categories,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useGetCategoriesQuery();
   const [createPost, createState] = useCreatePostMutation();
   const [updatePost, updateState] = useUpdatePostMutation();
   const isEditing = Boolean(post);
@@ -48,6 +49,7 @@ export const usePostFormController = ({ post, isAdmin }) => {
 
     if (!values.categories.length) {
       setFormError("Choose at least one category.");
+
       return;
     }
 
@@ -58,6 +60,7 @@ export const usePostFormController = ({ post, isAdmin }) => {
           ...buildPostPayload(values, { isEditing, isAdmin }),
         }).unwrap();
         navigate(`/posts/${post.id}`);
+
         return;
       }
 

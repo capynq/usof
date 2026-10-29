@@ -1,12 +1,6 @@
 import { Dialog } from "./Dialog.jsx";
 
-export const ModalDialog = ({
-  open,
-  title,
-  onClose,
-  busy = false,
-  children,
-}) => {
+export const ModalDialog = ({ open, title, onClose, busy = false, children }) => {
   return (
     <Dialog
       open={open}

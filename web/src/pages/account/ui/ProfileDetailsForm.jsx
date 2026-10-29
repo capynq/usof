@@ -85,14 +85,8 @@ export const ProfileDetailsForm = ({ user }) => {
           maxLength: 120,
         }}
       />
-      {notice && (
-        <FormFeedback type={notice.type}>{notice.message}</FormFeedback>
-      )}
-      <button
-        className="button"
-        type="submit"
-        disabled={profileState.isLoading}
-      >
+      {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
+      <button className="button" type="submit" disabled={profileState.isLoading}>
         Save profile
       </button>
     </form>

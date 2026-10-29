@@ -4,7 +4,11 @@ import styles from "./AboutPage.module.css";
 const operations = [
   () => JSON.parse("{"),
   () => decodeURIComponent("%"),
-  () => { const value = null; return value.missing; },
+  () => {
+    const value = null;
+
+    return value.missing;
+  },
 ];
 
 const ErrorPreview = () => {

@@ -8,34 +8,27 @@ import {
   POST_FEED_PAGE_SIZES,
   getPostFeedPageSizeParams,
 } from "../../../widgets/post-feed/model/postFeedQuery.js";
-import {
-  parsePositivePage,
-  withPageParam,
-} from "../../../shared/lib/queryParams.js";
+import { parsePositivePage, withPageParam } from "../../../shared/lib/queryParams.js";
 import { WindowShell } from "../../../shared/ui/window-shell/index.js";
 
 export const FavoritesPage = () => {
   const [params, setParams] = useSearchParams();
   const requestedSize = Number(params.get("page_size"));
-  const pageSize = POST_FEED_PAGE_SIZES.includes(requestedSize)
-    ? requestedSize
-    : 20;
+  const pageSize = POST_FEED_PAGE_SIZES.includes(requestedSize) ? requestedSize : 20;
   const query = useGetFavoritesQuery({
     page: parsePositivePage(params.get("page")),
     page_size: pageSize,
   });
   useEffect(() => {
     const meta = query.data?.meta;
-    if (
-      meta &&
-      !query.isFetching &&
-      meta.page > Math.max(1, meta.total_pages)
-    ) {
+
+    if (meta && !query.isFetching && meta.page > Math.max(1, meta.total_pages)) {
       setParams(withPageParam(params, Math.max(1, meta.total_pages)), {
         replace: true,
       });
     }
   }, [query.data, query.isFetching, params, setParams]);
+
   return (
     <WindowShell title="My favorites">
       <h1>Your little collection of useful questions</h1>
@@ -55,9 +48,7 @@ export const FavoritesPage = () => {
         pageSize={pageSize}
         onPageChange={(page) => setParams(withPageParam(params, page))}
         onPageSizeChange={(event) =>
-          setParams(
-            getPostFeedPageSizeParams(params.toString(), event.target.value),
-          )
+          setParams(getPostFeedPageSizeParams(params.toString(), event.target.value))
         }
       />
     </WindowShell>

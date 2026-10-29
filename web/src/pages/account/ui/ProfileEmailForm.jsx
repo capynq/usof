@@ -12,12 +12,15 @@ export const ProfileEmailForm = ({ user }) => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const submit = async (event) => {
     event.preventDefault();
     const nextEmail = email.trim().toLowerCase();
+
     if (nextEmail === user.email) {
       return;
     }
+
     try {
       const result = await update({
         userId: user.id,
@@ -37,6 +40,7 @@ export const ProfileEmailForm = ({ user }) => {
       }
     }
   };
+
   return (
     <form className={styles.form} onSubmit={submit}>
       <label>
@@ -53,15 +57,9 @@ export const ProfileEmailForm = ({ user }) => {
           }}
         />
       </label>
-      <p>
-        Changing your email signs you out. Confirm the new address before
-        signing in again.
-      </p>
+      <p>Changing your email signs you out. Confirm the new address before signing in again.</p>
       {error && <p role="alert">{error}</p>}
-      <button
-        type="submit"
-        disabled={state.isLoading || email.trim().toLowerCase() === user.email}
-      >
+      <button type="submit" disabled={state.isLoading || email.trim().toLowerCase() === user.email}>
         {state.isLoading ? "Saving email…" : "Change email address"}
       </button>
     </form>

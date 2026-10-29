@@ -11,8 +11,7 @@ import { getErrorMessage } from "../../../shared/api/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
 export const ResendConfirmationForm = () => {
-  const [resendConfirmation, { data, error, isLoading, reset }] =
-    useResendConfirmationMutation();
+  const [resendConfirmation, { data, error, isLoading, reset }] = useResendConfirmationMutation();
 
   const form = useValidatedAuthForm({
     initialValues: EMAIL_INITIAL_VALUES,

@@ -8,8 +8,10 @@ export const useSessionExpiry = ({ dispatch, expiresAt, status }) => {
     if (status !== AUTH_STATUS.authenticated || !expiresAt) return undefined;
 
     const remaining = expiresAt - Date.now();
+
     if (remaining <= 0) {
       endAuthSession(dispatch, sessionExpired());
+
       return undefined;
     }
 

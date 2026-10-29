@@ -12,10 +12,9 @@ export const adminRoutes = async (services, users, config) => {
   router.use(sameOrigin(config));
   router.use(
     "/auth-assets",
-    express.static(
-      fileURLToPath(new URL("../views/assets/", import.meta.url)),
-      { dotfiles: "deny" },
-    ),
+    express.static(fileURLToPath(new URL("../views/assets/", import.meta.url)), {
+      dotfiles: "deny",
+    }),
   );
   router.get("/login", controller.loginPage);
   router.post("/login", express.json({ limit: "4kb" }), controller.login);
@@ -30,5 +29,6 @@ export const adminRoutes = async (services, users, config) => {
       multiples: false,
     }),
   );
+
   return router;
 };

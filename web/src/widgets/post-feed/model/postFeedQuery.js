@@ -1,7 +1,4 @@
-import {
-  CATEGORY_ID_PATTERN,
-  DATE_ONLY_PATTERN,
-} from "../../../shared/lib/regexPatterns.js";
+import { CATEGORY_ID_PATTERN, DATE_ONLY_PATTERN } from "../../../shared/lib/regexPatterns.js";
 import {
   parsePositivePage,
   toSearchParams,
@@ -14,19 +11,15 @@ export const POST_FEED_PAGE_SIZES = [10, 20, 50, 100];
 const isDate = (value) => {
   if (!DATE_ONLY_PATTERN.test(value)) return false;
   const parsed = new Date(`${value}T00:00:00.000Z`);
-  return (
-    !Number.isNaN(parsed.getTime()) &&
-    parsed.toISOString().slice(0, 10) === value
-  );
+
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 };
 
 const readFilters = (searchParams, canFilterStatus) => {
   const rawCategory = searchParams.get("category") ?? "";
   const requestedStatus = searchParams.get("status");
   const status =
-    canFilterStatus && ["active", "inactive"].includes(requestedStatus)
-      ? requestedStatus
-      : "";
+    canFilterStatus && ["active", "inactive"].includes(requestedStatus) ? requestedStatus : "";
   const dateFrom = searchParams.get("date_from") ?? "";
   const dateTo = searchParams.get("date_to") ?? "";
 
@@ -35,34 +28,27 @@ const readFilters = (searchParams, canFilterStatus) => {
     category: CATEGORY_ID_PATTERN.test(rawCategory) ? rawCategory : "",
     date_from: isDate(dateFrom) ? dateFrom : "",
     date_to: isDate(dateTo) ? dateTo : "",
-    sort: searchParams.get("sort") === "likes"
-      ? searchParams.get("direction") === "asc" ? "likes-asc" : "likes"
-      : "date",
+    sort:
+      searchParams.get("sort") === "likes"
+        ? searchParams.get("direction") === "asc"
+          ? "likes-asc"
+          : "likes"
+        : "date",
     status,
   };
 };
 
-export const getPostFeedQueryState = ({
-  searchParams,
-  user,
-  lockedCategoryId,
-  authorId,
-}) => {
+export const getPostFeedQueryState = ({ searchParams, user, lockedCategoryId, authorId }) => {
   const page = parsePositivePage(searchParams.get("page"));
   const requestedPageSize = Number(searchParams.get("page_size"));
   const pageSize = POST_FEED_PAGE_SIZES.includes(requestedPageSize)
     ? requestedPageSize
     : RECENT_POST_PAGE_SIZE;
   const canFilterStatus = Boolean(
-    user &&
-    (!authorId ||
-      Number(user.id) === Number(authorId) ||
-      user.role === "admin"),
+    user && (!authorId || Number(user.id) === Number(authorId) || user.role === "admin"),
   );
   const filters = readFilters(searchParams, canFilterStatus);
-  const categoryId =
-    lockedCategoryId ??
-    (filters.category ? Number(filters.category) : undefined);
+  const categoryId = lockedCategoryId ?? (filters.category ? Number(filters.category) : undefined);
 
   const queryArgs = {
     sort: filters.sort === "date" ? "date" : "likes",
@@ -81,10 +67,7 @@ export const getPostFeedQueryState = ({
   return { filters, page, pageSize, queryArgs, canFilterStatus };
 };
 
-export const getPostFeedFilterParams = (
-  values,
-  { lockedCategoryId, user, pageSize },
-) =>
+export const getPostFeedFilterParams = (values, { lockedCategoryId, user, pageSize }) =>
   new URLSearchParams(
     toSearchParams({
       search: values.search.trim(),
@@ -94,8 +77,7 @@ export const getPostFeedFilterParams = (
       sort: values.sort === "likes" || values.sort === "likes-asc" ? "likes" : undefined,
       direction: values.sort === "likes-asc" ? "asc" : undefined,
       status: user ? values.status : undefined,
-      page_size:
-        pageSize === RECENT_POST_PAGE_SIZE ? undefined : String(pageSize),
+      page_size: pageSize === RECENT_POST_PAGE_SIZE ? undefined : String(pageSize),
     }),
   );
 

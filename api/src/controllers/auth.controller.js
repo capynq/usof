@@ -10,13 +10,12 @@ export const authController = (auth, config) => {
       },
     });
   };
+
   return {
-    me: async (request, response) =>
-      response.json({ data: await auth.me(request.user) }),
+    me: async (request, response) => response.json({ data: await auth.me(request.user) }),
     register: async (request, response) =>
       response.status(201).json({ data: await auth.register(request.body) }),
-    login: async (request, response) =>
-      response.json({ data: await auth.login(request.body) }),
+    login: async (request, response) => response.json({ data: await auth.login(request.body) }),
     logout: async (request, response) => {
       await auth.logout(request.user);
       response.status(204).end();

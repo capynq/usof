@@ -24,30 +24,25 @@ export const useAuthSession = () => {
   });
 
   useEffect(() => {
-    if (
-      [AUTH_STATUS.restoring, AUTH_STATUS.authenticated].includes(
-        auth.status,
-      ) &&
-      data
-    ) {
+    if ([AUTH_STATUS.restoring, AUTH_STATUS.authenticated].includes(auth.status) && data) {
       dispatch(sessionRestored(data));
     }
   }, [auth.status, data, dispatch]);
 
   useEffect(() => {
-    if (
-      auth.status === AUTH_STATUS.restoring &&
-      error &&
-      error.status !== 401
-    ) {
+    if (auth.status === AUTH_STATUS.restoring && error && error.status !== 401) {
       dispatch(sessionRestoreFailed());
     }
   }, [auth.status, dispatch, error]);
 
   useEffect(() => {
     const syncSession = (event) => {
-      if (event.storageArea !== window.localStorage ||
-          (event.key !== SESSION_STORAGE_KEY && event.key !== null)) return;
+      if (
+        event.storageArea !== window.localStorage ||
+        (event.key !== SESSION_STORAGE_KEY && event.key !== null)
+      )
+        return;
+
       try {
         window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
       } catch {
@@ -56,15 +51,18 @@ export const useAuthSession = () => {
             SESSION_STORAGE_KEY,
             event.newValue ?? JSON.stringify({ tabLocal: true, ended: true }),
           );
-        } catch { }
+        } catch {}
       }
+
       const session = readStoredSession();
       if (session?.token === auth.token && session?.expiresAt === auth.expiresAt) return;
       dispatch(baseApi.util.resetApiState());
       if (session?.token) dispatch(sessionSynced(session));
       else dispatch(sessionEnded());
     };
+
     window.addEventListener("storage", syncSession);
+
     return () => window.removeEventListener("storage", syncSession);
   }, [auth.token, auth.expiresAt, dispatch]);
 

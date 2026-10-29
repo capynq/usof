@@ -1,14 +1,7 @@
 import { CommentBody } from "./CommentBody.jsx";
 import styles from "./CommentItem.module.css";
 
-export const CommentItem = ({
-  comment,
-  postId,
-  postStatus,
-  canReply,
-  currentUser,
-  depth = 0,
-}) => {
+export const CommentItem = ({ comment, postId, postStatus, canReply, currentUser, depth = 0 }) => {
   const replyDepth = Math.min(depth + 1, 4);
   const replyLabel = `Replies to ${comment.author?.login || "comment"}`;
 
@@ -22,11 +15,7 @@ export const CommentItem = ({
         currentUser={currentUser}
       />
       {comment.replies.length > 0 && (
-        <ol
-          className={styles.replies}
-          data-depth={replyDepth}
-          aria-label={replyLabel}
-        >
+        <ol className={styles.replies} data-depth={replyDepth} aria-label={replyLabel}>
           {comment.replies.map((reply) => (
             <CommentItem
               key={reply.id}

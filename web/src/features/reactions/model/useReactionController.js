@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { getErrorMessage } from "../../../shared/api/index.js";
-import {
-  useCreateReactionMutation,
-  useDeleteReactionMutation,
-} from "../api/reactionsApi.js";
+import { useCreateReactionMutation, useDeleteReactionMutation } from "../api/reactionsApi.js";
 
 export const useReactionController = ({
   target,
@@ -30,6 +27,7 @@ export const useReactionController = ({
     }
 
     setErrorMessage(null);
+
     try {
       if (viewerReaction === type) {
         await deleteReaction({ target, targetId, postId }).unwrap();
@@ -37,6 +35,7 @@ export const useReactionController = ({
         if (viewerReaction) {
           await deleteReaction({ target, targetId, postId, skipRefresh: true }).unwrap();
         }
+
         await createReaction({ target, targetId, postId, type }).unwrap();
       }
     } catch (error) {

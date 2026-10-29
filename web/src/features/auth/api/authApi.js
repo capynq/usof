@@ -19,6 +19,7 @@ export const authApi = baseApi.injectEndpoints({
       transformResponse: unwrapResponse,
       onQueryStarted: async (_, { dispatch, getState, queryFulfilled }) => {
         const generation = getState().auth.generation;
+
         try {
           const { data } = await queryFulfilled;
           if (getState().auth.generation !== generation) return;
@@ -80,6 +81,7 @@ export const authApi = baseApi.injectEndpoints({
       transformResponse: unwrapResponse,
       onQueryStarted: async (_, { dispatch, getState, queryFulfilled }) => {
         const generation = getState().auth.generation;
+
         try {
           await queryFulfilled;
           if (getState().auth.generation === generation) endAuthSession(dispatch);

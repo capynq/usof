@@ -2,6 +2,7 @@ import { useState } from "react";
 import styles from "./Image.module.css";
 
 const revealedSources = new Set();
+
 export const Image = ({
   src,
   alt = "",
@@ -16,15 +17,18 @@ export const Image = ({
     reveal: false,
   });
   const current = loaded.src === src;
+
   const ready = (event) => {
     const animate = reveal && !revealedSources.has(src);
     revealedSources.add(src);
     setLoaded({ src, failed: false, reveal: animate });
     event.currentTarget.dataset.ready = "true";
   };
+
   if (current && loaded.failed) {
     return fallback;
   }
+
   return (
     <img
       {...props}

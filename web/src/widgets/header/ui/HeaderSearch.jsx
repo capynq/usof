@@ -7,9 +7,7 @@ export const HeaderSearch = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const currentSearch =
-    location.pathname === "/"
-      ? (new URLSearchParams(location.search).get("search") ?? "")
-      : "";
+    location.pathname === "/" ? (new URLSearchParams(location.search).get("search") ?? "") : "";
   const [value, setValue] = useState(currentSearch);
 
   useEffect(() => {

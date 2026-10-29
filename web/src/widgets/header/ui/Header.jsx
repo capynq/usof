@@ -12,13 +12,7 @@ export const Header = () => {
     <header className={styles.header}>
       <div className={styles.topRow}>
         <NavLink className={styles.brand} to="/" aria-label="Usof home">
-          <img
-            className={styles.brandMark}
-            src={usofMark}
-            alt=""
-            width="32"
-            height="32"
-          />
+          <img className={styles.brandMark} src={usofMark} alt="" width="32" height="32" />
           <span>Usof</span>
         </NavLink>
         <HeaderSearch />

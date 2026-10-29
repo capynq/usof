@@ -10,5 +10,6 @@ export const usersRoutes = (controller, authenticate, optional, admin) => {
   router.patch("/avatar", uploadAvatar, controller.avatar);
   router.patch("/:user_id", controller.update);
   router.delete("/:user_id", controller.delete);
+
   return router;
 };

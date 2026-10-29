@@ -8,16 +8,8 @@ export const PostPreview = ({ post, actions }) => {
 
   return (
     <article className={styles.preview}>
-      <PostPreviewSidebar
-        post={post}
-        likes={preview.likes}
-        replies={preview.replies}
-      />
-      <PostPreviewBody
-        post={post}
-        excerpt={preview.excerpt}
-        actions={actions}
-      />
+      <PostPreviewSidebar post={post} likes={preview.likes} replies={preview.replies} />
+      <PostPreviewBody post={post} excerpt={preview.excerpt} actions={actions} />
     </article>
   );
 };

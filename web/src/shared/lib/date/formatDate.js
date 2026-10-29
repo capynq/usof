@@ -25,6 +25,7 @@ export const formatDate = (value, formatter, fallback = "Date unavailable") => {
   }
 
   const date = new Date(normalizeDateValue(value));
+
   if (Number.isNaN(date.getTime())) {
     return fallback;
   }

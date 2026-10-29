@@ -12,13 +12,14 @@ const defaultValues = {
   status: "",
 };
 
-const getActiveFilters = (values, { lockCategory, isHome }) => [
-  !isHome && values.search.trim() ? `Search: ${values.search.trim()}` : "",
-  !lockCategory && values.category ? "Category" : "",
-  values.sort === "likes" ? "Most liked" : values.sort === "likes-asc" ? "Fewest likes" : "",
-  values.status ? `Status: ${values.status}` : "",
-  values.date_from || values.date_to ? "Date range" : "",
-].filter(Boolean);
+const getActiveFilters = (values, { lockCategory, isHome }) =>
+  [
+    !isHome && values.search.trim() ? `Search: ${values.search.trim()}` : "",
+    !lockCategory && values.category ? "Category" : "",
+    values.sort === "likes" ? "Most liked" : values.sort === "likes-asc" ? "Fewest likes" : "",
+    values.status ? `Status: ${values.status}` : "",
+    values.date_from || values.date_to ? "Date range" : "",
+  ].filter(Boolean);
 
 export const PostFeedFilters = ({
   categories,
@@ -48,8 +49,10 @@ export const PostFeedFilters = ({
 
   const submit = (event) => {
     event.preventDefault();
+
     if (values.date_from && values.date_to && values.date_from > values.date_to) {
       setError("The start date must be on or before the end date.");
+
       return;
     }
 
@@ -81,14 +84,19 @@ export const PostFeedFilters = ({
       </button>
       {activeFilters.length > 0 && (
         <ul className={styles.activeFilters} aria-label="Active filters">
-          {activeFilters.map((filter) => <li key={filter}>{filter}</li>)}
+          {activeFilters.map((filter) => (
+            <li key={filter}>{filter}</li>
+          ))}
         </ul>
       )}
       <div id="post-feed-filters" className={styles.filterPanel} hidden={!expanded}>
         <div className={styles.filterGrid}>
           {!isHome && (
             <label className={styles.searchField}>
-              <span className={styles.searchLabel}><SearchIcon />Search {searchScope}</span>
+              <span className={styles.searchLabel}>
+                <SearchIcon />
+                Search {searchScope}
+              </span>
               <input
                 type="search"
                 name="search"
@@ -105,7 +113,9 @@ export const PostFeedFilters = ({
               <SelectControl name="category" value={values.category} onChange={updateField}>
                 <option value="">All categories</option>
                 {(categories ?? []).map((category) => (
-                  <option key={category.id} value={category.id}>{category.title}</option>
+                  <option key={category.id} value={category.id}>
+                    {category.title}
+                  </option>
                 ))}
               </SelectControl>
             </label>
@@ -137,10 +147,18 @@ export const PostFeedFilters = ({
             <input type="date" name="date_to" value={values.date_to} onChange={updateField} />
           </label>
         </div>
-        {error && <p className={styles.validationError} role="alert">{error}</p>}
+        {error && (
+          <p className={styles.validationError} role="alert">
+            {error}
+          </p>
+        )}
         <div className={styles.filterActions}>
-          <button className="button" type="submit">Apply filters</button>
-          <button className="button" type="button" onClick={clearFilters}>Clear filters</button>
+          <button className="button" type="submit">
+            Apply filters
+          </button>
+          <button className="button" type="button" onClick={clearFilters}>
+            Clear filters
+          </button>
         </div>
       </div>
     </form>

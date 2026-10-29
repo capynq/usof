@@ -14,7 +14,8 @@ export const SessionNotice = () => {
   return (
     <div className={styles.wrapper}>
       <AuthNotice>
-        {notice} {location.pathname !== "/login" && (
+        {notice}{" "}
+        {location.pathname !== "/login" && (
           <Link to="/login" state={{ from: location }}>
             Sign in
           </Link>

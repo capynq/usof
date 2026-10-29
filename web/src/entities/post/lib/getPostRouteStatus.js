@@ -2,6 +2,7 @@ export const getPostRouteStatus = ({ isValidPostId, isLoading, error, post }) =>
   if (!isValidPostId) return "invalid";
   if (isLoading) return "loading";
   if (error || !post) return "unavailable";
+
   return "ready";
 };
 

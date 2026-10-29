@@ -8,7 +8,10 @@ import styles from "./UserProfilePage.module.css";
 export const UserProfilePage = () => {
   const profile = useUserProfileController();
 
-  const { visible: showLoading, completing } = useMinimumLoading(profile.isUserLoading, profile.userError);
+  const { visible: showLoading, completing } = useMinimumLoading(
+    profile.isUserLoading,
+    profile.userError,
+  );
 
   if (!profile.isValidUserId) {
     return (

@@ -7,6 +7,7 @@ export const LoadingIndicator = ({ children, completing = false }) => {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setProgress(completing ? 100 : 60);
+
       return;
     }
 
@@ -14,6 +15,7 @@ export const LoadingIndicator = ({ children, completing = false }) => {
       const timer = setInterval(() => {
         setProgress((value) => Math.min(100, value + 20));
       }, 60);
+
       return () => clearInterval(timer);
     }
 
@@ -21,6 +23,7 @@ export const LoadingIndicator = ({ children, completing = false }) => {
     const timer = setInterval(() => {
       setProgress((value) => Math.min(80, value + 20));
     }, 500);
+
     return () => clearInterval(timer);
   }, [completing]);
 

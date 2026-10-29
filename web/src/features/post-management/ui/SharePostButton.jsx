@@ -2,8 +2,10 @@ import { useState } from "react";
 
 export const SharePostButton = ({ post }) => {
   const [feedback, setFeedback] = useState("");
+
   const share = async () => {
     const url = new URL(`/posts/${post.id}`, window.location.origin).href;
+
     try {
       if (navigator.share) {
         await navigator.share({ title: post.title, url });
@@ -18,6 +20,7 @@ export const SharePostButton = ({ post }) => {
       }
     }
   };
+
   return (
     <div className="inline-action">
       <button type="button" onClick={share}>

@@ -8,12 +8,14 @@ export const useMinimumLoading = (isLoading, error) => {
     if (isLoading) {
       if (startedAt.current === null) startedAt.current = Date.now();
       setVisible(true);
+
       return;
     }
 
     if (error) {
       startedAt.current = null;
       setVisible(false);
+
       return;
     }
 
@@ -23,6 +25,7 @@ export const useMinimumLoading = (isLoading, error) => {
       startedAt.current = null;
       setVisible(false);
     }, remaining);
+
     return () => clearTimeout(timer);
   }, [isLoading, error]);
 

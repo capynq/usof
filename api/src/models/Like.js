@@ -6,11 +6,7 @@ import { isAdmin, requireAuthenticatedUser, requireAdmin } from "./access.js";
 const targetSpec = (target) => {
   if (target === "post") return { foreignKey: "post_id" };
   if (target === "comment") return { foreignKey: "comment_id" };
-  throw new AppError(
-    400,
-    ERROR_CODES.VALIDATION_ERROR,
-    "Invalid reaction target",
-  );
+  throw new AppError(400, ERROR_CODES.VALIDATION_ERROR, "Invalid reaction target");
 };
 
 const targetRows = async (connection, target, id, lock = false) => {
@@ -19,28 +15,26 @@ const targetRows = async (connection, target, id, lock = false) => {
       `SELECT id,author_id,status FROM posts WHERE id = ?${lock ? " FOR UPDATE" : ""}`,
       [id],
     );
+
     return rows;
   }
+
   const [rows] = await connection.query(
     `SELECT c.id,c.author_id,c.status,p.status AS post_status FROM comments c JOIN posts p ON p.id = c.post_id WHERE c.id = ?${lock ? " FOR UPDATE" : ""}`,
     [id],
   );
+
   return rows;
 };
 
 const targetVisible = (row, target, user) =>
   row &&
   (isAdmin(user) ||
-    (row.status === "active" &&
-      (target === "post" || row.post_status === "active")));
+    (row.status === "active" && (target === "post" || row.post_status === "active")));
 
 const requireVisibleTarget = (row, target, user) => {
   if (!targetVisible(row, target, user)) {
-    throw new AppError(
-      404,
-      ERROR_CODES.TARGET_NOT_FOUND,
-      "Reaction target not found",
-    );
+    throw new AppError(404, ERROR_CODES.TARGET_NOT_FOUND, "Reaction target not found");
   }
 };
 
@@ -67,6 +61,7 @@ export class Like {
       `SELECT l.id,l.author_id,l.type,l.created_at,u.login,u.full_name,u.profile_picture FROM likes l JOIN users u ON u.id = l.author_id WHERE l.${spec.foreignKey} = ? ORDER BY l.created_at, l.id`,
       [id],
     );
+
     return rows.map(({ login, full_name, profile_picture, ...reaction }) => ({
       ...reaction,
       author: {
@@ -83,6 +78,7 @@ export class Like {
     const [rows] = await this.db.query(
       "SELECT id,author_id,post_id,comment_id,type,created_at FROM likes ORDER BY created_at DESC,id DESC",
     );
+
     return rows;
   }
 
@@ -92,23 +88,21 @@ export class Like {
       "SELECT id,author_id,post_id,comment_id,type,created_at FROM likes WHERE id = ?",
       [id],
     );
-    if (!rows[0])
-      throw new AppError(
-        404,
-        ERROR_CODES.REACTION_NOT_FOUND,
-        "Reaction not found",
-      );
+    if (!rows[0]) throw new AppError(404, ERROR_CODES.REACTION_NOT_FOUND, "Reaction not found");
+
     return rows[0];
   }
 
   async create(target, id, type, user) {
     const spec = targetSpec(target);
     requireAuthenticatedUser(user);
+
     return transaction(this.db, async (connection) => {
       await Like.lockUsers(connection);
       const targets = await targetRows(connection, target, id, true);
       requireVisibleTarget(targets[0], target, user);
       let result;
+
       try {
         [result] = await connection.query(
           `INSERT INTO likes (author_id,${spec.foreignKey},type) VALUES (?,?,?)`,
@@ -116,18 +110,16 @@ export class Like {
         );
       } catch (error) {
         if (error.code === "ER_DUP_ENTRY")
-          throw new AppError(
-            409,
-            ERROR_CODES.REACTION_EXISTS,
-            "Reaction already exists",
-          );
+          throw new AppError(409, ERROR_CODES.REACTION_EXISTS, "Reaction already exists");
         throw error;
       }
+
       await Like.recalculate(connection);
       const [rows] = await connection.query(
         "SELECT id,author_id,post_id,comment_id,type,created_at FROM likes WHERE id = ?",
         [result.insertId],
       );
+
       return rows[0];
     });
   }
@@ -137,8 +129,7 @@ export class Like {
 
     requireAuthenticatedUser(user);
 
-    const selectedAuthorId =
-      isAdmin(user) && authorId !== undefined ? authorId : user.id;
+    const selectedAuthorId = isAdmin(user) && authorId !== undefined ? authorId : user.id;
 
     return transaction(this.db, async (connection) => {
       await Like.lockUsers(connection);
@@ -151,12 +142,7 @@ export class Like {
         `SELECT id,author_id FROM likes WHERE ${spec.foreignKey} = ? AND author_id = ? FOR UPDATE`,
         [id, selectedAuthorId],
       );
-      if (!rows[0])
-        throw new AppError(
-          404,
-          ERROR_CODES.REACTION_NOT_FOUND,
-          "Reaction not found",
-        );
+      if (!rows[0]) throw new AppError(404, ERROR_CODES.REACTION_NOT_FOUND, "Reaction not found");
 
       await connection.query("DELETE FROM likes WHERE id = ?", [rows[0].id]);
       await Like.recalculate(connection);

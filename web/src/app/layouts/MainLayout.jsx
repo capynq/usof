@@ -11,6 +11,7 @@ export const MainLayout = () => {
       .map((match) => match.handle?.mascotContext)
       .filter(Boolean)
       .at(-1) ?? "browse";
+
   return (
     <div className={styles.frame}>
       <Header />

@@ -31,29 +31,38 @@ export const useUserEditor = ({ record, onClose }) => {
   const submit = async (event) => {
     event.preventDefault();
     setError("");
+
     if (!LOGIN_PATTERN.test(values.login.trim())) {
       setError("Use letters, digits, underscores, or hyphens for the login.");
+
       return;
     }
+
     if (isCreating && values.password !== values.password_confirmation) {
       setError("Password confirmation must match.");
+
       return;
     }
 
     const body = buildUserPayload(values, isCreating);
     const isOwnRecord = Number(user.id) === Number(record?.id);
     const emailChanged = Boolean(record && body.email !== record.email);
+
     try {
       const result = await save({ resource: "users", id: record?.id, body }).unwrap();
+
       if (isOwnRecord && emailChanged) {
         await navigate("/email-confirmation", {
           state: { registrationDelivery: result.data?.delivery },
           flushSync: true,
         });
         endAuthSession(dispatch);
+
         return;
       }
+
       onClose();
+
       if (isOwnRecord && body.role !== record.role) {
         endAuthSession(dispatch);
         navigate("/login", { replace: true });
@@ -61,6 +70,7 @@ export const useUserEditor = ({ record, onClose }) => {
     } catch (failure) {
       if (failure.data?.error?.code === "EMAIL_UNAVAILABLE") {
         onClose();
+
         if (isOwnRecord) {
           await navigate("/email-confirmation", {
             state: { emailChangeDeliveryFailed: "self" },
@@ -72,8 +82,10 @@ export const useUserEditor = ({ record, onClose }) => {
             state: { emailChangeDeliveryFailed: "member" },
           });
         }
+
         return;
       }
+
       setError(getErrorMessage(failure, "The member could not be saved."));
     }
   };

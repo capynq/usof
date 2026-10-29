@@ -4,6 +4,7 @@ import { ReactionTargetPicker } from "./ReactionTargetPicker.jsx";
 
 export const ManageReactions = () => {
   const [selected, setSelected] = useState(null);
+
   return (
     <section>
       <div className="management-intro">
@@ -11,13 +12,7 @@ export const ManageReactions = () => {
         <p>Find a question or comment to review and remove its reactions.</p>
       </div>
       <ReactionTargetPicker onSelect={setSelected} />
-      {selected && (
-        <ReactionListDialog
-          open
-          onClose={() => setSelected(null)}
-          {...selected}
-        />
-      )}
+      {selected && <ReactionListDialog open onClose={() => setSelected(null)} {...selected} />}
     </section>
   );
 };

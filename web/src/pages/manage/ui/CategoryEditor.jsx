@@ -10,12 +10,16 @@ export const CategoryEditor = ({ record, onClose }) => {
   });
   const [error, setError] = useState("");
   const [save, state] = useSaveManagementRecordMutation();
+
   const submit = async (event) => {
     event.preventDefault();
+
     if (!values.title.trim()) {
       setError("Give the category a title.");
+
       return;
     }
+
     try {
       await save({
         resource: "categories",
@@ -26,9 +30,9 @@ export const CategoryEditor = ({ record, onClose }) => {
         },
       }).unwrap();
       onClose();
-    } catch {
-    }
+    } catch {}
   };
+
   return (
     <ModalDialog
       open
@@ -41,9 +45,7 @@ export const CategoryEditor = ({ record, onClose }) => {
           Title
           <input
             value={values.title}
-            onChange={(event) =>
-              setValues({ ...values, title: event.target.value })
-            }
+            onChange={(event) => setValues({ ...values, title: event.target.value })}
             required
             maxLength={100}
           />
@@ -52,17 +54,14 @@ export const CategoryEditor = ({ record, onClose }) => {
           Description
           <textarea
             value={values.description}
-            onChange={(event) =>
-              setValues({ ...values, description: event.target.value })
-            }
+            onChange={(event) => setValues({ ...values, description: event.target.value })}
             maxLength={2000}
             rows={4}
           />
         </label>
         {(error || state.error) && (
           <p role="alert">
-            {error ||
-              getErrorMessage(state.error, "The category could not be saved.")}
+            {error || getErrorMessage(state.error, "The category could not be saved.")}
           </p>
         )}
         <button type="submit" disabled={state.isLoading}>

@@ -10,7 +10,10 @@ export const FormFeedback = ({ children, type = "info" }) => {
   const feedbackType = Object.hasOwn(FEEDBACK_ROLES, type) ? type : "info";
 
   return (
-    <div className={`${styles.feedback} ${styles[feedbackType]}`} role={FEEDBACK_ROLES[feedbackType]}>
+    <div
+      className={`${styles.feedback} ${styles[feedbackType]}`}
+      role={FEEDBACK_ROLES[feedbackType]}
+    >
       {children}
     </div>
   );

@@ -14,21 +14,25 @@ export const ManagementDeleteAction = ({ resource, record, label }) => {
   const user = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const deleteRecord = async (event) => {
     event.preventDefault();
+
     if (confirmation !== String(record.id) || state.isLoading) {
       return;
     }
+
     try {
       await remove({ resource, id: record.id }).unwrap();
       setOpen(false);
+
       if (resource === "users" && Number(user.id) === Number(record.id)) {
         await navigate("/", { replace: true, flushSync: true });
         endAuthSession(dispatch);
       }
-    } catch {
-    }
+    } catch {}
   };
+
   return (
     <div className="inline-action">
       <button
@@ -66,14 +70,9 @@ export const ManagementDeleteAction = ({ resource, record, label }) => {
             />
           </label>
           {state.error && (
-            <p role="alert">
-              {getErrorMessage(state.error, "The record could not be deleted.")}
-            </p>
+            <p role="alert">{getErrorMessage(state.error, "The record could not be deleted.")}</p>
           )}
-          <button
-            type="submit"
-            disabled={confirmation !== String(record.id) || state.isLoading}
-          >
+          <button type="submit" disabled={confirmation !== String(record.id) || state.isLoading}>
             {state.isLoading ? "Deleting…" : "Permanently delete"}
           </button>
         </form>

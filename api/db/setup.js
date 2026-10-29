@@ -17,10 +17,9 @@ const ensureCommentRelationships = async (server, database) => {
     [database],
   );
   const columnNames = new Set(columns.map((column) => column.COLUMN_NAME));
+
   if (!columnNames.has("parent_id")) {
-    await server.query(
-      "ALTER TABLE comments ADD COLUMN parent_id INT UNSIGNED NULL AFTER post_id",
-    );
+    await server.query("ALTER TABLE comments ADD COLUMN parent_id INT UNSIGNED NULL AFTER post_id");
   }
 
   if (!columnNames.has("is_deleted")) {
@@ -33,20 +32,17 @@ const ensureCommentRelationships = async (server, database) => {
     "SELECT INDEX_NAME,COLUMN_NAME,SEQ_IN_INDEX FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'comments' AND INDEX_NAME = 'comments_parent_idx' ORDER BY SEQ_IN_INDEX",
     [database],
   );
+
   if (
     parentIndex.length !== 1 ||
     parentIndex[0].COLUMN_NAME !== "parent_id" ||
     Number(parentIndex[0].SEQ_IN_INDEX) !== 1
   ) {
     if (parentIndex.length) {
-      await server.query(
-        "ALTER TABLE comments DROP INDEX comments_parent_idx",
-      );
+      await server.query("ALTER TABLE comments DROP INDEX comments_parent_idx");
     }
 
-    await server.query(
-      "ALTER TABLE comments ADD KEY comments_parent_idx (parent_id)",
-    );
+    await server.query("ALTER TABLE comments ADD KEY comments_parent_idx (parent_id)");
   }
 
   const [parentConstraint] = await server.query(
@@ -59,10 +55,9 @@ const ensureCommentRelationships = async (server, database) => {
     parentConstraint[0].REFERENCED_TABLE_NAME === "comments" &&
     parentConstraint[0].REFERENCED_COLUMN_NAME === "id" &&
     parentConstraint[0].DELETE_RULE === "SET NULL";
+
   if (parentConstraint.length && !hasExpectedParentConstraint) {
-    await server.query(
-      "ALTER TABLE comments DROP FOREIGN KEY comments_parent_fk",
-    );
+    await server.query("ALTER TABLE comments DROP FOREIGN KEY comments_parent_fk");
   }
 
   if (!hasExpectedParentConstraint) {
@@ -83,6 +78,7 @@ export const setupDatabase = async (config, { recreate = false } = {}) => {
     password: config.db.password,
     charset: "utf8mb4",
   });
+
   try {
     if (recreate) {
       await server.query(`DROP DATABASE IF EXISTS \`${database}\``);
@@ -92,10 +88,8 @@ export const setupDatabase = async (config, { recreate = false } = {}) => {
       `CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`,
     );
     await server.query(`USE \`${database}\``);
-    const schema = await readFile(
-      fileURLToPath(new URL("./schema.sql", import.meta.url)),
-      "utf8",
-    );
+    const schema = await readFile(fileURLToPath(new URL("./schema.sql", import.meta.url)), "utf8");
+
     for (const statement of schema
       .split(";")
       .map((value) => value.trim())
@@ -109,8 +103,10 @@ export const setupDatabase = async (config, { recreate = false } = {}) => {
   }
 
   const pool = createDatabasePool(config);
+
   try {
     const [rows] = await pool.query("SELECT COUNT(*) AS count FROM users");
+
     if (Number(rows[0].count) === 0) {
       await seed(pool, config);
     }

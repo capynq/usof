@@ -15,5 +15,6 @@ export const postsRoutes = (controller, authenticate, optional) => {
   router.delete("/:post_id/favorite", authenticate, controller.removeFavorite);
   router.patch("/:post_id", authenticate, controller.update);
   router.delete("/:post_id", authenticate, controller.delete);
+
   return router;
 };

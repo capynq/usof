@@ -25,5 +25,6 @@ const contexts = {
 
 export const getMascotPresentation = (context = "browse") => {
   const entry = contexts[context] ?? contexts.browse;
+
   return { ...MASCOTS[entry.character], hint: entry.hint };
 };

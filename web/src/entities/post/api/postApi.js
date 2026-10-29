@@ -1,8 +1,4 @@
-import {
-  API_URLS,
-  baseApi,
-  unwrapResponse,
-} from "../../../shared/api/index.js";
+import { API_URLS, baseApi, unwrapResponse } from "../../../shared/api/index.js";
 import { toSearchParams } from "../../../shared/lib/queryParams.js";
 
 export const postApi = baseApi.injectEndpoints({
@@ -15,6 +11,7 @@ export const postApi = baseApi.injectEndpoints({
           page_size: 20,
           ...options,
         });
+
         return `${API_URLS.posts.list}?${query}`;
       },
       providesTags: (result) => [

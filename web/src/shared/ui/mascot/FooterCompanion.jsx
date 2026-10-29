@@ -4,6 +4,7 @@ import styles from "./PassiveMascot.module.css";
 
 export const FooterCompanion = ({ context = "browse" }) => {
   const mascot = getMascotPresentation(context);
+
   return (
     <aside
       className={`${styles.footer} ${styles[mascot.id]}`}

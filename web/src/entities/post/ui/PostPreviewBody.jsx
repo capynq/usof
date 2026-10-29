@@ -12,11 +12,7 @@ export const PostPreviewBody = ({ post, excerpt, actions }) => (
       {actions}
     </div>
     <p className={styles.excerpt}>{excerpt}</p>
-    <PostMeta
-      post={post}
-      className={styles.meta}
-      showAuthor={false}
-    />
+    <PostMeta post={post} className={styles.meta} showAuthor={false} />
     <CategoryList categories={post.categories} className={styles.categories} />
   </div>
 );

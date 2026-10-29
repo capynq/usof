@@ -13,7 +13,5 @@ export const StatusBadge = ({ status }) => {
     return null;
   }
 
-  return (
-    <span className={`${styles.badge} ${styles[status]}`}>{label}</span>
-  );
+  return <span className={`${styles.badge} ${styles[status]}`}>{label}</span>;
 };

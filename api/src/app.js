@@ -28,11 +28,7 @@ export const createApp = async (config, database) => {
   const comments = new Comment(database);
   const likes = new Like(database);
   const mailer = createMailer(config);
-  const services = createServices(
-    { users, posts, categories, comments, likes },
-    mailer,
-    config,
-  );
+  const services = createServices({ users, posts, categories, comments, likes }, mailer, config);
   const controllers = {
     auth: authController(services.auth, config),
     users: usersController(services.users),
@@ -72,5 +68,6 @@ export const createApp = async (config, database) => {
   );
   app.use(notFound);
   app.use(errorHandler);
+
   return app;
 };

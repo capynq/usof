@@ -63,6 +63,7 @@ export const date = pipe(
   regex(DATE_ONLY_PATTERN),
   custom((value) => {
     const parsed = new Date(`${value}${UTC_DAY_START_SUFFIX}`);
+
     return (
       value >= MIN_DATE &&
       value <= MAX_DATE &&

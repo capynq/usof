@@ -13,6 +13,7 @@ export const useFormFields = (initialValues) => {
   const validate = (validator) => {
     const errors = validator(values);
     setFieldErrors(errors);
+
     return errors;
   };
 

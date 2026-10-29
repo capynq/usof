@@ -20,9 +20,7 @@ export const AuthenticatedHeader = ({ user }) => {
         actions={[
           { to: "/account", label: "Settings" },
           { to: "/favorites", label: "Favorites" },
-          ...(user.role === "admin"
-            ? [{ to: "/manage", label: "Manage" }]
-            : []),
+          ...(user.role === "admin" ? [{ to: "/manage", label: "Manage" }] : []),
           {
             id: "sign-out",
             label: isLoading ? "Signing out…" : "Sign out",

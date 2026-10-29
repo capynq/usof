@@ -12,7 +12,7 @@ export const AuthFormActions = ({
   note,
   noteType = "note",
   variant = "primary",
-}) => (
+}) =>
   variant === "secondary" ? (
     <button className={styles.secondaryButton} type="submit" disabled={isLoading}>
       {isLoading ? loadingLabel : label}
@@ -24,5 +24,4 @@ export const AuthFormActions = ({
       </button>
       {note && <span className={NOTE_CLASSES[noteType] ?? NOTE_CLASSES.note}>{note}</span>}
     </div>
-  )
-);
+  );

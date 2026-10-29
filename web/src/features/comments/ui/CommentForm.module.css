@@ -4,7 +4,9 @@
   padding: 0.85rem;
   border: 1px solid var(--form-panel-border);
   background: var(--form-panel-surface);
-  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--form-panel-inset);
+  box-shadow:
+    inset 1px 1px var(--surface-color-raised),
+    inset -1px -1px var(--form-panel-inset);
 }
 
 .label {
@@ -40,7 +42,11 @@
   min-height: var(--button-min-height);
   padding: var(--button-padding);
   border-color: var(--form-button-border);
-  background: linear-gradient(var(--form-button-gradient-start), var(--form-button-gradient-middle) 48%, var(--form-button-gradient-end));
+  background: linear-gradient(
+    var(--form-button-gradient-start),
+    var(--form-button-gradient-middle) 48%,
+    var(--form-button-gradient-end)
+  );
   color: var(--text-color-on-primary);
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   text-shadow: 1px 1px var(--action-color-text-shadow);

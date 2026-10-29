@@ -15,6 +15,7 @@ export const MascotArt = ({
     width: 48,
     height: 48,
   };
+
   return (
     <Image
       src={art.src}

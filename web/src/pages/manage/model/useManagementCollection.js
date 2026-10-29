@@ -28,10 +28,12 @@ export const useManagementCollection = (records = []) => {
   );
   const totalPages = Math.ceil(matches.length / 10);
   const currentPage = Math.max(1, Math.min(page, totalPages || 1));
+
   const changeSearch = (value) => {
     setSearch(value);
     setPage(1);
   };
+
   return {
     search,
     setSearch: changeSearch,

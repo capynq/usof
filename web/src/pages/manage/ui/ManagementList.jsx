@@ -18,9 +18,13 @@ const columnLabels = {
 
 export const ManagementList = ({ query, resource, children }) => {
   const collection = useManagementCollection(query.data);
-  const { visible: showInitialLoading, completing } = useMinimumLoading(query.isFetching, query.error);
+  const { visible: showInitialLoading, completing } = useMinimumLoading(
+    query.isFetching,
+    query.error,
+  );
   const searchId = useId();
   const records = query.data ?? [];
+
   return (
     <div className="management-list" data-resource={resource}>
       <div className="management-toolbar">
@@ -44,16 +48,17 @@ export const ManagementList = ({ query, resource, children }) => {
           </p>
         )}
       </div>
-      {(query.isFetching || showInitialLoading) && <LoadingIndicator completing={completing}>Opening records…</LoadingIndicator>}
+      {(query.isFetching || showInitialLoading) && (
+        <LoadingIndicator completing={completing}>Opening records…</LoadingIndicator>
+      )}
       {query.error && (
-        <p role="alert">
-          {getErrorMessage(query.error, "Records could not be loaded.")}
-        </p>
+        <p role="alert">{getErrorMessage(query.error, "Records could not be loaded.")}</p>
       )}
       {!query.isFetching && !showInitialLoading && !query.error && records.length === 0 && (
         <p className="management-empty">No {resource} yet.</p>
       )}
-      {!query.isFetching && !showInitialLoading &&
+      {!query.isFetching &&
+        !showInitialLoading &&
         !query.error &&
         records.length > 0 &&
         collection.total === 0 && (
@@ -61,9 +66,9 @@ export const ManagementList = ({ query, resource, children }) => {
         )}
       {collection.total > 0 && (
         <div className="management-columns" aria-hidden="true">
-          {(columnLabels[resource] ?? ["ID", "Record", "Actions"]).map(
-            (label) => <span key={label}>{label}</span>,
-          )}
+          {(columnLabels[resource] ?? ["ID", "Record", "Actions"]).map((label) => (
+            <span key={label}>{label}</span>
+          ))}
         </div>
       )}
       {!showInitialLoading && !query.error && collection.matches.map((record) => children(record))}

@@ -5,14 +5,11 @@ import { createReaction, deleteReaction } from "../schemas/index.js";
 import { idInput, reactionTarget } from "../schemas/common.js";
 
 const id = (value, name) => parse(idInput, String(value), name);
+
 export const createReactionsService = (likes) => {
   return {
     list: (target, rawId, user) =>
-      likes.list(
-        parse(reactionTarget, target, "target"),
-        id(rawId, `${target}_id`),
-        user,
-      ),
+      likes.list(parse(reactionTarget, target, "target"), id(rawId, `${target}_id`), user),
     listAll: (user) => likes.listAll(user),
     get: (rawId, user) => likes.get(id(rawId, "reaction_id"), user),
     create: (target, rawId, rawType, user) =>
@@ -33,11 +30,8 @@ export const createReactionsService = (likes) => {
         input.author_id !== undefined &&
         input.author_id !== Number(user?.id)
       )
-        throw new AppError(
-          403,
-          ERROR_CODES.FORBIDDEN,
-          "You may delete only your own reactions",
-        );
+        throw new AppError(403, ERROR_CODES.FORBIDDEN, "You may delete only your own reactions");
+
       return likes.delete(
         parse(reactionTarget, target, "target"),
         id(rawId, `${target}_id`),
@@ -47,6 +41,7 @@ export const createReactionsService = (likes) => {
     },
     deleteById: async (rawId, user) => {
       const reaction = await likes.get(id(rawId, "reaction_id"), user);
+
       return likes.delete(
         reaction.post_id ? "post" : "comment",
         reaction.post_id ?? reaction.comment_id,

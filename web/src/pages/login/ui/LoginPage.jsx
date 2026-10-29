@@ -33,6 +33,7 @@ export const LoginPage = () => {
       return;
     }
   };
+
   const form = useValidatedAuthForm({
     initialValues: LOGIN_INITIAL_VALUES,
     validator: validateLogin,
@@ -82,7 +83,13 @@ export const LoginPage = () => {
           type="password"
           value={form.values.password}
         />
-        <AuthFormActions isLoading={isLoading} label="Sign in" loadingLabel="Signing in…" note="Email confirmation is required." noteType="pending" />
+        <AuthFormActions
+          isLoading={isLoading}
+          label="Sign in"
+          loadingLabel="Signing in…"
+          note="Email confirmation is required."
+          noteType="pending"
+        />
       </form>
       <AuthLinks links={AUTH_LINKS.login} />
       <p className={styles.forgotLink}>

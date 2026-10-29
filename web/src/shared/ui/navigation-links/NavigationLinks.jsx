@@ -6,7 +6,7 @@ export const NavigationLinks = ({
   items,
   linkClassName,
   activeLinkClassName,
-  iconClassName
+  iconClassName,
 }) => {
   const navigationClassName = [className].filter(Boolean).join(" ");
 
@@ -15,7 +15,9 @@ export const NavigationLinks = ({
       {items.map(({ to, end, label, Icon }) => (
         <NavLink
           key={to}
-          className={({ isActive }) => [linkClassName, isActive && activeLinkClassName].filter(Boolean).join(" ")}
+          className={({ isActive }) =>
+            [linkClassName, isActive && activeLinkClassName].filter(Boolean).join(" ")
+          }
           end={end}
           to={to}
         >

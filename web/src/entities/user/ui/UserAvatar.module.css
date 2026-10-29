@@ -5,7 +5,9 @@
   overflow: hidden;
   border: 1px solid var(--avatar-border);
   background: var(--avatar-surface);
-  box-shadow: inset 1px 1px var(--surface-color-raised), inset -1px -1px var(--avatar-shadow);
+  box-shadow:
+    inset 1px 1px var(--surface-color-raised),
+    inset -1px -1px var(--avatar-shadow);
   color: var(--text-color-emphasis);
   font-family: Tahoma, Arial, sans-serif;
   font-weight: 700;

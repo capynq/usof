@@ -16,7 +16,9 @@ export const StatusWindow = ({ status, children, completing }) => {
       titleId={labelledBy}
     >
       {role === "alert" ? (
-        <StateCompanion kind="error"><p role={role}>{message}</p></StateCompanion>
+        <StateCompanion kind="error">
+          <p role={role}>{message}</p>
+        </StateCompanion>
       ) : (
         <LoadingIndicator completing={completing}>{message}</LoadingIndicator>
       )}
