@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
 import { useUserProfileController } from "../model/useUserProfileController.js";
 import { UserProfilePosts } from "./UserProfilePosts.jsx";
@@ -7,6 +8,8 @@ import styles from "./UserProfilePage.module.css";
 export const UserProfilePage = () => {
   const profile = useUserProfileController();
 
+  const { visible: showLoading, completing } = useMinimumLoading(profile.isUserLoading, profile.userError);
+
   if (!profile.isValidUserId) {
     return (
       <p className={styles.error} role="alert">
@@ -15,8 +18,8 @@ export const UserProfilePage = () => {
     );
   }
 
-  if (profile.isUserLoading) {
-    return <p className={styles.state}>Loading profile…</p>;
+  if (showLoading) {
+    return <LoadingIndicator completing={completing}>Loading profile…</LoadingIndicator>;
   }
 
   if (profile.userError || !profile.user) {

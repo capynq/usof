@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { useParams } from "react-router";
 import { useGetCategoryQuery } from "../../../entities/category/index.js";
 import { PostFeed } from "../../../widgets/post-feed/ui/PostFeed.jsx";
@@ -13,12 +14,14 @@ export const CategoryPage = () => {
     skip: !isValidCategoryId,
   });
 
+  const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
+
   if (!isValidCategoryId) {
     return <p className={styles.error} role="alert">That category address is not valid.</p>;
   }
 
-  if (isLoading) {
-    return <p className={styles.state}>Opening category…</p>;
+  if (showLoading) {
+    return <LoadingIndicator completing={completing}>Opening category…</LoadingIndicator>;
   }
 
   if (error || !category) {

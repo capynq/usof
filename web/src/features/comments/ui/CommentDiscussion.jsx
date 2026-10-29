@@ -1,3 +1,4 @@
+import { useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { useCommentAnchor } from "../model/useCommentAnchor.js";
 import { CommentForm } from "./CommentForm.jsx";
 import { CommentList } from "./CommentList.jsx";
@@ -7,7 +8,8 @@ import styles from "./CommentDiscussion.module.css";
 
 export const CommentDiscussion = ({ postId, postStatus }) => {
   const discussion = useCommentDiscussionController({ postId, postStatus });
-  useCommentAnchor(discussion.comments);
+  const { visible: showLoading, completing } = useMinimumLoading(discussion.isLoading, discussion.error);
+  useCommentAnchor(discussion.comments, !showLoading && !discussion.error);
 
   return (
     <section className={styles.discussion} aria-labelledby="discussion-title">
@@ -22,10 +24,11 @@ export const CommentDiscussion = ({ postId, postStatus }) => {
         canReply={discussion.canReply}
         currentUser={discussion.currentUser}
         error={discussion.error}
-        isLoading={discussion.isLoading}
+        isLoading={showLoading}
+        completing={completing}
         commentTree={discussion.commentTree}
       />
-      {!discussion.isLoading &&
+      {!showLoading &&
         !discussion.error &&
         discussion.commentTree.length > 0 && (
           <CommentList

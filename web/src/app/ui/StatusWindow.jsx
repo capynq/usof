@@ -1,8 +1,9 @@
+import { LoadingIndicator } from "../../shared/ui/loading/index.js";
 import { StateCompanion } from "../../shared/ui/mascot/StateCompanion.jsx";
 import styles from "./AuthGateStatus.module.css";
 import { WindowShell } from "../../shared/ui/window-shell/index.js";
 
-export const StatusWindow = ({ status, children }) => {
+export const StatusWindow = ({ status, children, completing }) => {
   const { title, message, ariaLive, labelledBy, role } = status;
 
   return (
@@ -14,9 +15,11 @@ export const StatusWindow = ({ status, children }) => {
       title={title}
       titleId={labelledBy}
     >
-      <StateCompanion kind={role === "alert" ? "error" : "loading"}>
-        <p role={role}>{message}</p>
-      </StateCompanion>
+      {role === "alert" ? (
+        <StateCompanion kind="error"><p role={role}>{message}</p></StateCompanion>
+      ) : (
+        <LoadingIndicator completing={completing}>{message}</LoadingIndicator>
+      )}
       {children}
     </WindowShell>
   );

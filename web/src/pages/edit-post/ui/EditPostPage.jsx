@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { Link } from "react-router";
 import { useSelector } from "react-redux";
 import {
@@ -15,14 +16,15 @@ import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.j
 export const EditPostPage = () => {
   const currentUser = useSelector(selectCurrentUser);
   const { isValidPostId, data: post, error, isLoading } = usePostRouteData();
-  const routeStatus = getPostRouteStatus({ isValidPostId, isLoading, error, post });
+  const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
+  const routeStatus = getPostRouteStatus({ isValidPostId, isLoading: showLoading, error, post });
 
   if (routeStatus === "invalid") {
     return <PostRouteMessage className={styles.error}>That question address is not valid.</PostRouteMessage>;
   }
 
   if (routeStatus === "loading") {
-    return <PostRouteMessage className={styles.state} type="loading">Loading question…</PostRouteMessage>;
+    return <LoadingIndicator completing={completing}>Loading question…</LoadingIndicator>;
   }
 
   if (routeStatus === "unavailable") {

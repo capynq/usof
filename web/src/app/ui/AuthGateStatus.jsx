@@ -4,7 +4,7 @@ import { AUTH_GATE_COPY } from "../authGateConstants.js";
 import { StatusWindow } from "./StatusWindow.jsx";
 import styles from "./AuthGateStatus.module.css";
 
-export const AuthGateStatus = ({ status, error, onRetry, onSignInAgain }) => {
+export const AuthGateStatus = ({ status, error, completing, onRetry, onSignInAgain }) => {
   const restoreErrorCopy = AUTH_GATE_COPY.restoreError;
   const restoreErrorStatus = {
     ...restoreErrorCopy,
@@ -14,7 +14,7 @@ export const AuthGateStatus = ({ status, error, onRetry, onSignInAgain }) => {
   return (
     <main className={styles.statusPage}>
       {status === AUTH_STATUS.restoring && (
-        <StatusWindow status={AUTH_GATE_COPY.restoring} />
+        <StatusWindow status={AUTH_GATE_COPY.restoring} completing={completing} />
       )}
       {status === AUTH_STATUS.restoreError && (
         <StatusWindow status={restoreErrorStatus}>

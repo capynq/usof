@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { FavoriteButton } from "../../../features/favorites/ui/FavoriteButton.jsx";
 import { SharePostButton } from "../../../features/post-management/ui/SharePostButton.jsx";
 import { Link } from "react-router";
@@ -25,9 +26,10 @@ import styles from "./PostDetailsPage.module.css";
 export const PostDetailsPage = () => {
   const currentUser = useSelector(selectCurrentUser);
   const { isValidPostId, data: post, error, isLoading } = usePostRouteData();
+  const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
   const routeStatus = getPostRouteStatus({
     isValidPostId,
-    isLoading,
+    isLoading: showLoading,
     error,
     post,
   });
@@ -42,9 +44,9 @@ export const PostDetailsPage = () => {
 
   if (routeStatus === "loading") {
     return (
-      <PostRouteMessage className={styles.state} type="loading">
+      <LoadingIndicator completing={completing}>
         Loading question…
-      </PostRouteMessage>
+      </LoadingIndicator>
     );
   }
 

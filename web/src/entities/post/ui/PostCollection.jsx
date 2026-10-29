@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { StateCompanion } from "../../../shared/ui/mascot/StateCompanion.jsx";
 import { PostPreview } from "./PostPreview.jsx";
 import {
@@ -17,16 +18,10 @@ export const PostCollection = ({
   stateClassName,
   errorClassName,
 }) => {
-  if (isLoading) {
-    return (
-      <div>
-        <StateCompanion kind="loading">
-          <p className={stateClassName} role="status">
-            {loadingMessage}
-          </p>
-        </StateCompanion>
-      </div>
-    );
+  const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
+
+  if (showLoading) {
+    return <LoadingIndicator completing={completing}>{loadingMessage}</LoadingIndicator>;
   }
 
   if (error) {

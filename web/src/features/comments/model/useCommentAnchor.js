@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 
-export const useCommentAnchor = (comments) => {
+export const useCommentAnchor = (comments, ready = true) => {
   const { hash } = useLocation();
   const handledHash = useRef("");
   useEffect(() => {
@@ -9,6 +9,7 @@ export const useCommentAnchor = (comments) => {
       handledHash.current = "";
       return;
     }
+    if (!ready) return;
     if (!hash.startsWith("#comment-") || handledHash.current === hash) {
       return;
     }
@@ -18,5 +19,5 @@ export const useCommentAnchor = (comments) => {
       element.scrollIntoView({ block: "center" });
       element.focus({ preventScroll: true });
     }
-  }, [hash, comments]);
+  }, [hash, comments, ready]);
 };

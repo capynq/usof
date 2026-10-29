@@ -1,3 +1,4 @@
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { useId } from "react";
 import { useManagementCollection } from "../model/useManagementCollection.js";
 import { Pagination } from "../../../shared/ui/pagination/Pagination.jsx";
@@ -17,6 +18,7 @@ const columnLabels = {
 
 export const ManagementList = ({ query, resource, children }) => {
   const collection = useManagementCollection(query.data);
+  const { visible: showInitialLoading, completing } = useMinimumLoading(query.isFetching, query.error);
   const searchId = useId();
   const records = query.data ?? [];
   return (
@@ -42,16 +44,16 @@ export const ManagementList = ({ query, resource, children }) => {
           </p>
         )}
       </div>
-      {query.isFetching && <p role="status">Opening records…</p>}
+      {(query.isFetching || showInitialLoading) && <LoadingIndicator completing={completing}>Opening records…</LoadingIndicator>}
       {query.error && (
         <p role="alert">
           {getErrorMessage(query.error, "Records could not be loaded.")}
         </p>
       )}
-      {!query.isFetching && !query.error && records.length === 0 && (
+      {!query.isFetching && !showInitialLoading && !query.error && records.length === 0 && (
         <p className="management-empty">No {resource} yet.</p>
       )}
-      {!query.isFetching &&
+      {!query.isFetching && !showInitialLoading &&
         !query.error &&
         records.length > 0 &&
         collection.total === 0 && (
@@ -64,7 +66,7 @@ export const ManagementList = ({ query, resource, children }) => {
           )}
         </div>
       )}
-      {!query.error && collection.matches.map((record) => children(record))}
+      {!showInitialLoading && !query.error && collection.matches.map((record) => children(record))}
       <Pagination
         page={collection.page}
         totalPages={collection.totalPages}
