@@ -1,6 +1,23 @@
+.content {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.filter {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.content p {
+  margin: 0;
+}
+
 .reactionList {
   display: grid;
   gap: 0.7rem;
+  min-width: 0;
+  margin: 0;
   padding-left: 0;
   max-height: 40vh;
   overflow-y: auto;
@@ -8,12 +25,34 @@
 }
 
 .reactionList li {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.5rem auto;
+  gap: 0.75rem;
   align-items: center;
   padding-bottom: 0.6rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid var(--border-color-subtle);
+}
+
+.author {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reactionList button {
+  max-width: 100%;
+  justify-self: end;
+}
+
+@media (max-width: 400px) {
+  .reactionList li {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .reactionList button {
+    grid-column: 1 / -1;
+  }
 }
 
 .targetContext {

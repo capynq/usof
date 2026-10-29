@@ -11,23 +11,30 @@ export const HeaderSearch = () => {
       ? (new URLSearchParams(location.search).get("search") ?? "")
       : "";
   const [value, setValue] = useState(currentSearch);
+
   useEffect(() => {
     setValue(currentSearch);
   }, [currentSearch, location.pathname]);
+
   const submit = (event) => {
     event.preventDefault();
     const search = value.trim();
+
     if (location.pathname === "/") {
       const params = new URLSearchParams(location.search);
+
       if (search) params.set("search", search);
       else params.delete("search");
+
       params.delete("page");
       navigate(params.size ? `/?${params}` : "/");
+
       return;
     }
 
     navigate(search ? `/?${new URLSearchParams({ search })}` : "/");
   };
+
   return (
     <form className={styles.search} role="search" onSubmit={submit}>
       <label className="visually-hidden" htmlFor="header-search">

@@ -48,6 +48,7 @@ export const ReactionControls = ({
         />
       ))}
       <button
+        className={`button ${styles.button}`}
         type="button"
         disabled={!canReact}
         onClick={() => setShowReactions(true)}

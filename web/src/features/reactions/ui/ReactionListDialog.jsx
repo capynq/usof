@@ -33,6 +33,7 @@ export const ReactionListDialog = ({
       title="Community reactions"
       busy={removal.isLoading}
     >
+      <div className={styles.content}>
       {context && (
         <div className={styles.targetContext}>
           <h3>{context.kind === "question" ? "Question" : "Comment"} {context.id}</h3>
@@ -42,7 +43,7 @@ export const ReactionListDialog = ({
           {context.postId && <p>On question {context.postId}</p>}
         </div>
       )}
-      <label>
+      <label className={styles.filter}>
         Show reactions
         <SelectControl
           value={filter}
@@ -65,7 +66,7 @@ export const ReactionListDialog = ({
       <ul className={styles.reactionList}>
         {rows.map((row) => (
           <li key={row.id}>
-            <Link to={`/users/${row.author_id}`} onClick={onClose}>
+            <Link className={styles.author} to={`/users/${row.author_id}`} onClick={onClose}>
               {row.author?.full_name ||
                 row.author?.login ||
                 `Member ${row.author_id}`}
@@ -74,12 +75,13 @@ export const ReactionListDialog = ({
             {user?.role === "admin" && (
               <button
                 type="button"
+                aria-label={`Remove reaction by ${row.author?.full_name || row.author?.login || `Member ${row.author_id}`}`}
                 disabled={removal.isLoading}
                 onClick={() =>
                   remove({ target, targetId, postId, authorId: row.author_id })
                 }
               >
-                Remove reaction by {row.author?.login || row.author_id}
+                Remove
               </button>
             )}
           </li>
@@ -93,6 +95,7 @@ export const ReactionListDialog = ({
           )}
         </p>
       )}
+      </div>
     </ModalDialog>
   );
 };

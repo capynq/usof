@@ -2,11 +2,15 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  min-width: 0;
+  max-width: 100%;
   gap: 0.4rem;
 }
 
 .button {
   display: inline-flex;
+  width: fit-content;
+  min-width: 0;
   min-height: var(--button-min-height);
   align-items: center;
   gap: 0.35rem;

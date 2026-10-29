@@ -59,9 +59,16 @@
 }
 
 .actionButton {
+  justify-self: start;
+  width: fit-content;
+  min-width: 0;
   min-height: var(--button-min-height);
   padding: var(--button-padding);
   font-size: 0.82rem;
+}
+
+.actions :global(.inline-action) {
+  margin: 0;
 }
 
 .replies {
