@@ -11,6 +11,7 @@ import { getAccountDetailValue } from "../model/getAccountDetailValue.js";
 import styles from "./AccountPage.module.css";
 import { WindowShell } from "../../../shared/ui/window-shell/index.js";
 import { ProfileSettings } from "./ProfileSettings.jsx";
+import { AppearanceSettings } from "./AppearanceSettings.jsx";
 
 export const AccountPage = () => {
   const user = useSelector((state) => state.auth.user);
@@ -43,6 +44,7 @@ export const AccountPage = () => {
         ))}
       </dl>
       <ProfileSettings user={user} />
+      <AppearanceSettings />
       <DeleteAccountAction user={user} />
       <div className={styles.footer}>
         <Link to="/">Back to Usof</Link>
