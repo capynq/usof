@@ -118,9 +118,36 @@
   }
 }
 
-.category input + label {
+.statusOption {
   display: inline-flex;
   align-items: center;
   min-height: 1.75rem;
+}
+
+.statusOption label {
   line-height: 1.4;
+}
+
+.statusOption input:focus-visible + label {
+  outline: 1px dotted var(--text-color-default);
+  outline-offset: 3px;
+}
+
+.statusOption span {
+  padding: 0.08rem 0.42rem;
+  border: 1px solid;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.active {
+  border-color: #72946b;
+  background: #e4f1df;
+  color: #25471f;
+}
+
+.inactive {
+  border-color: #a98645;
+  background: #fbf0d5;
+  color: #513b12;
 }

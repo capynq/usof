@@ -313,24 +313,32 @@ export class Post {
       throw new AppError(403, ERROR_CODES.FORBIDDEN, "Not allowed");
     }
 
+    const isOwner = Number(post.author_id) === Number(user.id);
+
+    if (!isOwner && (input.title !== undefined || input.content !== undefined)) {
+      throw new AppError(403, ERROR_CODES.FORBIDDEN, "Only the author can edit post text");
+    }
+
+    if (!isAdmin(user) && input.status !== undefined) {
+      throw new AppError(403, ERROR_CODES.FORBIDDEN, "Only an admin can edit post status");
+    }
+
     const fields = [];
     const values = [];
 
-    if (isAdmin(user)) {
-      if (input.status !== undefined) {
-        fields.push("status = ?");
-        values.push(input.status);
-      }
-    } else {
-      if (input.title !== undefined) {
-        fields.push("title = ?");
-        values.push(input.title.trim());
-      }
+    if (input.status !== undefined) {
+      fields.push("status = ?");
+      values.push(input.status);
+    }
 
-      if (input.content !== undefined) {
-        fields.push("content = ?");
-        values.push(input.content.trim());
-      }
+    if (input.title !== undefined) {
+      fields.push("title = ?");
+      values.push(input.title.trim());
+    }
+
+    if (input.content !== undefined) {
+      fields.push("content = ?");
+      values.push(input.content.trim());
     }
 
     await transaction(this.db, async (connection) => {

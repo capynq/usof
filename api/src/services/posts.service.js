@@ -1,8 +1,7 @@
 import { assertDateRange, assertNonEmpty, parse } from "../schemas/parse.js";
 import {
   createPost,
-  updateUserPost,
-  updateAdminPost,
+  updatePost,
   postQuery,
   favoritesQuery,
   createComment,
@@ -37,7 +36,7 @@ export const createPostsService = (posts, comments, reactions) => ({
     posts.update(
       id(rawId, "post_id"),
       assertNonEmpty(
-        parse(user?.role === "admin" ? updateAdminPost : updateUserPost, body, "post"),
+        parse(updatePost, body, "post"),
         "At least one editable post field is required",
       ),
       user,

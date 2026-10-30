@@ -17,7 +17,7 @@ const getInitialValues = (post) => {
   };
 };
 
-export const usePostFormController = ({ post, isAdmin }) => {
+export const usePostFormController = ({ post, isAdmin, isOwner }) => {
   const navigate = useNavigate();
   const [values, setValues] = useState(() => getInitialValues(post));
   const [formError, setFormError] = useState(null);
@@ -57,7 +57,7 @@ export const usePostFormController = ({ post, isAdmin }) => {
       if (isEditing) {
         await updatePost({
           postId: post.id,
-          ...buildPostPayload(values, { isEditing, isAdmin }),
+          ...buildPostPayload(values, { isEditing, isAdmin, isOwner }),
         }).unwrap();
         navigate(`/posts/${post.id}`);
 
@@ -65,7 +65,7 @@ export const usePostFormController = ({ post, isAdmin }) => {
       }
 
       const createdPost = await createPost(
-        buildPostPayload(values, { isEditing, isAdmin }),
+        buildPostPayload(values, { isEditing, isAdmin, isOwner }),
       ).unwrap();
       navigate(`/posts/${createdPost.id}`);
     } catch (error) {
@@ -84,6 +84,6 @@ export const usePostFormController = ({ post, isAdmin }) => {
     setField,
     toggleCategory,
     submit,
-    cancel: () => navigate(-1),
+    cancel: () => navigate(post ? `/posts/${post.id}` : "/"),
   };
 };

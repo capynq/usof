@@ -1,25 +1,29 @@
+import { useId } from "react";
 import { POST_STATUS_OPTIONS } from "../model/constants.js";
-import { SelectControl } from "../../../shared/ui/select-control/index.js";
 import styles from "./PostForm.module.css";
 
-export const AdminPostControls = ({ post, status, onChange }) => (
+export const AdminPostControls = ({ post, isOwner, status, onChange }) => {
+  const statusId = useId();
+
+  return (
   <>
-    <section className={styles.readOnlyPost} aria-label="Post content">
-      <h2>{post.title}</h2>
-      <p>{post.content}</p>
-      <p className={styles.note}>
-        Administrators can change categories and publication status here.
-      </p>
-    </section>
-    <label className={styles.field}>
-      <span>Publication status</span>
-      <SelectControl name="status" value={status} onChange={onChange}>
+    {!isOwner && (
+      <section className={styles.readOnlyPost} aria-label="Post content">
+        <h2>{post.title}</h2>
+        <p>{post.content}</p>
+      </section>
+    )}
+    <fieldset className={styles.categories}>
+      <legend>Publication status</legend>
+      <div className={styles.categoryList}>
         {POST_STATUS_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
+          <div className={styles.statusOption} key={option.value}>
+            <input id={`${statusId}-${option.value}`} type="radio" name="status" value={option.value} checked={status === option.value} onChange={onChange} />
+            <label htmlFor={`${statusId}-${option.value}`}><span className={styles[option.value]}>{option.label}</span></label>
+          </div>
         ))}
-      </SelectControl>
-    </label>
+      </div>
+    </fieldset>
   </>
-);
+  );
+};

@@ -1,4 +1,4 @@
-export const buildPostPayload = (values, { isEditing, isAdmin }) => {
+export const buildPostPayload = (values, { isEditing, isAdmin, isOwner }) => {
   if (!isEditing) {
     return {
       title: values.title,
@@ -7,9 +7,11 @@ export const buildPostPayload = (values, { isEditing, isAdmin }) => {
     };
   }
 
-  return isAdmin
-    ? { categories: values.categories, status: values.status }
-    : { title: values.title, content: values.content, categories: values.categories };
+  return {
+    categories: values.categories,
+    ...(isAdmin ? { status: values.status } : {}),
+    ...(isOwner ? { title: values.title, content: values.content } : {}),
+  };
 };
 
 export const toggleCategorySelection = (selectedIds, categoryId) =>

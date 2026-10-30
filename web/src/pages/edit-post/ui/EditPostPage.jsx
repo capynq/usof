@@ -63,8 +63,7 @@ export const EditPostPage = () => {
       }
     >
       <h1 id="edit-post-title">Edit question</h1>
-      <PostForm post={post} isAdmin={permissions.isAdmin} />
-      <Link to={`/posts/${post.id}`}>Cancel and return</Link>
+      <PostForm post={post} isAdmin={permissions.isAdmin} isOwner={permissions.isOwner} />
     </WindowShell>
   );
 };

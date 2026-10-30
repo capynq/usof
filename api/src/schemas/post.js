@@ -20,12 +20,9 @@ export const createPost = strictObject({
   content: text(1, 50000),
   categories,
 });
-export const updateUserPost = strictObject({
+export const updatePost = strictObject({
   title: optional(text(1, 200)),
   content: optional(text(1, 50000)),
-  categories: optional(categories),
-});
-export const updateAdminPost = strictObject({
   categories: optional(categories),
   status: optional(status),
 });
