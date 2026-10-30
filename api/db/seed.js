@@ -139,6 +139,23 @@ export const seed = async (pool, config) => {
       );
     }
 
+    const favorites = [
+      [userId("test1"), postIds[1]],
+      [userId("test1"), postIds[2]],
+      [userId("test2"), postIds[0]],
+      [userId("test3"), postIds[4]],
+      [userId("test4"), postIds[3]],
+    ];
+
+    for (let index = 0; index < favorites.length; index += 1) {
+      const [userIdValue, postId] = favorites[index];
+      await connection.query("INSERT INTO favorites (user_id,post_id,created_at) VALUES (?,?,?)", [
+        userIdValue,
+        postId,
+        seedDate("06", index),
+      ]);
+    }
+
     await Like.lockUsers(connection);
     await Like.recalculate(connection);
   });
