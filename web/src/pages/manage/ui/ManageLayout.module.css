@@ -1,3 +1,8 @@
+.managementBody {
+  margin: 0;
+  padding: 1.2rem;
+}
+
 .managementBody > :global(nav),
 .managementBody > :global(section) {
   min-width: 0;
@@ -279,6 +284,10 @@
 }
 
 @media (max-width: 760px) {
+  .managementBody {
+    padding: 0.85rem;
+  }
+
   .managementBody :global(.management-toolbar) {
     align-items: stretch;
     flex-direction: column;

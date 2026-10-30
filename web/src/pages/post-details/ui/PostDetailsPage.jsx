@@ -85,21 +85,27 @@ export const PostDetailsPage = () => {
               <Link className={`button ${styles.button}`} to={`/posts/${post.id}/edit`}>
                 Edit
               </Link>
-              <DeletePostButton postId={post.id} />
             </div>
           )}
         </div>
         <CategoryList categories={post.categories} className={styles.categories} />
         <div className={styles.content}>{post.content}</div>
-        <ReactionControls
-          target="post"
-          targetId={post.id}
-          likeCount={post.like_count}
-          dislikeCount={post.dislike_count}
-          viewerReaction={post.viewer_reaction}
-          currentUser={currentUser}
-          canReact={permissions.canReact}
-        />
+        <div className={styles.actions}>
+          <ReactionControls
+            target="post"
+            targetId={post.id}
+            likeCount={post.like_count}
+            dislikeCount={post.dislike_count}
+            viewerReaction={post.viewer_reaction}
+            currentUser={currentUser}
+            canReact={permissions.canReact}
+          />
+          {permissions.canManage && (
+            <div className={styles.deleteAction}>
+              <DeletePostButton postId={post.id} />
+            </div>
+          )}
+        </div>
       </WindowShell>
       <CommentDiscussion postId={post.id} postStatus={post.status} />
     </div>

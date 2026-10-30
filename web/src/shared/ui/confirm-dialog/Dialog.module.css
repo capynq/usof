@@ -32,6 +32,7 @@
 
 .content {
   display: grid;
+  align-content: start;
   flex: 1 1 auto;
   gap: var(--dialog-content-gap);
   min-width: 0;
@@ -41,6 +42,7 @@
 
 .content form {
   display: grid;
+  align-content: start;
   gap: var(--dialog-content-gap);
   min-width: 0;
   margin: 0;
