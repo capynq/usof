@@ -40,7 +40,7 @@ export const PostDetailsPage = () => {
   }
 
   if (routeStatus === "loading") {
-    return <LoadingIndicator completing={completing}>Loading question…</LoadingIndicator>;
+    return <LoadingIndicator completing={completing} expanded>Loading question…</LoadingIndicator>;
   }
 
   if (routeStatus === "unavailable") {
@@ -73,22 +73,17 @@ export const PostDetailsPage = () => {
           </span>
         }
       >
-        <div className={styles.heading}>
-          <h1>{post.title}</h1>
-          <FavoriteButton post={post} />
-        </div>
-        <PostMeta post={post} leading={<UserAvatar user={post.author} />} className={styles.meta} />
-        <div className={styles.toolbar}>
-          <SharePostButton post={post} />
-          {permissions.canManage && (
-            <div className={styles.manage}>
-              <Link className={`button ${styles.button}`} to={`/posts/${post.id}/edit`}>
-                Edit
-              </Link>
+        <header className={styles.header}>
+          <div className={styles.heading}>
+            <h1>{post.title}</h1>
+            <div className={styles.headingActions}>
+              <SharePostButton post={post} />
+              <FavoriteButton post={post} />
             </div>
-          )}
-        </div>
-        <CategoryList categories={post.categories} className={styles.categories} />
+          </div>
+          <PostMeta post={post} leading={<UserAvatar user={post.author} />} className={styles.meta} />
+          <CategoryList categories={post.categories} className={styles.categories} />
+        </header>
         <div className={styles.content}>{post.content}</div>
         <div className={styles.actions}>
           <ReactionControls
@@ -100,11 +95,14 @@ export const PostDetailsPage = () => {
             currentUser={currentUser}
             canReact={permissions.canReact}
           />
-          {permissions.canManage && (
-            <div className={styles.deleteAction}>
-              <DeletePostButton postId={post.id} />
-            </div>
-          )}
+          <div className={styles.toolbar}>
+            {permissions.canManage && (post.status === "active" || permissions.isAdmin) && (
+              <Link className={`button ${styles.button}`} to={`/posts/${post.id}/edit`}>
+                {post.status === "active" ? "Edit" : "Manage status"}
+              </Link>
+            )}
+            {permissions.canManage && <DeletePostButton postId={post.id} />}
+          </div>
         </div>
       </WindowShell>
       <CommentDiscussion postId={post.id} postStatus={post.status} />

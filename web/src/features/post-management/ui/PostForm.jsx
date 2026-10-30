@@ -8,21 +8,22 @@ import styles from "./PostForm.module.css";
 
 export const PostForm = ({ post, isAdmin = false, isOwner = false }) => {
   const form = usePostFormController({ post, isAdmin, isOwner });
+  const statusOnly = form.isEditing && post.status !== "active";
 
   return (
     <form className={styles.form} onSubmit={form.submit}>
       <FormCompanion context={isAdmin ? "manage" : "writing"} />
       {isAdmin && form.isEditing && (
-        <AdminPostControls post={post} isOwner={isOwner} status={form.values.status} onChange={form.setField} />
+        <AdminPostControls post={post} isOwner={isOwner && !statusOnly} status={form.values.status} onChange={form.setField} />
       )}
-      {(!form.isEditing || isOwner) && <PostFields values={form.values} onChange={form.setField} />}
-      <CategoryPicker
+      {(!form.isEditing || (isOwner && !statusOnly)) && <PostFields values={form.values} onChange={form.setField} />}
+      {!statusOnly && <CategoryPicker
         categories={form.categories}
         error={form.categoriesError}
         isLoading={form.categoriesLoading}
         selectedIds={form.values.categories}
         onToggle={form.toggleCategory}
-      />
+      />}
       {form.formError && (
         <p className={styles.error} role="alert">
           {form.formError}
@@ -31,7 +32,7 @@ export const PostForm = ({ post, isAdmin = false, isOwner = false }) => {
       <PostFormActions
         isEditing={form.isEditing}
         isSaving={form.isSaving}
-        isDisabled={form.categoriesLoading || Boolean(form.categoriesError)}
+        isDisabled={!statusOnly && (form.categoriesLoading || Boolean(form.categoriesError))}
         onCancel={form.cancel}
       />
     </form>

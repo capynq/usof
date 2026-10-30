@@ -47,7 +47,9 @@ export const usePostFormController = ({ post, isAdmin, isOwner }) => {
     event.preventDefault();
     setFormError(null);
 
-    if (!values.categories.length) {
+    const statusOnly = isEditing && post.status !== "active";
+
+    if (!statusOnly && !values.categories.length) {
       setFormError("Choose at least one category.");
 
       return;
@@ -57,7 +59,7 @@ export const usePostFormController = ({ post, isAdmin, isOwner }) => {
       if (isEditing) {
         await updatePost({
           postId: post.id,
-          ...buildPostPayload(values, { isEditing, isAdmin, isOwner }),
+          ...(statusOnly ? { status: values.status } : buildPostPayload(values, { isEditing, isAdmin, isOwner })),
         }).unwrap();
         navigate(`/posts/${post.id}`);
 

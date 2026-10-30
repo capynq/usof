@@ -28,7 +28,7 @@ export const EditPostPage = () => {
   }
 
   if (routeStatus === "loading") {
-    return <LoadingIndicator completing={completing}>Loading question…</LoadingIndicator>;
+    return <LoadingIndicator completing={completing} expanded>Loading question…</LoadingIndicator>;
   }
 
   if (routeStatus === "unavailable") {
@@ -45,6 +45,15 @@ export const EditPostPage = () => {
     return (
       <WindowShell title="Edit question" className={styles.window} bodyClassName={styles.body}>
         <PostRouteMessage>You can edit only your own questions.</PostRouteMessage>
+        <Link to={`/posts/${post.id}`}>Return to the question</Link>
+      </WindowShell>
+    );
+  }
+
+  if (post.status !== "active" && !permissions.isAdmin) {
+    return (
+      <WindowShell title="Edit question" className={styles.window} bodyClassName={styles.body}>
+        <PostRouteMessage>Inactive questions cannot be edited.</PostRouteMessage>
         <Link to={`/posts/${post.id}`}>Return to the question</Link>
       </WindowShell>
     );
