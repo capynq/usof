@@ -8,6 +8,8 @@ The frontend uses React, Redux Toolkit, React Router and xp.css. The backend use
 
 ![Home page](web/docs/screenshots/home-desktop.png)
 
+![Home page on mobile](web/docs/screenshots/home-mobile.png)
+
 ![Question page](web/docs/screenshots/question-desktop.png)
 
 ## Requirements
