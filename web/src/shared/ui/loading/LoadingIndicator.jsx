@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./LoadingIndicator.module.css";
 
-export const LoadingIndicator = ({ children, completing = false }) => {
+export const LoadingIndicator = ({ children, completing = false, expanded = false }) => {
   const [progress, setProgress] = useState(20);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export const LoadingIndicator = ({ children, completing = false }) => {
   }, [completing]);
 
   return (
-    <div className={styles.status} role="status">
+    <div className={`${styles.status} ${expanded ? styles.expanded : ""}`.trim()} role="status">
       <span>{completing ? "Preparing view…" : children}</span>
       <progress className={styles.track} max="100" value={progress} aria-hidden="true" />
     </div>

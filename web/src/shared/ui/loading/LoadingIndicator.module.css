@@ -3,10 +3,20 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
-  padding: 12px 0;
+  padding: 12px;
 }
 
 .track {
   display: block;
   width: 160px;
+  max-width: 100%;
+}
+
+.expanded {
+  align-items: center;
+  text-align: center;
+}
+
+.expanded .track {
+  width: 100%;
 }

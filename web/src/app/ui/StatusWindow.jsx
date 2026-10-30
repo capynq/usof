@@ -20,7 +20,7 @@ export const StatusWindow = ({ status, children, completing }) => {
           <p role={role}>{message}</p>
         </StateCompanion>
       ) : (
-        <LoadingIndicator completing={completing}>{message}</LoadingIndicator>
+        <LoadingIndicator completing={completing} expanded>{message}</LoadingIndicator>
       )}
       {children}
     </WindowShell>

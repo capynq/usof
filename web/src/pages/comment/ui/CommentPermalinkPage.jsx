@@ -14,7 +14,7 @@ export const CommentPermalinkPage = () => {
   }
 
   if (showLoading) {
-    return <LoadingIndicator completing={completing}>Finding that reply…</LoadingIndicator>;
+    return <LoadingIndicator completing={completing} expanded>Finding that reply…</LoadingIndicator>;
   }
 
   if (query.error || !query.data) {

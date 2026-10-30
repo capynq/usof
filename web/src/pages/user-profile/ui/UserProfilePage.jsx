@@ -22,7 +22,7 @@ export const UserProfilePage = () => {
   }
 
   if (showLoading) {
-    return <LoadingIndicator completing={completing}>Loading profile…</LoadingIndicator>;
+    return <LoadingIndicator completing={completing} expanded>Loading profile…</LoadingIndicator>;
   }
 
   if (profile.userError || !profile.user) {

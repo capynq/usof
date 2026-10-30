@@ -29,7 +29,7 @@ export const CategoryPage = () => {
   }
 
   if (showLoading) {
-    return <LoadingIndicator completing={completing}>Opening category…</LoadingIndicator>;
+    return <LoadingIndicator completing={completing} expanded>Opening category…</LoadingIndicator>;
   }
 
   if (error || !category) {

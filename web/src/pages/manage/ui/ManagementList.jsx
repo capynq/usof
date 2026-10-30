@@ -49,7 +49,7 @@ export const ManagementList = ({ query, resource, children }) => {
         )}
       </div>
       {(query.isFetching || showInitialLoading) && (
-        <LoadingIndicator completing={completing}>Opening records…</LoadingIndicator>
+        <LoadingIndicator completing={completing} expanded>Opening records…</LoadingIndicator>
       )}
       {query.error && (
         <p role="alert">{getErrorMessage(query.error, "Records could not be loaded.")}</p>

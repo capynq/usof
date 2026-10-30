@@ -18,7 +18,7 @@ export const PostCollection = ({
   const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
 
   if (showLoading) {
-    return <LoadingIndicator completing={completing}>{loadingMessage}</LoadingIndicator>;
+    return <LoadingIndicator completing={completing} expanded>{loadingMessage}</LoadingIndicator>;
   }
 
   if (error) {
