@@ -8,6 +8,16 @@
   min-width: 0;
 }
 
+.managementBody > :global(section) > :global(h1),
+.managementBody > :global(section) > :global(p) {
+  margin: 0;
+}
+
+.managementBody > :global(section) > :global(h1) {
+  color: #0054a6;
+  font-size: 1.5rem;
+}
+
 .managementBody > :global(section) {
   display: grid;
   align-content: start;
@@ -165,7 +175,7 @@
   display: grid;
   grid-template-columns: var(--management-columns, 3rem minmax(0, 1fr) 12rem);
   gap: 0.5rem 0.75rem;
-  padding: 0.35rem 0.75rem;
+  padding: 0.6rem 0.75rem;
   border-bottom: 1px solid #bdc9d2;
   background: #f7f6f0;
   color: #345775;
@@ -240,8 +250,8 @@
 }
 
 .managementBody :global(.management-list[data-resource="comments"]) {
-  --management-columns: 2.5rem minmax(12rem, 1.7fr) minmax(7rem, 0.65fr) minmax(6.5rem, 0.55fr)
-    12rem;
+  --management-columns: 2.5rem minmax(9rem, 1fr) minmax(5rem, 0.4fr) minmax(5rem, 0.4fr)
+    14rem;
 }
 
 .managementBody :global(.management-list[data-resource="comments"] .management-comment-excerpt) {
