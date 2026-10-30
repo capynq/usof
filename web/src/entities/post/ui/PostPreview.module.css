@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: 6rem minmax(0, 1fr);
   gap: 1rem;
-  padding: 1rem 0.85rem;
+  padding: 1rem;
   border-bottom: 1px solid var(--border-color-subtle);
   background: var(--surface-color-raised);
 }
@@ -34,12 +34,17 @@
 }
 
 .metrics {
-  display: grid;
-  align-content: start;
-  gap: 0.15rem;
+  display: flex;
+  gap: 0.5rem;
   color: var(--text-color-secondary);
   font-size: 0.76rem;
-  text-align: center;
+  white-space: nowrap;
+}
+
+.activityDate {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
   white-space: nowrap;
 }
 
@@ -124,14 +129,11 @@
     width: 100%;
   }
 
+  .activityDate,
   .metrics {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.8rem;
-    text-align: left;
-    white-space: normal;
+    font-size: 0.7rem;
   }
+
 }
 
 .heading {

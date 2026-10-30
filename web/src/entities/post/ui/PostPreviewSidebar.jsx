@@ -1,9 +1,8 @@
 import { AuthorLink, UserAvatar } from "../../user/index.js";
-import { PostPreviewMetrics } from "./PostPreviewMetrics.jsx";
 import styles from "./PostPreview.module.css";
 
-export const PostPreviewSidebar = ({ post, likes, replies }) => (
-  <aside className={styles.sidebar} aria-label="Question author and activity">
+export const PostPreviewSidebar = ({ post }) => (
+  <aside className={styles.sidebar} aria-label="Question author">
     <AuthorLink
       user={post.author}
       className={styles.author}
@@ -14,6 +13,5 @@ export const PostPreviewSidebar = ({ post, likes, replies }) => (
         {post.author?.full_name || post.author?.login || "Author"}
       </span>
     </AuthorLink>
-    <PostPreviewMetrics likes={likes} replies={replies} />
   </aside>
 );
