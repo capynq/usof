@@ -41,7 +41,6 @@
   color: var(--text-color-link);
   font: inherit;
   font-weight: 700;
-  cursor: pointer;
 }
 
 .filterToggle:hover {

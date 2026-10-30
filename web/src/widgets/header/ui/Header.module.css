@@ -103,7 +103,6 @@
   all: unset;
   display: inline-grid;
   flex: 0 0 auto;
-  cursor: pointer;
 }
 
 .avatarButton:hover {

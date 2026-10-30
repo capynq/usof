@@ -62,6 +62,13 @@ button {
   height: var(--form-control-height);
 }
 
+:is(input:not([type]), input[type="text"], input[type="search"], input[type="email"], input[type="password"], input[type="url"], input[type="tel"], input[type="number"]),
+textarea {
+  border: 1px solid var(--form-control-border);
+  background-color: var(--surface-color-raised);
+  box-shadow: inset 1px 1px var(--form-control-inset);
+}
+
 select:not([multiple]):not([size]),
 select:not([multiple])[size="1"] {
   appearance: none;
@@ -216,35 +223,22 @@ fieldset {
   font-size: 0.8rem;
 }
 
-@media (pointer: fine) {
+@media (pointer: fine) and (forced-colors: none) {
   body {
-    cursor:
-      url("../assets/cursors/arrow.svg") 2 1,
-      default;
+    cursor: url("../assets/cursors/default.svg") 3 4, default;
   }
 
-  :where(a, button, select, summary, input[type="checkbox"], input[type="radio"]) {
-    cursor:
-      url("../assets/cursors/hand.svg") 11 2,
-      pointer;
+  :where(a[href], button, select, summary, input[type="checkbox"], input[type="radio"], input[type="button"], input[type="submit"], input[type="reset"], input[type="file"], label:has(input:is([type="checkbox"], [type="radio"], [type="file"])), input:is([type="checkbox"], [type="radio"], [type="file"]) + label, [role="button"], [role="link"]) {
+    cursor: url("../assets/cursors/pointer.svg") 7 3, pointer;
   }
 
-  :where(input:not([type="checkbox"]):not([type="radio"]), textarea) {
-    cursor: text;
+  :where(input:not([type]), input:is([type="text"], [type="search"], [type="email"], [type="password"], [type="url"], [type="tel"], [type="number"]), textarea, [contenteditable="true"]) {
+    cursor: url("../assets/cursors/text.svg") 6 10, text;
   }
 
-  button:disabled {
-    cursor: not-allowed;
-  }
-}
-
-@media (forced-colors: active) {
-  body {
-    cursor: default;
-  }
-
-  :where(a, button, select, summary) {
-    cursor: pointer;
+  :where(button, input, select, textarea):disabled,
+  :where(label:has(input:disabled), input:disabled + label, [aria-disabled="true"]) {
+    cursor: url("../assets/cursors/not-allowed.svg") 13 13, not-allowed;
   }
 }
 

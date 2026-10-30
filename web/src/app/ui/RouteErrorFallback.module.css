@@ -48,7 +48,6 @@
   font: inherit;
   text-decoration: underline;
   text-underline-offset: 0.15em;
-  cursor: pointer;
 }
 
 .screen button:focus-visible,

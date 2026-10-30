@@ -23,7 +23,6 @@
 }
 
 .button:disabled {
-  cursor: not-allowed;
   color: var(--form-text-disabled);
 }
 

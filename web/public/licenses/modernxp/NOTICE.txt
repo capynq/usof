@@ -1,0 +1,3 @@
+The cursor SVGs in web/src/shared/assets/cursors are derived from modernXP-cursor-theme by na0miluv.
+Source: https://github.com/na0miluv/modernXP-cursor-theme
+License: GNU General Public License version 3. See LICENSE in this directory.
