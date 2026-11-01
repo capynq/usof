@@ -12,6 +12,7 @@ import {
   validateRegistration,
 } from "../../../features/auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
+import { isDev } from "../../../shared/config.js";
 import { AccountIcon } from "../../../shared/ui/icons/index.js";
 import styles from "../../../features/auth/ui/AuthForm.module.css";
 
@@ -28,7 +29,13 @@ export const RegisterPage = () => {
         password_confirmation: values.password_confirmation,
       }).unwrap();
       navigate("/email-confirmation", {
-        state: { registrationDelivery: result.delivery },
+        state: {
+          registrationDelivery: result.delivery,
+          registrationEmail: result.user.email,
+          ...(isDev && result.confirmation_url
+            ? { confirmationUrl: result.confirmation_url }
+            : {}),
+        },
       });
     } catch {
       return;

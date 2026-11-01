@@ -5,7 +5,7 @@ export const authController = (auth, config) => {
       data: {
         message:
           config.mailMode === "file"
-            ? "If the account is eligible, a link was saved to the private development outbox. No email was sent."
+            ? "If the account is eligible, a link was saved to the server assets."
             : "If the account is eligible, a link was submitted for email delivery.",
       },
     });

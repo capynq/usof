@@ -83,6 +83,7 @@ export const loadConfig = (source = process.env) => {
   return Object.freeze({
     port: port("PORT", 3000),
     production,
+    development: source.NODE_ENV === "development",
     authSecret,
     baseUrl: baseUrl.origin,
     webBaseUrl: webBaseUrl.origin,

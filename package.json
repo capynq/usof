@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev:web": "npm run dev --workspace=web",
-    "dev:api": "npm run start --workspace=api",
+    "dev:api": "NODE_ENV=development npm run start --workspace=api",
     "build": "npm run build --workspace=web",
     "db:init": "npm run db:init --workspace=api",
     "db:recreate": "npm run db:recreate --workspace=api"

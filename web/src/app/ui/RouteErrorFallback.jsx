@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { isRouteErrorResponse, Link, useRouteError } from "react-router";
+import { isDev } from "../../shared/config.js";
 import { formatRouteError } from "../../shared/lib/formatRouteError.js";
 import styles from "./RouteErrorFallback.module.css";
-
-const isDevelopment = import.meta.env.DEV;
 
 export const RouteErrorFallback = () => {
   const error = useRouteError();
   const [copyFeedback, setCopyFeedback] = useState("");
-  const details = isDevelopment ? formatRouteError(error, isRouteErrorResponse) : "";
+  const details = isDev ? formatRouteError(error, isRouteErrorResponse) : "";
 
   const copyDetails = async () => {
     try {
@@ -36,7 +35,7 @@ export const RouteErrorFallback = () => {
           </button>
           <Link to="/">Back to Usof home</Link>
         </div>
-        {isDevelopment && (
+        {isDev && (
           <section className={styles.details} aria-labelledby="error-details-title">
             <h2 id="error-details-title">Technical information:</h2>
             <pre>{details}</pre>

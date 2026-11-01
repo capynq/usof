@@ -1,4 +1,5 @@
 import { signAuthToken } from "../utils/authToken.js";
+import { confirmationUrl } from "../utils/mailer.js";
 import { parse } from "../schemas/parse.js";
 import {
   credentials,
@@ -37,6 +38,9 @@ export const createAuthService = (users, mailer, config) => {
       return {
         user: result.user,
         delivery: await mailer(result.user.email, "confirmation", result.token),
+        ...(config.development && config.mailMode === "file"
+          ? { confirmation_url: confirmationUrl(config, result.token) }
+          : {}),
       };
     },
     login: async (body) => {

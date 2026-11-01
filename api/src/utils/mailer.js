@@ -6,20 +6,23 @@ import { join } from "node:path";
 import { storageDirectory } from "./files.js";
 import { AppError } from "../errors/AppError.js";
 
+export const confirmationUrl = (config, token) =>
+  `${config.webBaseUrl}/email-confirmation?token=${encodeURIComponent(token)}`;
+
 export const createMailer = (config) => {
   const transport =
     config.mailMode === "smtp"
       ? nodemailer.createTransport({
-          host: config.smtp.host,
-          port: config.smtp.port,
-          secure: config.smtp.port === 465,
-          auth: config.smtp.user
-            ? { user: config.smtp.user, pass: config.smtp.password }
-            : undefined,
-          connectionTimeout: 10000,
-          greetingTimeout: 10000,
-          socketTimeout: 10000,
-        })
+        host: config.smtp.host,
+        port: config.smtp.port,
+        secure: config.smtp.port === 465,
+        auth: config.smtp.user
+          ? { user: config.smtp.user, pass: config.smtp.password }
+          : undefined,
+        connectionTimeout: 10000,
+        greetingTimeout: 10000,
+        socketTimeout: 10000,
+      })
       : null;
 
   return async (email, kind, token) => {
@@ -29,7 +32,7 @@ export const createMailer = (config) => {
       subject: `Usof ${kind}`,
       text:
         kind === "confirmation"
-          ? `Use this link within one hour: ${config.webBaseUrl}/email-confirmation?token=${encodeURIComponent(token)}`
+          ? `Use this link within one hour: ${confirmationUrl(config, token)}`
           : `Use this link within one hour: ${config.webBaseUrl}/reset-password?token=${encodeURIComponent(token)}`,
     };
 
