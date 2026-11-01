@@ -23,6 +23,7 @@
   align-content: start;
   align-self: start;
   gap: 0.75rem;
+  padding-top: 0.75rem;
 }
 
 .managementBody > :global(section) > :global(.management-heading-row) {
