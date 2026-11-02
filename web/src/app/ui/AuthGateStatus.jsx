@@ -23,7 +23,7 @@ export const AuthGateStatus = ({ status, error, completing, onRetry, onSignInAga
               Try again
             </button>
             <button type="button" onClick={onSignInAgain}>
-              Sign in again
+              Login again
             </button>
           </div>
         </StatusWindow>

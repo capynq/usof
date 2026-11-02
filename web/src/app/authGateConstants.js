@@ -1,7 +1,7 @@
 export const AUTH_GATE_COPY = {
   restoring: {
     title: "Checking your Usof session",
-    message: "Usof is checking that your sign-in is still current.",
+    message: "Usof is checking that your login is still current.",
     ariaLive: "polite",
     labelledBy: "auth-gate-restoring-title",
     role: "status",

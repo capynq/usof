@@ -16,7 +16,6 @@ const getActiveFilters = (values, { lockCategory, isHome }) =>
   [
     !isHome && values.search.trim() ? `Search: ${values.search.trim()}` : "",
     !lockCategory && values.category ? "Category" : "",
-    values.sort === "likes" ? "Most liked" : values.sort === "likes-asc" ? "Fewest likes" : "",
     values.status ? `Status: ${values.status}` : "",
     values.date_from || values.date_to ? "Date range" : "",
   ].filter(Boolean);
@@ -60,9 +59,17 @@ export const PostFeedFilters = ({
     onApply(values);
   };
 
+  const changeSort = (event) => {
+    const sort = event.target.value;
+
+    setValues((current) => ({ ...current, sort }));
+    onApply({ ...initialValues, sort });
+  };
+
   const clearFilters = () => {
     const cleared = {
       ...defaultValues,
+      sort: values.sort,
       search: isHome ? values.search : "",
       category: lockCategory ? values.category : "",
     };
@@ -89,6 +96,15 @@ export const PostFeedFilters = ({
           </li>
         ))}
       </ul>
+      <label className={styles.sortField}>
+        <span>Sort by</span>
+        <SelectControl name="sort" value={initialValues.sort} onChange={changeSort}>
+          <option value="date">Newest first</option>
+          <option value="date-asc">Oldest first</option>
+          <option value="likes">Most liked</option>
+          <option value="likes-asc">Fewest likes</option>
+        </SelectControl>
+      </label>
       <div id="post-feed-filters" className={styles.filterPanel} hidden={!expanded}>
         <div className={styles.filterGrid}>
           {!isHome && (
@@ -120,14 +136,6 @@ export const PostFeedFilters = ({
               </SelectControl>
             </label>
           )}
-          <label>
-            <span>Sort by</span>
-            <SelectControl name="sort" value={values.sort} onChange={updateField}>
-              <option value="date">Newest first</option>
-              <option value="likes">Most liked</option>
-              <option value="likes-asc">Fewest likes</option>
-            </SelectControl>
-          </label>
           {canFilterStatus && (
             <label>
               <span>Publication status</span>

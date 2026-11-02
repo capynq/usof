@@ -15,6 +15,14 @@ const isDate = (value) => {
   return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
 };
 
+const readSort = (searchParams) => {
+  const isAsc = searchParams.get("direction") === "asc";
+
+  if (searchParams.get("sort") === "likes") return isAsc ? "likes-asc" : "likes";
+
+  return isAsc ? "date-asc" : "date";
+};
+
 const readFilters = (searchParams, canFilterStatus) => {
   const rawCategory = searchParams.get("category") ?? "";
   const requestedStatus = searchParams.get("status");
@@ -28,12 +36,7 @@ const readFilters = (searchParams, canFilterStatus) => {
     category: CATEGORY_ID_PATTERN.test(rawCategory) ? rawCategory : "",
     date_from: isDate(dateFrom) ? dateFrom : "",
     date_to: isDate(dateTo) ? dateTo : "",
-    sort:
-      searchParams.get("sort") === "likes"
-        ? searchParams.get("direction") === "asc"
-          ? "likes-asc"
-          : "likes"
-        : "date",
+    sort: readSort(searchParams),
     status,
   };
 };
@@ -51,8 +54,8 @@ export const getPostFeedQueryState = ({ searchParams, user, lockedCategoryId, au
   const categoryId = lockedCategoryId ?? (filters.category ? Number(filters.category) : undefined);
 
   const queryArgs = {
-    sort: filters.sort === "date" ? "date" : "likes",
-    ...(filters.sort === "likes-asc" ? { direction: "asc" } : {}),
+    sort: filters.sort.startsWith("likes") ? "likes" : "date",
+    ...(filters.sort.endsWith("-asc") ? { direction: "asc" } : {}),
     page,
     page_size: pageSize,
     summary: true,
@@ -74,8 +77,8 @@ export const getPostFeedFilterParams = (values, { lockedCategoryId, user, pageSi
       category: lockedCategoryId ? undefined : values.category,
       date_from: values.date_from,
       date_to: values.date_to,
-      sort: values.sort === "likes" || values.sort === "likes-asc" ? "likes" : undefined,
-      direction: values.sort === "likes-asc" ? "asc" : undefined,
+      sort: values.sort.startsWith("likes") ? "likes" : undefined,
+      direction: values.sort.endsWith("-asc") ? "asc" : undefined,
       status: user ? values.status : undefined,
       page_size: pageSize === RECENT_POST_PAGE_SIZE ? undefined : String(pageSize),
     }),

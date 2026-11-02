@@ -57,7 +57,7 @@ export const ReactionControls = ({
         targetId={targetId}
         postId={postId}
       />
-      {!currentUser && <Link to="/login">Sign in to react</Link>}
+      {!currentUser && <Link to="/login">Login to react</Link>}
       {currentUser && !canReact && (
         <span className={styles.error}>Reactions are closed on inactive content.</span>
       )}

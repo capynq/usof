@@ -10,5 +10,5 @@ export const getRegistrationMessage = (delivery) => {
     return REGISTRATION_DELIVERY_MESSAGES[delivery];
   }
 
-  return "Your account is ready. Confirm your email before signing in.";
+  return "Your account is ready. Confirm your email before logging in.";
 };

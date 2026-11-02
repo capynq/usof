@@ -49,7 +49,7 @@ export const ProfileEmailForm = ({ user }) => {
         id="profile-email"
         label="Email address"
         layout="stacked"
-        hint="Changing your email signs you out. Confirm the new address before signing in again."
+        hint="Changing your email signs you out. Confirm the new address before logging in again."
         inputProps={{
           type: "email",
           required: true,

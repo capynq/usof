@@ -14,7 +14,7 @@ export const CommentDiscussionNotices = ({
   <>
     {canReply && !currentUser && (
       <p className={styles.signInPrompt}>
-        <Link to="/login">Sign in</Link> to join the discussion.
+        <Link to="/login">Login</Link> to join the discussion.
       </p>
     )}
     {!canReply && (

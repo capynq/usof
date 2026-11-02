@@ -41,8 +41,8 @@ export const RESET_INITIAL_VALUES = {
 
 export const AUTH_LINKS = {
   login: [{ to: "/register", label: "Create an account" }],
-  register: [{ to: "/login", label: "Already registered? Sign in" }],
-  emailConfirmation: [{ to: "/login", label: "Return to sign in" }],
-  forgotPassword: [{ to: "/login", label: "Back to sign in" }],
-  resetPassword: [{ to: "/login", label: "Return to sign in" }],
+  register: [{ to: "/login", label: "Already registered? Login" }],
+  emailConfirmation: [{ to: "/login", label: "Return to login" }],
+  forgotPassword: [{ to: "/login", label: "Back to login" }],
+  resetPassword: [{ to: "/login", label: "Return to login" }],
 };

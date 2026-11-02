@@ -17,7 +17,7 @@ export const SessionNotice = () => {
         {notice}{" "}
         {location.pathname !== "/login" && (
           <Link to="/login" state={{ from: location }}>
-            Sign in
+            Login
           </Link>
         )}
       </AuthNotice>

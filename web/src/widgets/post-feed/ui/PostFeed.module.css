@@ -61,6 +61,29 @@
   font-weight: 700;
 }
 
+.sortField {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  margin-left: auto;
+  color: var(--text-color-secondary);
+  font-size: var(--form-label-size);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.sortField > span {
+  flex: 0 0 auto;
+}
+
+.sortField select {
+  flex: 0 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
 .filterToggle:hover {
   background: var(--navigation-hover-surface);
   color: var(--global-text-link-hover);

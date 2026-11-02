@@ -22,7 +22,7 @@ export const EmailConfirmationPage = () => {
     <AuthWindow title="Confirm your email" Icon={EnvelopeIcon}>
       <div className={styles.intro}>
         <h1>One more step</h1>
-        <p>Confirm your email address before signing in to Usof.</p>
+        <p>Confirm your email address before logging in to Usof.</p>
       </div>
       {pageState.registrationMessage && (
         <AuthNotice type="success">{pageState.registrationMessage}</AuthNotice>

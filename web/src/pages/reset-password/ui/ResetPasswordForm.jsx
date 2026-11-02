@@ -35,7 +35,7 @@ export const ResetPasswordForm = ({ token }) => {
   if (notice) {
     return (
       <AuthNotice type="success">
-        {notice} <Link to="/login">Sign in</Link>
+        {notice} <Link to="/login">Login</Link>
       </AuthNotice>
     );
   }

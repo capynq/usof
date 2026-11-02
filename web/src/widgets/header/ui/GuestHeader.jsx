@@ -4,14 +4,14 @@ import { ActionButtonGroup } from "../../../shared/ui/action-button-group/index.
 import styles from "./Header.module.css";
 
 const GUEST_LINKS = [
-  { to: "/login", label: "Sign in" },
+  { to: "/login", label: "Login" },
   { to: "/register", label: "Register" },
 ];
 
 export const GuestHeader = () => (
   <>
     <span className={styles.guestIdentity}>
-      <Link className={styles.avatarSlot} to="/login" aria-label="Sign in" title="Sign in">
+      <Link className={styles.avatarSlot} to="/login" aria-label="Login" title="Login">
         <UserAvatar user={null} />
       </Link>
       <span className={styles.guestStatus}>Welcome, Guest</span>

@@ -10,7 +10,7 @@ export const EmailConfirmationAction = ({ token }) => {
     <section className={styles.actionPanel} aria-label="Email confirmation">
       {data?.message && (
         <AuthNotice type="success">
-          {data.message} <Link to="/login">Sign in</Link>
+          {data.message} <Link to="/login">Login</Link>
         </AuthNotice>
       )}
       {error && (

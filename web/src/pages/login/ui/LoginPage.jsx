@@ -41,14 +41,14 @@ export const LoginPage = () => {
   });
 
   return (
-    <AuthWindow title="Sign in to Usof" Icon={KeyIcon}>
+    <AuthWindow title="Login to Usof" Icon={KeyIcon}>
       <div className={styles.intro}>
         <h1>Welcome back</h1>
         <p>Use your login, email address, and password to continue.</p>
       </div>
       {error && (
         <AuthNotice type="error">
-          {getErrorMessage(error, "Sign-in failed. Check your details and try again.")}
+          {getErrorMessage(error, "Login failed. Check your details and try again.")}
         </AuthNotice>
       )}
       <form className={styles.form} noValidate onSubmit={form.handleSubmit}>
@@ -85,8 +85,8 @@ export const LoginPage = () => {
         />
         <AuthFormActions
           isLoading={isLoading}
-          label="Sign in"
-          loadingLabel="Signing in…"
+          label="Login"
+          loadingLabel="Logging in…"
           note="Email confirmation is required."
           noteType="pending"
         />

@@ -11,7 +11,7 @@ const initialState = {
   user: null,
   status: storedSession?.token ? AUTH_STATUS.restoring : AUTH_STATUS.anonymous,
   notice: storedSession?.expired
-    ? "Your session has expired. Sign in again to continue."
+    ? "Your session has expired. Log in again to continue."
     : null,
 };
 
@@ -67,7 +67,7 @@ const authSlice = createSlice({
       expiresAt: null,
       user: null,
       status: AUTH_STATUS.anonymous,
-      notice: "Your session has expired. Sign in again to continue.",
+      notice: "Your session has expired. Log in again to continue.",
     }),
   },
 });

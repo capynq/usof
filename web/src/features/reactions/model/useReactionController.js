@@ -16,7 +16,7 @@ export const useReactionController = ({
   const isBusy = createState.isLoading || deleteState.isLoading;
   const isAvailable = Boolean(currentUser && canReact);
   const availabilityMessage = !currentUser
-    ? "Sign in to react"
+    ? "Login to react"
     : !canReact
       ? "Reactions are closed on inactive content"
       : undefined;

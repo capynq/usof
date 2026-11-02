@@ -52,7 +52,7 @@ export const RegisterPage = () => {
     <AuthWindow title="Create a Usof account" Icon={AccountIcon}>
       <div className={styles.intro}>
         <h1>Join the conversation</h1>
-        <p>Create an account, then confirm your email before signing in.</p>
+        <p>Create an account, then confirm your email before logging in.</p>
       </div>
       {error && (
         <AuthNotice type="error">
