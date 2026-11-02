@@ -45,6 +45,7 @@ const authSlice = createSlice({
     }),
     sessionRestoreStarted: (state) => ({
       ...state,
+      generation: state.generation + 1,
       status: AUTH_STATUS.restoring,
       notice: null,
     }),

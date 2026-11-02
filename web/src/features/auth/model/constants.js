@@ -1,5 +1,15 @@
 export const SESSION_STORAGE_KEY = "usof-session";
 
+export const AUTH_ENDPOINTS = {
+  getCurrentUser: "getCurrentUser",
+  login: "login",
+};
+
+export const SESSION_RESTORE_TIMEOUT_ERROR = {
+  status: "TIMEOUT_ERROR",
+  error: "Session check timed out. Try again.",
+};
+
 export const AUTH_STATUS = {
   restoring: "restoring",
   restoreError: "restore-error",

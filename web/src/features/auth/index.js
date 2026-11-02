@@ -15,6 +15,7 @@ export {
   selectCurrentUser,
   sessionEnded,
   sessionEstablished,
+  sessionSynced,
   sessionExpired,
   sessionRestoreFailed,
   sessionRestored,
@@ -25,6 +26,7 @@ export { useAuthSession } from "./model/useAuthSession.js";
 export { useValidatedAuthForm } from "./model/useValidatedAuthForm.js";
 export { clearStoredSession, saveStoredSession } from "./model/sessionStorage.js";
 export {
+  AUTH_ENDPOINTS,
   AUTH_STATUS,
   AUTH_LINKS,
   EMAIL_INITIAL_VALUES,

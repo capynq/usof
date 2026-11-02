@@ -1,35 +1,58 @@
 import {
   configureStore,
   createListenerMiddleware,
+  isAnyOf,
   isRejectedWithValue,
 } from "@reduxjs/toolkit";
+import { setupListeners } from "@reduxjs/toolkit/query";
 import {
   authReducer,
   clearStoredSession,
+  sessionEstablished,
+  sessionSynced,
+  sessionEnded,
   sessionExpired,
+  AUTH_ENDPOINTS,
 } from "../features/auth/index.js";
-import { baseApi } from "../shared/api/index.js";
+import { localMutationSync } from "../shared/lib/localMutationSync.js";
+import {
+  baseApi,
+  AUTHORIZATION_HEADER,
+  HTTP_STATUS,
+  toBearerToken,
+} from "../shared/api/index.js";
 
 const authListener = createListenerMiddleware();
 
 authListener.startListening({
   matcher: isRejectedWithValue,
   effect: (action, listenerApi) => {
-    const isLoginFailure = action.meta?.arg?.endpointName === "login";
-    const isUnauthorized = action.payload?.status === 401 ||
-      action.payload?.originalStatus === 401;
+    const isLoginFailure = action.meta?.arg?.endpointName === AUTH_ENDPOINTS.login;
+    const isUnauthorized = action.payload?.status === HTTP_STATUS.unauthorized ||
+      action.payload?.originalStatus === HTTP_STATUS.unauthorized;
     const token = listenerApi.getState().auth.token;
     const hasSession = Boolean(token);
-    const requestAuthorization = action.meta?.baseQueryMeta?.request?.headers?.get("Authorization");
+    const requestAuthorization = action.meta?.baseQueryMeta?.request?.headers?.get(AUTHORIZATION_HEADER);
 
     if (!isUnauthorized || !hasSession || isLoginFailure ||
-        requestAuthorization !== `Bearer ${token}`) {
+      requestAuthorization !== toBearerToken(token)) {
       return;
     }
 
     clearStoredSession();
     listenerApi.dispatch(sessionExpired());
-    listenerApi.dispatch(baseApi.util.resetApiState());
+  },
+});
+
+authListener.startListening({
+  matcher: isAnyOf(
+    sessionEstablished,
+    sessionSynced,
+    sessionEnded,
+    sessionExpired,
+  ),
+  effect: (_, { dispatch }) => {
+    dispatch(baseApi.util.resetApiState());
   },
 });
 
@@ -39,5 +62,11 @@ export const store = configureStore({
     [baseApi.reducerPath]: baseApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware, authListener.middleware),
+    getDefaultMiddleware().concat(
+      localMutationSync,
+      baseApi.middleware,
+      authListener.middleware,
+    ),
 });
+
+setupListeners(store.dispatch);
