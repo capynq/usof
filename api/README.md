@@ -61,6 +61,7 @@ All API routes start with `/api`. JSON requests reject unknown/protected fields;
 
 
 - Guests can read active content. Authors can read their inactive posts; admins can read all inactive content. Inactive comments are admin-only, and hidden resources return `404`.
+- Account owners can change their email through the confirmation flow. Server-side administrators may also change a member's email when assisting with account recovery; the web management client keeps existing member emails read-only.
 - Users create posts and comments on active posts and manage their own content. Admins manage categories, roles, visibility, and moderation, and can edit post titles/content only for their own posts; they cannot edit other users’ comment text.
 - Posts accept 1–100 category IDs; titles are 1–200 characters and content is 1–50,000. Comment authors can edit their text, which is 1–10,000 characters; authors and admins can change comment status. Categories are unique, 1–100-character titles with optional 2,000-character descriptions.
 - `GET /posts` supports `sort=likes|date`, `direction=asc|desc`, category IDs, inclusive `date_from`/`date_to`, `status`, `page`, and `page_size`. Sorting defaults to descending; like sorting uses positive likes, then publication date and ID descending.
