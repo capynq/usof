@@ -1,5 +1,6 @@
 :root {
   --layout-content-gutter: 1rem;
+  --tap-target-size: 44px;
   --action-color-primary: #0054a6;
   --action-color-primary-hover: #246cbd;
   --action-color-primary-subtle: #dceeff;
@@ -60,6 +61,8 @@
   --feedback-error-border: #a85151;
   --feedback-error-surface: #fff1ee;
   --feedback-error-text: #762122;
+  --favorite-saved-text: #a47010;
+  --favorite-saved-surface: #fff8dd;
   --shadow-color-card: rgb(34 57 80 / 20%);
   --dialog-backdrop: rgb(18 34 50 / 45%);
   --account-text-secondary: #4c5c6b;
@@ -129,6 +132,10 @@
   --mascot-description-text: #4b5968;
   --mascot-bubble-highlight: #e9e9e9;
   --mascot-bubble-text: #222;
+  --refresh-highlight-color: color-mix(in srgb, var(--accent-color) 45%, transparent);
+  --refresh-highlight-duration: 300ms;
+  --motion-duration-feedback: 180ms;
+  --motion-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 :root[data-theme="olive"] {

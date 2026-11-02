@@ -1,0 +1,23 @@
+.button {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+
+.wrapper {
+  align-items: center;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.error {
+  flex-basis: 100%;
+  overflow-wrap: anywhere;
+  color: var(--feedback-error-text);
+  font-size: 0.75rem;
+}
+
+.pending {
+  box-shadow: 0 0 0 2px var(--accent-color);
+}

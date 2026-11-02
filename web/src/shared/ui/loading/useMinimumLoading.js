@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { MIN_LOADING_COMPLETE_MS, MIN_LOADING_VISIBLE_MS } from "../../config.js";
 
 export const useMinimumLoading = (isLoading, error) => {
   const [visible, setVisible] = useState(isLoading);
@@ -20,7 +21,10 @@ export const useMinimumLoading = (isLoading, error) => {
     }
 
     if (startedAt.current === null) return;
-    const remaining = Math.max(300, 500 - (Date.now() - startedAt.current));
+    const remaining = Math.max(
+      MIN_LOADING_COMPLETE_MS,
+      MIN_LOADING_VISIBLE_MS - (Date.now() - startedAt.current),
+    );
     const timer = setTimeout(() => {
       startedAt.current = null;
       setVisible(false);
