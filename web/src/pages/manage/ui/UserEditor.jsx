@@ -1,6 +1,7 @@
 import { SelectControl } from "../../../shared/ui/select-control/index.js";
 import { ModalDialog } from "../../../shared/ui/confirm-dialog/ModalDialog.jsx";
 import { useUserEditor } from "../model/useUserEditor.js";
+import { EMAIL_CHANGE_NOTICE, USER_FIELD_LIMITS } from "../model/constants.js";
 
 export const UserEditor = ({ record, onClose }) => {
   const { values, error, isCreating, isLoading, change, changeAndClearError, submit } =
@@ -21,8 +22,8 @@ export const UserEditor = ({ record, onClose }) => {
             value={values.login}
             onChange={changeAndClearError}
             required
-            minLength={3}
-            maxLength={40}
+            minLength={USER_FIELD_LIMITS.login.min}
+            maxLength={USER_FIELD_LIMITS.login.max}
             autoComplete="off"
           />
         </label>
@@ -33,18 +34,20 @@ export const UserEditor = ({ record, onClose }) => {
             type="email"
             value={values.email}
             onChange={changeAndClearError}
+            readOnly={!isCreating}
             required
-            maxLength={254}
+            maxLength={USER_FIELD_LIMITS.email.max}
             autoComplete="off"
           />
         </label>
+        {!isCreating && <p>{EMAIL_CHANGE_NOTICE}</p>}
         <label>
           Full name
           <input
             name="full_name"
             value={values.full_name}
             onChange={changeAndClearError}
-            maxLength={120}
+            maxLength={USER_FIELD_LIMITS.fullName.max}
           />
         </label>
         <label>
@@ -64,8 +67,8 @@ export const UserEditor = ({ record, onClose }) => {
               value={values.password}
               onChange={change}
               required
-              minLength={8}
-              maxLength={128}
+              minLength={USER_FIELD_LIMITS.password.min}
+              maxLength={USER_FIELD_LIMITS.password.max}
             />
           </label>
         )}
@@ -79,8 +82,8 @@ export const UserEditor = ({ record, onClose }) => {
               value={values.password_confirmation}
               onChange={change}
               required
-              minLength={8}
-              maxLength={128}
+              minLength={USER_FIELD_LIMITS.password.min}
+              maxLength={USER_FIELD_LIMITS.password.max}
             />
           </label>
         )}

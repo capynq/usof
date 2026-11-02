@@ -1,18 +1,23 @@
 import { Link } from "react-router";
+import { POLLING_INTERVALS, livePollingOptions } from "../../../shared/config.js";
 import { useGetManagementListQuery } from "../api/managementApi.js";
 import { CommentStatusAction } from "../../../features/comments/ui/CommentStatusAction.jsx";
 import { ManagementList } from "./ManagementList.jsx";
 import { ManagementDeleteAction } from "./ManagementDeleteAction.jsx";
 import { StatusBadge } from "../../../shared/ui/status-badge/StatusBadge.jsx";
+import { MANAGEMENT_RESOURCES } from "../model/constants.js";
 
 export const ManageComments = () => {
-  const query = useGetManagementListQuery("comments");
+  const query = useGetManagementListQuery(
+    MANAGEMENT_RESOURCES.comments,
+    livePollingOptions(POLLING_INTERVALS.managementComments),
+  );
 
   return (
     <section>
       <h1>Comments</h1>
       <p>Comment text belongs to its author. You can change visibility or remove a comment.</p>
-      <ManagementList query={query} resource="comments">
+      <ManagementList query={query} resource={MANAGEMENT_RESOURCES.comments}>
         {(record) => (
           <article className="management-record" key={record.id}>
             <span
@@ -43,7 +48,7 @@ export const ManageComments = () => {
               {!record.is_deleted && (
                 <>
                   <CommentStatusAction comment={record} postId={record.post_id} />
-                  <ManagementDeleteAction resource="comments" record={record} label="comment" />
+                  <ManagementDeleteAction resource={MANAGEMENT_RESOURCES.comments} record={record} label="comment" />
                 </>
               )}
             </div>

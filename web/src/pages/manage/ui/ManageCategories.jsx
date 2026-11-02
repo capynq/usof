@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { POLLING_INTERVALS, livePollingOptions } from "../../../shared/config.js";
 import { useGetManagementListQuery } from "../api/managementApi.js";
 import { ManagementList } from "./ManagementList.jsx";
 import { ManagementDeleteAction } from "./ManagementDeleteAction.jsx";
 import { CategoryEditor } from "./CategoryEditor.jsx";
+import { MANAGEMENT_RESOURCES } from "../model/constants.js";
 
 export const ManageCategories = () => {
-  const query = useGetManagementListQuery("categories");
+  const query = useGetManagementListQuery(
+    MANAGEMENT_RESOURCES.categories,
+    livePollingOptions(POLLING_INTERVALS.managementCategories),
+  );
   const [editing, setEditing] = useState(null);
 
   return (
@@ -17,7 +22,7 @@ export const ManageCategories = () => {
           Create category
         </button>
       </div>
-      <ManagementList query={query} resource="categories">
+      <ManagementList query={query} resource={MANAGEMENT_RESOURCES.categories}>
         {(record) => (
           <article className="management-record" key={record.id}>
             <span
@@ -44,7 +49,7 @@ export const ManageCategories = () => {
               >
                 Edit
               </button>
-              <ManagementDeleteAction resource="categories" record={record} label="category" />
+              <ManagementDeleteAction resource={MANAGEMENT_RESOURCES.categories} record={record} label="category" />
             </div>
           </article>
         )}

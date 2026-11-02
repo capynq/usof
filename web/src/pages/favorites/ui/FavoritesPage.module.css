@@ -1,0 +1,14 @@
+.headingRow {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+@media (max-width: 520px) {
+  .headingRow {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

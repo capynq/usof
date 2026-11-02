@@ -20,13 +20,12 @@ export const getInitialUserValues = (record) =>
     : { ...EMPTY_USER_VALUES };
 
 export const buildUserPayload = (values, isCreating) => {
-  const { password, password_confirmation, ...profile } = values;
+  const { password, password_confirmation, email, ...profile } = values;
 
   return {
     ...profile,
     login: profile.login.trim(),
-    email: profile.email.trim().toLowerCase(),
     full_name: profile.full_name.trim(),
-    ...(isCreating ? { password, password_confirmation } : {}),
+    ...(isCreating ? { email: email.trim().toLowerCase(), password, password_confirmation } : {}),
   };
 };

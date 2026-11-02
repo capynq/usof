@@ -1,57 +1,17 @@
+import { useProfileDetailsForm } from "../model/useProfileDetailsForm.js";
+import {
+  PROFILE_DETAILS_BUTTONS,
+  PROFILE_DETAILS_MESSAGES,
+  PROFILE_FIELD_LIMITS,
+} from "../model/constants.js";
 import { LOGIN_PATTERN } from "../../../shared/lib/regexPatterns.js";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { sessionRestored } from "../../../features/auth/model/authSlice.js";
-import { useUpdateProfileMutation } from "../../../entities/user/index.js";
-import { getErrorMessage } from "../../../shared/api/index.js";
 import { FormFeedback } from "../../../shared/ui/form-feedback/index.js";
 import { FormField } from "../../../shared/ui/form-field/index.js";
 import styles from "./ProfileSettings.module.css";
 
-const getProfileValues = (user) => ({
-  login: user.login ?? "",
-  full_name: user.full_name ?? "",
-});
-
 export const ProfileDetailsForm = ({ user }) => {
-  const dispatch = useDispatch();
-  const [values, setValues] = useState(() => getProfileValues(user));
-  const [notice, setNotice] = useState(null);
-  const [updateProfile, profileState] = useUpdateProfileMutation();
-
-  useEffect(() => {
-    setValues(getProfileValues(user));
-  }, [user.login, user.full_name]);
-
-  const updateField = (event) => {
-    const { name, value } = event.currentTarget;
-    setValues((current) => ({ ...current, [name]: value }));
-  };
-
-  const saveProfile = async (event) => {
-    event.preventDefault();
-    setNotice(null);
-
-    try {
-      const updatedUser = await updateProfile({
-        userId: user.id,
-        body: {
-          login: values.login.trim(),
-          full_name: values.full_name.trim(),
-        },
-      }).unwrap();
-      dispatch(sessionRestored(updatedUser));
-      setNotice({
-        type: "success",
-        message: "Your profile details have been saved.",
-      });
-    } catch (error) {
-      setNotice({
-        type: "error",
-        message: getErrorMessage(error, "Your profile could not be saved."),
-      });
-    }
-  };
+  const { values, notice, busy, conflict, updateField, saveProfile, reloadProfile } =
+    useProfileDetailsForm(user);
 
   return (
     <form className={styles.form} onSubmit={saveProfile}>
@@ -61,14 +21,15 @@ export const ProfileDetailsForm = ({ user }) => {
         layout="stacked"
         className={styles.field}
         inputProps={{
+          disabled: busy,
           name: "login",
           value: values.login,
           onChange: updateField,
           autoComplete: "username",
           pattern: LOGIN_PATTERN.source,
           title: "Use letters, numbers, underscores, or hyphens.",
-          minLength: 3,
-          maxLength: 40,
+          minLength: PROFILE_FIELD_LIMITS.login.min,
+          maxLength: PROFILE_FIELD_LIMITS.login.max,
           required: true,
         }}
       />
@@ -78,16 +39,25 @@ export const ProfileDetailsForm = ({ user }) => {
         layout="stacked"
         className={styles.field}
         inputProps={{
+          disabled: busy,
           name: "full_name",
           value: values.full_name,
           onChange: updateField,
           autoComplete: "name",
-          maxLength: 120,
+          maxLength: PROFILE_FIELD_LIMITS.fullName.max,
         }}
       />
       {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
-      <button className="button" type="submit" disabled={profileState.isLoading}>
-        Save profile
+      {conflict && (
+        <div>
+          <p>{PROFILE_DETAILS_MESSAGES.replaceDraft}</p>
+          <button className="button" type="button" disabled={busy} onClick={reloadProfile}>
+            {PROFILE_DETAILS_BUTTONS.loadCurrent}
+          </button>
+        </div>
+      )}
+      <button className="button" type="submit" disabled={busy}>
+        {PROFILE_DETAILS_BUTTONS.save}
       </button>
     </form>
   );

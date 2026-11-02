@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { POLLING_INTERVALS, livePollingOptions } from "../../../shared/config.js";
 import { useGetManagementListQuery } from "../api/managementApi.js";
 import { ManagementList } from "./ManagementList.jsx";
 import { ManagementDeleteAction } from "./ManagementDeleteAction.jsx";
 import { UserEditor } from "./UserEditor.jsx";
+import { MANAGEMENT_RESOURCES } from "../model/constants.js";
 
 export const ManageUsers = () => {
-  const query = useGetManagementListQuery("users");
+  const query = useGetManagementListQuery(
+    MANAGEMENT_RESOURCES.users,
+    livePollingOptions(POLLING_INTERVALS.managementUsers),
+  );
   const [editing, setEditing] = useState(null);
 
   return (
@@ -17,7 +22,7 @@ export const ManageUsers = () => {
           Create member
         </button>
       </div>
-      <ManagementList query={query} resource="members">
+      <ManagementList query={query} resource={MANAGEMENT_RESOURCES.members}>
         {(record) => (
           <article className="management-record" key={record.id}>
             <span
@@ -55,7 +60,11 @@ export const ManageUsers = () => {
               >
                 Edit
               </button>
-              <ManagementDeleteAction resource="users" record={record} label="member" />
+              <ManagementDeleteAction
+                resource={MANAGEMENT_RESOURCES.users}
+                record={record}
+                label="member"
+              />
             </div>
           </article>
         )}

@@ -1,8 +1,11 @@
-import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { useId } from "react";
+import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { useManagementCollection } from "../model/useManagementCollection.js";
 import { Pagination } from "../../../shared/ui/pagination/Pagination.jsx";
 import { getErrorMessage } from "../../../shared/api/index.js";
+import { RefreshControl } from "../../../shared/ui/refresh-control/index.js";
+import { useStagedCollection } from "../../../shared/lib/useStagedCollection.js";
+import { MANAGEMENT_SEARCH_MAX_LENGTH } from "../model/constants.js";
 
 const searchScopes = {
   members: "ID, login, name, and email",
@@ -16,14 +19,20 @@ const columnLabels = {
   comments: ["ID", "Comment", "Author", "Status", "Actions"],
 };
 
+const fallbackColumnLabels = ["ID", "Record", "Actions"];
+
+const noRecords = [];
+
 export const ManagementList = ({ query, resource, children }) => {
-  const collection = useManagementCollection(query.data);
   const { visible: showInitialLoading, completing } = useMinimumLoading(
-    query.isFetching,
+    query.isLoading,
     query.error,
   );
   const searchId = useId();
-  const records = query.data ?? [];
+  const staged = useStagedCollection(query.currentData, resource);
+  const visibleRecords = staged.data ?? noRecords;
+  const collection = useManagementCollection(visibleRecords);
+  const onRefresh = staged.hasPending ? staged.applyPending : query.refetch;
 
   return (
     <div className="management-list" data-resource={resource}>
@@ -33,7 +42,7 @@ export const ManagementList = ({ query, resource, children }) => {
           <input
             id={searchId}
             type="search"
-            maxLength={100}
+            maxLength={MANAGEMENT_SEARCH_MAX_LENGTH}
             aria-describedby={`${searchId}-scope`}
             value={collection.search}
             onChange={(event) => collection.setSearch(event.target.value)}
@@ -44,34 +53,40 @@ export const ManagementList = ({ query, resource, children }) => {
         </label>
         {!query.error && (
           <p className="management-count" aria-live="polite">
-            {collection.total} of {records.length} {resource}
+            {collection.total} of {visibleRecords.length} {resource}
           </p>
         )}
+        <RefreshControl
+          onClick={onRefresh}
+          isFetching={query.isFetching}
+          pendingCount={staged.pendingCount}
+          error={query.error && visibleRecords.length > 0 ? query.error : null}
+        />
       </div>
-      {(query.isFetching || showInitialLoading) && (
+      {visibleRecords.length === 0 && (query.isFetching || showInitialLoading) && (
         <LoadingIndicator completing={completing} expanded>Opening records…</LoadingIndicator>
       )}
-      {query.error && (
+      {query.error && visibleRecords.length === 0 && (
         <p role="alert">{getErrorMessage(query.error, "Records could not be loaded.")}</p>
       )}
-      {!query.isFetching && !showInitialLoading && !query.error && records.length === 0 && (
+      {!query.isFetching && !showInitialLoading && !query.error && visibleRecords.length === 0 && (
         <p className="management-empty">No {resource} yet.</p>
       )}
       {!query.isFetching &&
         !showInitialLoading &&
         !query.error &&
-        records.length > 0 &&
+        visibleRecords.length > 0 &&
         collection.total === 0 && (
           <p className="management-empty">No {resource} match this search.</p>
         )}
       {collection.total > 0 && (
         <div className="management-columns" aria-hidden="true">
-          {(columnLabels[resource] ?? ["ID", "Record", "Actions"]).map((label) => (
+          {(columnLabels[resource] ?? fallbackColumnLabels).map((label) => (
             <span key={label}>{label}</span>
           ))}
         </div>
       )}
-      {!showInitialLoading && !query.error && collection.matches.map((record) => children(record))}
+      {!showInitialLoading && collection.matches.map((record) => children(record))}
       <Pagination
         page={collection.page}
         totalPages={collection.totalPages}

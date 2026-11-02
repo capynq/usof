@@ -7,6 +7,7 @@ import { getErrorMessage } from "../../../shared/api/index.js";
 import { LOGIN_PATTERN } from "../../../shared/lib/regexPatterns.js";
 import { useSaveManagementRecordMutation } from "../api/managementApi.js";
 import { buildUserPayload, getInitialUserValues } from "./userForm.js";
+import { MANAGEMENT_RESOURCES, USER_EDITOR_MESSAGES } from "./constants.js";
 
 export const useUserEditor = ({ record, onClose }) => {
   const [values, setValues] = useState(() => getInitialUserValues(record));
@@ -33,34 +34,22 @@ export const useUserEditor = ({ record, onClose }) => {
     setError("");
 
     if (!LOGIN_PATTERN.test(values.login.trim())) {
-      setError("Use letters, digits, underscores, or hyphens for the login.");
+      setError(USER_EDITOR_MESSAGES.invalidLogin);
 
       return;
     }
 
     if (isCreating && values.password !== values.password_confirmation) {
-      setError("Password confirmation must match.");
+      setError(USER_EDITOR_MESSAGES.passwordMismatch);
 
       return;
     }
 
     const body = buildUserPayload(values, isCreating);
     const isOwnRecord = Number(user.id) === Number(record?.id);
-    const emailChanged = Boolean(record && body.email !== record.email);
 
     try {
-      const result = await save({ resource: "users", id: record?.id, body }).unwrap();
-
-      if (isOwnRecord && emailChanged) {
-        await navigate("/email-confirmation", {
-          state: { registrationDelivery: result.data?.delivery },
-          flushSync: true,
-        });
-        endAuthSession(dispatch);
-
-        return;
-      }
-
+      await save({ resource: MANAGEMENT_RESOURCES.users, id: record?.id, body }).unwrap();
       onClose();
 
       if (isOwnRecord && body.role !== record.role) {
@@ -68,25 +57,7 @@ export const useUserEditor = ({ record, onClose }) => {
         navigate("/login", { replace: true });
       }
     } catch (failure) {
-      if (failure.data?.error?.code === "EMAIL_UNAVAILABLE") {
-        onClose();
-
-        if (isOwnRecord) {
-          await navigate("/email-confirmation", {
-            state: { emailChangeDeliveryFailed: "self" },
-            flushSync: true,
-          });
-          endAuthSession(dispatch);
-        } else {
-          await navigate("/email-confirmation", {
-            state: { emailChangeDeliveryFailed: "member" },
-          });
-        }
-
-        return;
-      }
-
-      setError(getErrorMessage(failure, "The member could not be saved."));
+      setError(getErrorMessage(failure, USER_EDITOR_MESSAGES.saveFailed));
     }
   };
 

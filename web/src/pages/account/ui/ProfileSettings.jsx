@@ -12,7 +12,7 @@ export const ProfileSettings = ({ user }) => (
       confirmation flow.
     </p>
     <FormCompanion context="account" />
-    <ProfileDetailsForm user={user} />
+    <ProfileDetailsForm key={user.id} user={user} />
     <ProfileAvatarForm user={user} />
     <ProfileEmailForm user={user} />
   </section>
