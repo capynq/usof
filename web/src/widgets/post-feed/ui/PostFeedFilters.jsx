@@ -84,7 +84,9 @@ export const PostFeedFilters = ({
       </button>
       <ul className={styles.activeFilters} aria-label="Active filters">
         {activeFilters.map((filter) => (
-          <li key={filter}>{filter}</li>
+          <li key={filter} title={filter}>
+            {filter}
+          </li>
         ))}
       </ul>
       <div id="post-feed-filters" className={styles.filterPanel} hidden={!expanded}>
@@ -136,14 +138,16 @@ export const PostFeedFilters = ({
               </SelectControl>
             </label>
           )}
-          <label>
-            <span>From</span>
-            <input type="date" name="date_from" value={values.date_from} onChange={updateField} />
-          </label>
-          <label>
-            <span>To</span>
-            <input type="date" name="date_to" value={values.date_to} onChange={updateField} />
-          </label>
+          <div className={styles.dateRange} role="group" aria-label="Question date range">
+            <label>
+              <span>From</span>
+              <input type="date" name="date_from" value={values.date_from} onChange={updateField} />
+            </label>
+            <label>
+              <span>To</span>
+              <input type="date" name="date_to" value={values.date_to} onChange={updateField} />
+            </label>
+          </div>
         </div>
         <div className={styles.filterActions}>
           <button className="button" type="submit">

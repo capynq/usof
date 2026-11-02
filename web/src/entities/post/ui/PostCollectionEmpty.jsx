@@ -3,8 +3,10 @@ import styles from "./PostCollection.module.css";
 
 export const PostCollectionEmpty = ({ message, className }) => (
   <div className={styles.slot}>
-    <StateCompanion kind="empty">
-      <p className={className}>{message}</p>
-    </StateCompanion>
+    <div className={styles.stateCenter}>
+      <StateCompanion kind="empty">
+        <p className={className}>{message}</p>
+      </StateCompanion>
+    </div>
   </div>
 );

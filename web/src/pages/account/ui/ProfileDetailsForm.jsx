@@ -19,7 +19,6 @@ export const ProfileDetailsForm = ({ user }) => {
         id="profile-login"
         label="Login"
         layout="stacked"
-        className={styles.field}
         inputProps={{
           disabled: busy,
           name: "login",
@@ -37,7 +36,6 @@ export const ProfileDetailsForm = ({ user }) => {
         id="profile-full-name"
         label="Display name"
         layout="stacked"
-        className={styles.field}
         inputProps={{
           disabled: busy,
           name: "full_name",

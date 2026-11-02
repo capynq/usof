@@ -10,7 +10,9 @@ export const AuthenticatedHeader = ({ user }) => {
   return (
     <>
       <Link className={styles.accountLink} to={`/users/${user.id}`}>
-        <UserAvatar user={user} />
+        <span className={styles.avatarSlot}>
+          <UserAvatar user={user} />
+        </span>
         <span className={styles.identity}>
           <span className={styles.login}>{user.login}</span>
           <span className={styles.role}>{user.role}</span>

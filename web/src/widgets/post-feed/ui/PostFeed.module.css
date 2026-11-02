@@ -9,6 +9,7 @@
 }
 
 .heading {
+  position: relative;
   display: flex;
   flex-wrap: nowrap;
   min-height: calc(var(--tap-target-size) + 0.9rem + 1px);
@@ -20,6 +21,14 @@
   background: linear-gradient(var(--navigation-surface-start), var(--navigation-surface-end));
 }
 
+.heading > :last-child {
+  position: static;
+}
+
+.heading > :last-child > [role="status"] {
+  right: 0.85rem;
+}
+
 .heading > h2,
 .heading > span:first-child {
   flex: 1;
@@ -27,8 +36,11 @@
   margin: 0;
   overflow: hidden;
   font-size: 1.1rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .filters {
@@ -43,12 +55,9 @@
 
 .filterToggle {
   flex: 0 0 auto;
-  min-height: var(--button-min-height);
-  padding: var(--button-padding);
   border: 1px solid var(--border-color-layout);
   background: var(--surface-color-raised);
   color: var(--text-color-link);
-  font: inherit;
   font-weight: 700;
 }
 
@@ -80,11 +89,15 @@
 }
 
 .activeFilters li {
+  max-width: 100%;
   padding: 0.15rem 0.45rem;
+  overflow: hidden;
   border: 1px solid var(--border-color-subtle);
   background: var(--surface-color-raised);
   color: var(--text-color-secondary);
   font-size: 0.8rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .filterPanel[hidden] {
@@ -93,7 +106,7 @@
 
 .filterGrid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.65rem;
 }
 
@@ -112,15 +125,27 @@
   gap: 0.35rem;
 }
 
-.filterGrid input,
-.filterGrid > label > input {
+.filterGrid input {
   width: 100%;
   min-width: 0;
-  min-height: var(--form-control-height);
 }
 
-.searchField {
-  grid-column: span 2;
+.searchField,
+.dateRange {
+  grid-column: 1 / -1;
+}
+
+.dateRange {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+@media (min-width: 521px) {
+  .filterGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .filterActions {
@@ -170,6 +195,7 @@
   margin: 0;
   padding: 1rem;
   color: var(--text-color-secondary);
+  text-wrap: balance;
 }
 
 .error {
@@ -177,14 +203,6 @@
 }
 
 @media (max-width: 520px) {
-  .filterGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .searchField {
-    grid-column: 1 / -1;
-  }
-
   .resultsFooter {
     align-items: stretch;
     flex-direction: column;

@@ -22,7 +22,7 @@ export const CommentStatusAction = ({ comment, postId }) => {
   };
 
   return (
-    <div className="inline-action">
+    <div className={styles.inlineAction}>
       <button
         className={`button ${styles.actionButton}`}
         type="button"

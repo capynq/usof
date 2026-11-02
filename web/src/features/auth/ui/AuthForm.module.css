@@ -48,18 +48,18 @@
 }
 
 .actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.7rem;
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.7fr) minmax(0, 1.5fr);
+  align-items: start;
+  gap: 0.4rem 0.7rem;
   margin-top: 0.15rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--border-color-subtle);
 }
 
 .primaryButton {
-  min-height: var(--button-min-height);
-  padding: var(--button-padding);
+  grid-column: 2;
+  justify-self: start;
   border-color: var(--form-button-border);
   background: linear-gradient(
     var(--form-button-gradient-start),
@@ -70,7 +70,6 @@
     inset 1px 1px var(--header-shadow-highlight),
     inset -1px -1px var(--action-color-shadow-strong);
   color: var(--text-color-on-primary);
-  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   text-shadow: 1px 1px var(--action-color-text-shadow);
 }
 
@@ -92,8 +91,21 @@
 
 .note,
 .pendingText {
+  grid-column: 2;
   color: var(--form-text-note);
   font-size: 0.82rem;
+}
+
+@media (max-width: 520px) {
+  .actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .primaryButton,
+  .note,
+  .pendingText {
+    grid-column: 1;
+  }
 }
 
 .forgotLink {

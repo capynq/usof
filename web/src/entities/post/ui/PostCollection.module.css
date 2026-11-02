@@ -1,3 +1,19 @@
 .slot {
   min-height: 10rem;
 }
+
+.stateCenter {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.stateCenter > * {
+  max-width: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stateCenter p {
+  text-wrap: balance;
+}

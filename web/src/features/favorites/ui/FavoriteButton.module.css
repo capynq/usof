@@ -4,7 +4,6 @@
 
 .button {
   flex-shrink: 0;
-  height: var(--tap-target-size);
   color: var(--text-color-muted);
   background: var(--surface-color-raised);
 }

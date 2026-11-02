@@ -30,7 +30,12 @@
   margin: 0;
 }
 
-.field :global(label) {
-  color: var(--text-color-secondary);
+.form > button {
+  justify-self: start;
+}
+
+.selectLabel {
+  color: var(--form-label-text);
   font-size: var(--form-label-size);
+  font-weight: 700;
 }

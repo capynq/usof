@@ -13,8 +13,11 @@ export const UserEditor = ({ record, onClose }) => {
       title={record ? `Edit ${record.login}` : "Create a member"}
       onClose={onClose}
       busy={isLoading}
+      submitFormId="user-editor-form"
+      submitLabel={isLoading ? "Saving…" : "Save member"}
+      submitDisabled={isLoading}
     >
-      <form onSubmit={submit} className="stack-form">
+      <form id="user-editor-form" onSubmit={submit} className="stack-form">
         <label>
           Login
           <input
@@ -87,9 +90,6 @@ export const UserEditor = ({ record, onClose }) => {
             />
           </label>
         )}
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Saving…" : "Save member"}
-        </button>
         {error && <p role="alert">{error}</p>}
       </form>
     </ModalDialog>

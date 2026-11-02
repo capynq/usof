@@ -9,7 +9,7 @@ export const CommentHeader = ({ comment }) => (
     <span className={styles.author}>
       <AuthorLink user={comment.author} />
     </span>
-    <Link to={`/comments/${comment.id}`} aria-label={`Permalink to comment ${comment.id}`}>
+    <Link className={styles.permalink} to={`/comments/${comment.id}`} aria-label={`Permalink to comment ${comment.id}`}>
       <time dateTime={comment.publish_date}>{formatPostDate(comment.publish_date)}</time>
     </Link>
     {comment.status !== "active" && <StatusBadge status="inactive" />}

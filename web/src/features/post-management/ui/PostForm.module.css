@@ -14,19 +14,7 @@
 .field input,
 .field textarea,
 .field select {
-  width: 100%;
-  min-width: 0;
-  min-height: var(--form-control-height);
-  padding: var(--form-control-padding);
-  border: 1px solid var(--form-control-border);
-  background-color: var(--surface-color-raised);
-  box-shadow: inset 1px 1px var(--form-control-inset);
-  font: inherit;
   font-weight: 400;
-}
-
-.field select {
-  padding-right: 2.75rem;
 }
 
 .field textarea {
@@ -108,7 +96,6 @@
     var(--form-button-gradient-end)
   );
   color: var(--text-color-on-primary);
-  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   text-shadow: 1px 1px var(--action-color-text-shadow);
 }
 

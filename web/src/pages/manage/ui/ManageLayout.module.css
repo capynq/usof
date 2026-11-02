@@ -86,14 +86,13 @@
 
 .managementBody :global(.management-nav a) {
   display: inline-block;
+  min-height: var(--button-min-height);
   padding: 0.3rem 0.6rem;
   border: 1px solid #6685a5;
   background: #fff;
   color: #0054a6;
-  font:
-    0.875rem Tahoma,
-    Arial,
-    sans-serif;
+  font-family: var(--button-font-family);
+  font-size: var(--button-font-size);
   text-decoration: none;
 }
 
@@ -135,14 +134,8 @@
 }
 
 .managementBody :global(.management-toolbar input) {
-  min-height: 2rem;
-  padding: 0.3rem 0.45rem;
   border: 1px solid #6685a5;
   background: #fff;
-  font:
-    1rem Tahoma,
-    Arial,
-    sans-serif;
 }
 
 .managementBody :global(.management-search-hint) {
@@ -247,7 +240,6 @@
 }
 
 .managementBody :global(.management-actions button) {
-  min-height: 2.25rem;
   white-space: normal;
   overflow-wrap: anywhere;
 }
@@ -304,10 +296,6 @@
   background: #ece9d8;
 }
 
-.managementBody :global(.management-posts) button {
-  min-height: 2.25rem;
-}
-
 @media (max-width: 760px) {
   .managementBody {
     padding: 0.85rem;
@@ -319,16 +307,21 @@
     gap: 0.4rem;
   }
 
-  .managementBody :global(.management-toolbar input) {
-    min-height: 2.5rem;
+  .managementBody :global(.management-nav) {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
-  .managementBody :global(.management-actions button) {
-    min-height: 2.5rem;
+  .managementBody :global(.management-nav a) {
+    display: flex;
+    grid-column: span 2;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
-  .managementBody :global(.management-posts) button {
-    min-height: 2.5rem;
+  .managementBody :global(.management-nav a:nth-child(n + 4)) {
+    grid-column: span 3;
   }
 
   .managementBody :global(.management-list[data-resource] .management-record) {

@@ -93,6 +93,8 @@
 
 .idDisclosure summary {
   width: fit-content;
+  font-family: var(--button-font-family);
+  font-size: var(--button-font-size);
   font-weight: 600;
 }
 

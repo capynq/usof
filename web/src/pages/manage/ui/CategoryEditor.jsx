@@ -40,8 +40,11 @@ export const CategoryEditor = ({ record, onClose }) => {
       title={record ? "Edit category" : "Create category"}
       onClose={onClose}
       busy={state.isLoading}
+      submitFormId="category-editor-form"
+      submitLabel={state.isLoading ? "Saving…" : "Save category"}
+      submitDisabled={state.isLoading}
     >
-      <form className="stack-form" onSubmit={submit}>
+      <form id="category-editor-form" className="stack-form" onSubmit={submit}>
         <label>
           Title
           <input
@@ -60,9 +63,6 @@ export const CategoryEditor = ({ record, onClose }) => {
             rows={4}
           />
         </label>
-        <button type="submit" disabled={state.isLoading}>
-          {state.isLoading ? "Saving…" : "Save category"}
-        </button>
         {(error || state.error) && (
           <p role="alert">
             {error || getErrorMessage(state.error, "The category could not be saved.")}

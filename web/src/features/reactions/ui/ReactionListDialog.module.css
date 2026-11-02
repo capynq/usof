@@ -42,7 +42,7 @@
 
 .reactionList li {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 4.5rem auto;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   gap: 0.75rem;
   align-items: center;
   padding-bottom: 0.6rem;
@@ -61,16 +61,6 @@
   justify-self: end;
 }
 
-@media (max-width: 400px) {
-  .reactionList li {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .reactionList button {
-    grid-column: 1 / -1;
-  }
-}
-
 .targetContext {
   display: grid;
   gap: 0.35rem;
@@ -87,4 +77,10 @@
 .targetContext h3 {
   margin: 0;
   font-size: 0.95rem;
+}
+
+@media (max-width: 520px) {
+  .content {
+    padding-inline: calc(var(--layout-content-gutter) - 0.75rem);
+  }
 }

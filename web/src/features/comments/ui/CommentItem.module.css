@@ -36,6 +36,16 @@
   font-weight: 700;
 }
 
+.permalink,
+.permalink:hover {
+  color: var(--text-color-muted);
+  text-decoration: none;
+}
+
+.permalink:hover {
+  text-decoration: underline;
+}
+
 .content,
 .removed {
   margin: 0;
@@ -58,31 +68,40 @@
   border-top: 1px solid var(--border-color-subtle);
 }
 
+.reactions {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.reactions > div {
+  gap: 0.3rem;
+}
+
+.reactions a {
+  font-size: 0.82rem;
+}
+
+.signIn {
+  font-size: 0.82rem;
+}
+
 .actionButton {
   justify-self: start;
   width: fit-content;
   min-width: 0;
-  min-height: var(--button-min-height);
-  padding: var(--button-padding);
-  font-size: 0.82rem;
 }
 
-.actions :global(.inline-action) {
-  margin: 0;
+.inlineAction {
+  display: contents;
 }
 
 .replies {
   display: grid;
   gap: 0.55rem;
-  margin: 0.55rem 0 0 0.85rem;
-  padding: 0 0 0 0.75rem;
+  margin: 0.55rem 0 0 0.6rem;
+  padding: 0 0 0 0.6rem;
   border-left: 2px solid var(--navigation-border);
-}
-
-.replies[data-depth="4"] {
-  margin-left: 0;
-  padding-left: 0;
-  border-left: 0;
 }
 
 .error {
@@ -92,15 +111,17 @@
 
 .actionError {
   flex-basis: 100%;
+  order: 1;
+  font-size: 0.8rem;
 }
 
 @media (max-width: 520px) {
   .comment {
-    padding: 0.65rem;
+    padding: 0.5rem;
   }
 
   .replies {
-    margin-left: 0.35rem;
-    padding-left: 0.4rem;
+    margin-left: 0.1rem;
+    padding-left: 0.2rem;
   }
 }

@@ -18,7 +18,7 @@ export const AppearanceSettings = () => {
     <section className={styles.settings} aria-labelledby="appearance-settings-title">
       <h2 id="appearance-settings-title">Appearance</h2>
       <div className={styles.form}>
-        <label>
+        <label className={styles.selectLabel}>
           Theme
           <select value={theme} onChange={changeTheme}>
             <option value="blue">Blue</option>

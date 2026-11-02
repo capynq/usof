@@ -9,10 +9,11 @@
     var(--link-button-surface-end)
   );
   color: var(--text-color-default);
+  font-family: var(--button-font-family);
+  font-size: var(--button-font-size);
+  min-height: var(--button-min-height);
   display: inline-flex;
-  font: inherit;
   justify-content: center;
-  min-height: var(--tap-target-size);
   box-shadow:
     inset 1px 1px var(--surface-color-raised),
     inset -1px -1px var(--border-color-control);
@@ -25,6 +26,7 @@
 .iconOnly {
   width: var(--tap-target-size);
   min-width: var(--tap-target-size);
+  min-height: var(--tap-target-size);
   padding: 8px;
 }
 .button:hover:not(:disabled) {
@@ -33,10 +35,6 @@
 .button:active:not(:disabled) {
   background: var(--link-button-active-middle);
   box-shadow: none;
-}
-.button:focus-visible {
-  outline: 2px solid var(--action-color-focus);
-  outline-offset: 2px;
 }
 .button:disabled {
   color: var(--form-text-disabled);

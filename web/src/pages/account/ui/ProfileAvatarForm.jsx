@@ -75,7 +75,6 @@ export const ProfileAvatarForm = ({ user }) => {
         id="profile-avatar"
         label="Profile picture"
         layout="stacked"
-        className={styles.field}
         hint="JPEG, PNG, or WebP. Maximum size: 2 MB."
         inputProps={{
           name: "avatar",

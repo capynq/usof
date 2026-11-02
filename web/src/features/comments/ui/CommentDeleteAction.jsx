@@ -16,7 +16,7 @@ export const CommentDeleteAction = ({ comment, postId }) => {
   };
 
   return (
-    <div className="inline-action">
+    <div className={styles.inlineAction}>
       <button className={`button ${styles.actionButton}`} type="button" onClick={openConfirmation}>
         Remove
       </button>

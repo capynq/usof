@@ -87,6 +87,7 @@
   margin: 0;
   padding: 1rem;
   color: var(--text-color-secondary);
+  text-wrap: balance;
 }
 
 .error {

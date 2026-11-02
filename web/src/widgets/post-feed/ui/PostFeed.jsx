@@ -19,7 +19,13 @@ export const PostFeed = ({ lockedCategoryId, authorId, heading = RECENT_QUESTION
       aria-labelledby={headingId}
     >
       <div className={styles.heading}>
-        {heading ? <h2 id={headingId}>{heading}</h2> : <span>{RECENT_QUESTIONS_HEADING}</span>}
+        {heading ? (
+          <h2 id={headingId} title={heading}>
+            {heading}
+          </h2>
+        ) : (
+          <span>{RECENT_QUESTIONS_HEADING}</span>
+        )}
         <RefreshControl
           onClick={feed.onRefresh}
           isFetching={feed.isFetching}

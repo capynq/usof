@@ -15,11 +15,14 @@
   align-items: center;
   gap: 0.35rem;
   padding: var(--button-padding);
-  border: 1px solid var(--border-color-control);
-  background: linear-gradient(var(--link-button-surface-middle), var(--link-button-surface-end));
-  color: var(--text-color-emphasis);
-  font: inherit;
-  font-size: 0.82rem;
+  border: 1px solid var(--action-color-border);
+  border-radius: 3px;
+  background: linear-gradient(
+    180deg,
+    var(--surface-color-raised) 0%,
+    var(--link-button-surface-middle) 86%,
+    var(--link-button-surface-end) 100%
+  );
 }
 
 .button:disabled {

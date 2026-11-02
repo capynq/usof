@@ -11,7 +11,7 @@ const GUEST_LINKS = [
 export const GuestHeader = () => (
   <>
     <span className={styles.guestIdentity}>
-      <Link className={styles.avatarButton} to="/login" aria-label="Sign in" title="Sign in">
+      <Link className={styles.avatarSlot} to="/login" aria-label="Sign in" title="Sign in">
         <UserAvatar user={null} />
       </Link>
       <span className={styles.guestStatus}>Welcome, Guest</span>

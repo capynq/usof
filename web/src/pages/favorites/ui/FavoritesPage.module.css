@@ -10,7 +10,8 @@
 .headingRow h1 {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  min-height: 1.25em;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }

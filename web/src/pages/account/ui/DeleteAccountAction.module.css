@@ -1,10 +1,22 @@
 .dangerZone {
+  display: grid;
+  gap: 0.8rem;
   margin-top: 1.5rem;
-  padding: 1rem;
+  padding: 0.8rem;
   border: 1px solid #b98b7b;
   background: #fff6ef;
 }
 
 .dangerZone h2 {
-  font-size: 1.1rem;
+  margin: 0;
+  color: var(--text-color-heading);
+  font-size: 1.15rem;
+}
+
+.dangerZone p {
+  margin: 0;
+}
+
+.dangerZone > button {
+  justify-self: start;
 }

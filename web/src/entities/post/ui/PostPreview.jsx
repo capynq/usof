@@ -11,7 +11,6 @@ export const PostPreview = ({ post, actions }) => {
       <PostPreviewSidebar post={post} />
       <PostPreviewBody
         post={post}
-        excerpt={preview.excerpt}
         likes={preview.likes}
         replies={preview.replies}
         actions={actions}

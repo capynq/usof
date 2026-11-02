@@ -3,10 +3,12 @@ import styles from "./PostCollection.module.css";
 
 export const PostCollectionError = ({ message, className }) => (
   <div className={styles.slot}>
-    <StateCompanion kind="error">
-      <p className={className} role="alert">
-        {message}
-      </p>
-    </StateCompanion>
+    <div className={styles.stateCenter}>
+      <StateCompanion kind="error">
+        <p className={className} role="alert">
+          {message}
+        </p>
+      </StateCompanion>
+    </div>
   </div>
 );

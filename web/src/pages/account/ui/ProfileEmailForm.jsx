@@ -4,6 +4,8 @@ import { useNavigate } from "react-router";
 import { useUpdateProfileMutation } from "../../../entities/user/index.js";
 import { endAuthSession } from "../../../features/auth/model/endAuthSession.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
+import { FormFeedback } from "../../../shared/ui/form-feedback/index.js";
+import { FormField } from "../../../shared/ui/form-field/index.js";
 import styles from "./ProfileSettings.module.css";
 
 export const ProfileEmailForm = ({ user }) => {
@@ -43,25 +45,31 @@ export const ProfileEmailForm = ({ user }) => {
 
   return (
     <form className={styles.form} onSubmit={submit}>
-      <label>
-        Email address
-        <input
-          type="email"
-          required
-          maxLength={254}
-          autoComplete="email"
-          value={email}
-          onChange={(event) => {
+      <FormField
+        id="profile-email"
+        label="Email address"
+        layout="stacked"
+        hint="Changing your email signs you out. Confirm the new address before signing in again."
+        inputProps={{
+          type: "email",
+          required: true,
+          maxLength: 254,
+          autoComplete: "email",
+          value: email,
+          onChange: (event) => {
             setEmail(event.target.value);
             setError("");
-          }}
-        />
-      </label>
-      <p>Changing your email signs you out. Confirm the new address before signing in again.</p>
-      <button type="submit" disabled={state.isLoading || email.trim().toLowerCase() === user.email}>
+          },
+        }}
+      />
+      <button
+        className="button"
+        type="submit"
+        disabled={state.isLoading || email.trim().toLowerCase() === user.email}
+      >
         {state.isLoading ? "Saving email…" : "Change email address"}
       </button>
-      {error && <p role="alert">{error}</p>}
+      {error && <FormFeedback type="error">{error}</FormFeedback>}
     </form>
   );
 };

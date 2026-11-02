@@ -119,15 +119,17 @@ export const PostDetailsPage = () => {
           {post.content}
         </div>
         <div className={styles.actions}>
-          <ReactionControls
-            target="post"
-            targetId={post.id}
-            likeCount={post.like_count}
-            dislikeCount={post.dislike_count}
-            viewerReaction={post.viewer_reaction}
-            currentUser={currentUser}
-            canReact={permissions.canReact}
-          />
+          <div className={styles.reactions}>
+            <ReactionControls
+              target="post"
+              targetId={post.id}
+              likeCount={post.like_count}
+              dislikeCount={post.dislike_count}
+              viewerReaction={post.viewer_reaction}
+              currentUser={currentUser}
+              canReact={permissions.canReact}
+            />
+          </div>
           <div className={styles.toolbar}>
             {permissions.canManage && (post.status === "active" || permissions.isAdmin) && (
               <Link className={`button ${styles.button}`} to={`/posts/${post.id}/edit`}>

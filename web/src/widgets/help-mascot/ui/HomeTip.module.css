@@ -27,6 +27,13 @@
   margin: 0;
   font-size: 0.84rem;
   line-height: 1.4;
+  min-height: calc(3 * 1.4 * 0.84rem);
+}
+
+@media (min-width: 521px) {
+  .message p {
+    min-height: calc(2 * 1.4 * 0.84rem);
+  }
 }
 
 .name {

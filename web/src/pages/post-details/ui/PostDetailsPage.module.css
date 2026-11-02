@@ -79,12 +79,31 @@
 
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
   min-width: 0;
   margin-left: auto;
+}
+
+.toolbar :global(.button) {
+  min-width: 8rem;
+  justify-content: center;
+}
+
+.reactions {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.reactions > div {
+  gap: 0.3rem;
+}
+
+.reactions a {
+  font-size: 0.82rem;
 }
 
 .toolbar :global(.inline-action) {
@@ -119,7 +138,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 75px;
   padding: var(--button-padding);
   border: 1px solid var(--action-color-border);
   border-radius: 3px;
@@ -128,8 +146,6 @@
       var(--link-button-surface-middle) 86%,
       var(--link-button-surface-end));
   color: ButtonText;
-  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
-  font-size: 11px;
   -webkit-font-smoothing: antialiased;
   text-decoration: none;
 }
@@ -139,16 +155,6 @@
     inset 1px 2px var(--link-button-hover-shadow),
     inset -2px 2px var(--link-button-hover-shadow-strong),
     inset 2px -2px var(--link-button-hover-border);
-}
-
-.button:focus-visible {
-  outline: 1px dotted #000;
-  outline-offset: -4px;
-  box-shadow: inset -1px 1px var(--link-button-focus-start),
-    inset 1px 2px var(--link-button-focus-middle),
-    inset -2px 2px var(--link-button-focus-end),
-    inset 1px -1px var(--action-color-focus),
-    inset 2px -2px var(--action-color-focus);
 }
 
 .button:active {
@@ -211,13 +217,9 @@
   }
 }
 
-@media (max-width: 400px) {
-  .heading {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .headingActions {
-    justify-content: flex-start;
+@media (max-width: 520px) {
+  .body {
+    padding: 0.65rem;
   }
 }
 

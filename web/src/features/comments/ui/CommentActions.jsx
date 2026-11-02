@@ -12,16 +12,18 @@ export const CommentActions = ({ comment, postId, currentUser, capabilities }) =
   return (
     <>
       <div className={styles.actions}>
-        <ReactionControls
-          target="comment"
-          targetId={comment.id}
-          postId={postId}
-          likeCount={comment.like_count}
-          dislikeCount={comment.dislike_count}
-          viewerReaction={comment.viewer_reaction}
-          currentUser={currentUser}
-          canReact={capabilities.canReact}
-        />
+        <div className={styles.reactions}>
+          <ReactionControls
+            target="comment"
+            targetId={comment.id}
+            postId={postId}
+            likeCount={comment.like_count}
+            dislikeCount={comment.dislike_count}
+            viewerReaction={comment.viewer_reaction}
+            currentUser={currentUser}
+            canReact={capabilities.canReact}
+          />
+        </div>
         <ReplyAction
           canReply={capabilities.canReply}
           currentUser={currentUser}
