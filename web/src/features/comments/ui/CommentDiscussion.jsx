@@ -3,11 +3,9 @@ import { useCommentAnchor } from "../model/useCommentAnchor.js";
 import { CommentForm } from "./CommentForm.jsx";
 import { CommentList } from "./CommentList.jsx";
 import { CommentDiscussionNotices } from "./CommentDiscussionNotices.jsx";
-import { useCommentDiscussionController } from "../model/useCommentDiscussionController.js";
 import styles from "./CommentDiscussion.module.css";
 
-export const CommentDiscussion = ({ postId, postStatus }) => {
-  const discussion = useCommentDiscussionController({ postId, postStatus });
+export const CommentDiscussion = ({ postId, postStatus, discussion }) => {
   const { visible: showLoading, completing } = useMinimumLoading(
     discussion.isLoading,
     discussion.error,
@@ -29,7 +27,7 @@ export const CommentDiscussion = ({ postId, postStatus }) => {
         completing={completing}
         commentTree={discussion.commentTree}
       />
-      {!showLoading && !discussion.error && discussion.commentTree.length > 0 && (
+      {!showLoading && discussion.commentTree.length > 0 && (
         <CommentList
           comments={discussion.commentTree}
           postId={postId}

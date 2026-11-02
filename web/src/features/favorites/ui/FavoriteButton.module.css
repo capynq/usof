@@ -3,22 +3,15 @@
 }
 
 .button {
-  grid-column: 2;
-  grid-row: 1;
-  justify-self: end;
-  align-self: start;
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  padding: 8px;
+  height: var(--tap-target-size);
   color: var(--text-color-muted);
   background: var(--surface-color-raised);
 }
 
 .saved {
-  color: #a47010;
-  background: #fff8dd;
+  color: var(--favorite-saved-text);
+  background: var(--favorite-saved-surface);
 }
 
 .button[aria-busy="true"] {

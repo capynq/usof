@@ -2,7 +2,9 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../auth/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
 import { StarIcon } from "../../../shared/ui/icons/StarIcon.jsx";
+import { getActionButtonClass } from "../../../shared/ui/action-button/index.js";
 import { useSetFavoriteMutation } from "../api/favoritesApi.js";
+import { FAVORITE_MESSAGES } from "../model/constants.js";
 import styles from "./FavoriteButton.module.css";
 
 export const FavoriteButton = ({ post }) => {
@@ -10,10 +12,13 @@ export const FavoriteButton = ({ post }) => {
   const [save, state] = useSetFavoriteMutation();
   const saved = Boolean(post.is_favorite);
   const action = state.isLoading
-    ? "Saving question"
+    ? FAVORITE_MESSAGES.saving
     : saved
-      ? "Remove question from favorites"
-      : "Save question";
+      ? FAVORITE_MESSAGES.remove
+      : FAVORITE_MESSAGES.save;
+  //TODO: replace with clsx to make it more readable
+  const extraClassName = saved ? `${styles.button} ${styles.saved}` : styles.button;
+  const className = getActionButtonClass({ iconOnly: true, extraClassName });
 
   if (!user) {
     return null;
@@ -22,7 +27,7 @@ export const FavoriteButton = ({ post }) => {
   return (
     <div className={styles.root}>
       <button
-        className={`${styles.button} ${saved ? styles.saved : ""}`}
+        className={className}
         type="button"
         aria-label={`${action}: ${post.title}`}
         title={action}
@@ -35,7 +40,7 @@ export const FavoriteButton = ({ post }) => {
       </button>
       {state.error && (
         <span className={styles.error} role="alert">
-          {getErrorMessage(state.error, "Your favorite could not be saved.")}
+          {getErrorMessage(state.error, FAVORITE_MESSAGES.saveFailed)}
         </span>
       )}
     </div>

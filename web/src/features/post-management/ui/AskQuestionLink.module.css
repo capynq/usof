@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 44px;
+  min-height: var(--tap-target-size);
   padding: 0.5rem 0.95rem;
   border: 1px solid #8a651e;
   border-radius: 3px;

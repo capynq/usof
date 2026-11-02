@@ -21,6 +21,17 @@
   background: var(--surface-color-raised);
 }
 
+.refreshed {
+  animation: global(refresh-flash) var(--refresh-highlight-duration) steps(2, end);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .refreshed {
+    animation: none;
+    outline: 2px solid var(--action-color-primary);
+  }
+}
+
 .header {
   display: flex;
   flex-wrap: wrap;

@@ -1,4 +1,3 @@
-import { FormCompanion } from "../../../shared/ui/mascot/FormCompanion.jsx";
 import { useCommentForm } from "../model/useCommentForm.js";
 import styles from "./CommentForm.module.css";
 
@@ -7,7 +6,6 @@ export const CommentForm = ({ postId, parentId = null, parentLabel, onCreated })
 
   return (
     <form className={styles.form} onSubmit={form.submit}>
-      {parentId === null && <FormCompanion context="writing" />}
       {parentLabel && <p className={styles.replyContext}>Replying to {parentLabel}</p>}
       <label className={styles.label}>
         <span>{parentId === null ? "Add to the discussion" : "Your reply"}</span>
