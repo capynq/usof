@@ -6,6 +6,7 @@ export {
   useGetPostsQuery,
   useUpdatePostMutation,
 } from "./api/postApi.js";
+export { POST_ROUTE_STATUS } from "./model/constants.js";
 export { formatPostDate } from "./lib/formatPostDate.js";
 export { getPostPermissions, getPostRouteStatus } from "./lib/getPostRouteStatus.js";
 export { usePostRouteData } from "./lib/usePostRouteData.js";

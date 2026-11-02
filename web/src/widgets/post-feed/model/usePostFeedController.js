@@ -1,8 +1,10 @@
 import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useSearchParams } from "react-router";
+import { livePollingOptions, POLLING_INTERVALS } from "../../../shared/config.js";
 import { useGetCategoriesQuery } from "../../../entities/category/index.js";
 import { useGetPostsQuery } from "../../../entities/post/index.js";
+import { useStagedCollection } from "../../../shared/lib/useStagedCollection.js";
 import { selectCurrentUser } from "../../../features/auth/model/authSlice.js";
 import {
   getPostFeedFilterParams,
@@ -17,24 +19,32 @@ export const usePostFeedController = ({ lockedCategoryId, authorId }) => {
   const searchKey = searchParams.toString();
   const currentSearchParams = useMemo(() => new URLSearchParams(searchKey), [searchKey]);
   const user = useSelector(selectCurrentUser);
-  const { data: categories } = useGetCategoriesQuery();
+  const { data: categories } = useGetCategoriesQuery(
+    undefined,
+    livePollingOptions(POLLING_INTERVALS.categories),
+  );
   const { filters, page, pageSize, queryArgs, canFilterStatus } = getPostFeedQueryState({
     searchParams: currentSearchParams,
     user,
     lockedCategoryId,
     authorId,
   });
-  const postsQuery = useGetPostsQuery(queryArgs);
+  const postsQuery = useGetPostsQuery(
+    queryArgs,
+    livePollingOptions(POLLING_INTERVALS.postFeed),
+  );
+  const staged = useStagedCollection(postsQuery.currentData, JSON.stringify(queryArgs));
+  const onRefresh = staged.hasPending ? staged.applyPending : postsQuery.refetch;
 
   useEffect(() => {
-    const meta = postsQuery.data?.meta;
+    const meta = staged.data?.meta;
 
     if (meta && !postsQuery.isFetching && page > Math.max(1, meta.total_pages)) {
       setSearchParams(getPostFeedPageParams(searchKey, Math.max(1, meta.total_pages)), {
         replace: true,
       });
     }
-  }, [postsQuery.data, postsQuery.isFetching, page, searchKey, setSearchParams]);
+  }, [staged.data, postsQuery.isFetching, page, searchKey, setSearchParams]);
 
   const applyFilters = (values) => {
     setSearchParams(getPostFeedFilterParams(values, { lockedCategoryId, user, pageSize }));
@@ -59,7 +69,12 @@ export const usePostFeedController = ({ lockedCategoryId, authorId }) => {
     searchScope: lockedCategoryId ? "this category" : authorId ? "this user" : "these questions",
     page,
     pageSize,
-    postsQuery,
+    displayedData: staged.data,
+    pendingCount: staged.pendingCount,
+    isLoading: postsQuery.isLoading,
+    isFetching: postsQuery.isFetching,
+    error: postsQuery.error,
+    onRefresh,
     applyFilters,
     changePageSize,
     changePage,

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import {
   getPostPermissions,
   getPostRouteStatus,
+  POST_ROUTE_STATUS,
   PostRouteMessage,
   usePostRouteData,
 } from "../../../entities/post/index.js";
@@ -15,11 +16,11 @@ import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.j
 
 export const EditPostPage = () => {
   const currentUser = useSelector(selectCurrentUser);
-  const { isValidPostId, data: post, error, isLoading } = usePostRouteData();
+  const { isValidPostId, data: post, error, isLoading } = usePostRouteData({ poll: false });
   const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
   const routeStatus = getPostRouteStatus({ isValidPostId, isLoading: showLoading, error, post });
 
-  if (routeStatus === "invalid") {
+  if (routeStatus === POST_ROUTE_STATUS.invalid) {
     return (
       <PostRouteMessage className={styles.error}>
         That question address is not valid.
@@ -27,11 +28,11 @@ export const EditPostPage = () => {
     );
   }
 
-  if (routeStatus === "loading") {
+  if (routeStatus === POST_ROUTE_STATUS.loading) {
     return <LoadingIndicator completing={completing} expanded>Loading question…</LoadingIndicator>;
   }
 
-  if (routeStatus === "unavailable") {
+  if (routeStatus === POST_ROUTE_STATUS.unavailable) {
     return (
       <PostRouteMessage className={styles.error}>
         {getErrorMessage(error, API_ERROR_MESSAGES.postNotFound)}

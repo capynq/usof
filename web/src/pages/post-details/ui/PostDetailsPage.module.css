@@ -51,11 +51,13 @@
 }
 
 .headingActions {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(2, 44px);
-  align-items: flex-start;
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
+  align-items: start;
   justify-content: flex-end;
-  gap: 0.5rem;
+  column-gap: 0.5rem;
   min-width: 0;
   max-width: 100%;
 }
@@ -119,9 +121,12 @@
   justify-content: center;
   min-width: 75px;
   padding: var(--button-padding);
-  border: 1px solid #003c74;
+  border: 1px solid var(--action-color-border);
   border-radius: 3px;
-  background: linear-gradient(180deg, #fff, #ecebe5 86%, #d8d0c4);
+  background: linear-gradient(180deg,
+      #fff,
+      var(--link-button-surface-middle) 86%,
+      var(--link-button-surface-end));
   color: ButtonText;
   font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
   font-size: 11px;
@@ -130,19 +135,28 @@
 }
 
 .button:hover {
-  box-shadow: inset -1px 1px #fff0cf, inset 1px 2px #fdd889,
-    inset -2px 2px #fbc761, inset 2px -2px #e5a01a;
+  box-shadow: inset -1px 1px var(--link-button-hover-highlight),
+    inset 1px 2px var(--link-button-hover-shadow),
+    inset -2px 2px var(--link-button-hover-shadow-strong),
+    inset 2px -2px var(--link-button-hover-border);
 }
 
 .button:focus-visible {
   outline: 1px dotted #000;
   outline-offset: -4px;
-  box-shadow: inset -1px 1px #cee7ff, inset 1px 2px #98b8ea,
-    inset -2px 2px #bcd4f6, inset 1px -1px #89ade4, inset 2px -2px #89ade4;
+  box-shadow: inset -1px 1px var(--link-button-focus-start),
+    inset 1px 2px var(--link-button-focus-middle),
+    inset -2px 2px var(--link-button-focus-end),
+    inset 1px -1px var(--action-color-focus),
+    inset 2px -2px var(--action-color-focus);
 }
 
 .button:active {
-  background: linear-gradient(180deg, #cdcac3, #e3e3db 8%, #e5e5de 94%, #f2f2f1);
+  background: linear-gradient(180deg,
+      var(--link-button-active-start),
+      var(--link-button-active-middle) 8%,
+      var(--link-button-active-end) 94%,
+      var(--link-button-active-highlight));
   box-shadow: none;
 }
 
@@ -178,6 +192,17 @@
   white-space: pre-wrap;
 }
 
+.refreshed {
+  animation: global(refresh-flash) var(--refresh-highlight-duration) steps(2, end);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .refreshed {
+    animation: none;
+    outline: 2px solid var(--action-color-primary);
+  }
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -205,4 +230,18 @@
   .headingActions {
     justify-content: flex-start;
   }
+}
+
+.headingActions > div {
+  display: contents;
+}
+
+.headingActions > div > [role="alert"] {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  grid-column: auto;
+  margin-top: 0.25rem;
+  z-index: 1;
 }

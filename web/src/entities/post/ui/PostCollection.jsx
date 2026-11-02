@@ -21,7 +21,7 @@ export const PostCollection = ({
     return <LoadingIndicator completing={completing} expanded>{loadingMessage}</LoadingIndicator>;
   }
 
-  if (error) {
+  if (error && !posts?.length) {
     return (
       <StateCompanion kind="error">
         <p className={errorClassName} role="alert">

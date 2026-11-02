@@ -3,24 +3,30 @@ import { PostCollection } from "../../../entities/post/index.js";
 import { PostFeedFilters } from "./PostFeedFilters.jsx";
 import { PostFeedResultsFooter } from "./PostFeedResultsFooter.jsx";
 import { usePostFeedController } from "../model/usePostFeedController.js";
+import { RECENT_QUESTIONS_HEADING } from "../model/constants.js";
+import { RefreshControl } from "../../../shared/ui/refresh-control/index.js";
 import styles from "./PostFeed.module.css";
 
-export const PostFeed = ({ lockedCategoryId, authorId, heading = "Recent questions" }) => {
+export const PostFeed = ({ lockedCategoryId, authorId, heading = RECENT_QUESTIONS_HEADING }) => {
   const feed = usePostFeedController({ lockedCategoryId, authorId });
-  const { data, error, isLoading } = feed.postsQuery;
+  const { error, isLoading } = feed;
   const headingId = heading ? "recent-posts-title" : undefined;
 
   return (
     <section
       className={styles.feed}
-      aria-label={heading ? undefined : "Recent questions"}
+      aria-label={heading ? undefined : RECENT_QUESTIONS_HEADING}
       aria-labelledby={headingId}
     >
-      {heading && (
-        <div className={styles.heading}>
-          <h2 id={headingId}>{heading}</h2>
-        </div>
-      )}
+      <div className={styles.heading}>
+        {heading ? <h2 id={headingId}>{heading}</h2> : <span>{RECENT_QUESTIONS_HEADING}</span>}
+        <RefreshControl
+          onClick={feed.onRefresh}
+          isFetching={feed.isFetching}
+          pendingCount={feed.pendingCount}
+          error={error}
+        />
+      </div>
       <PostFeedFilters
         categories={feed.categories}
         initialValues={feed.filters}
@@ -34,7 +40,7 @@ export const PostFeed = ({ lockedCategoryId, authorId, heading = "Recent questio
       />
       <PostCollection
         renderActions={(post) => <FavoriteButton post={post} />}
-        posts={data?.data}
+        posts={feed.displayedData?.data}
         error={error}
         isLoading={isLoading}
         loadingMessage="Loading recent questions…"
@@ -44,7 +50,7 @@ export const PostFeed = ({ lockedCategoryId, authorId, heading = "Recent questio
         errorClassName={styles.error}
       />
       <PostFeedResultsFooter
-        data={data}
+        data={feed.displayedData}
         error={error}
         isLoading={isLoading}
         pageSize={feed.pageSize}

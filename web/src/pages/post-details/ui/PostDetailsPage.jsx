@@ -1,12 +1,14 @@
+import { useSelector } from "react-redux";
+import { Link } from "react-router";
+import { useCommentDiscussionController } from "../../../features/comments/model/useCommentDiscussionController.js";
 import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { FavoriteButton } from "../../../features/favorites/ui/FavoriteButton.jsx";
 import { SharePostButton } from "../../../features/post-management/ui/SharePostButton.jsx";
-import { Link } from "react-router";
-import { useSelector } from "react-redux";
 import { UserAvatar } from "../../../entities/user/index.js";
 import {
   getPostPermissions,
   getPostRouteStatus,
+  POST_ROUTE_STATUS,
   PostMeta,
   PostRouteMessage,
   usePostRouteData,
@@ -18,11 +20,22 @@ import { ReactionControls } from "../../../features/reactions/index.js";
 import { DeletePostButton } from "../../../features/post-management/index.js";
 import { selectCurrentUser } from "../../../features/auth/index.js";
 import { API_ERROR_MESSAGES, getErrorMessage } from "../../../shared/api/index.js";
+import { useRecentlyChanged } from "../../../shared/lib/useRecentlyChanged.js";
+import { RefreshControl } from "../../../shared/ui/refresh-control/index.js";
+import { usePostDetailsRefresh } from "../model/usePostDetailsRefresh.js";
 import styles from "./PostDetailsPage.module.css";
 
 export const PostDetailsPage = () => {
   const currentUser = useSelector(selectCurrentUser);
-  const { isValidPostId, data: post, error, isLoading } = usePostRouteData();
+  const postRoute = usePostRouteData();
+  const { isValidPostId, data: post, error, isLoading } = postRoute;
+  const discussion = useCommentDiscussionController({
+    postId: post?.id,
+    postStatus: post?.status,
+    skip: !isValidPostId || !post,
+  });
+  const refresh = usePostDetailsRefresh(postRoute, discussion);
+  const contentRecentlyChanged = useRecentlyChanged(post);
   const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
   const routeStatus = getPostRouteStatus({
     isValidPostId,
@@ -31,7 +44,7 @@ export const PostDetailsPage = () => {
     post,
   });
 
-  if (routeStatus === "invalid") {
+  if (routeStatus === POST_ROUTE_STATUS.invalid) {
     return (
       <PostRouteMessage className={styles.error}>
         That question address is not valid.
@@ -39,11 +52,11 @@ export const PostDetailsPage = () => {
     );
   }
 
-  if (routeStatus === "loading") {
+  if (routeStatus === POST_ROUTE_STATUS.loading) {
     return <LoadingIndicator completing={completing} expanded>Loading question…</LoadingIndicator>;
   }
 
-  if (routeStatus === "unavailable") {
+  if (routeStatus === POST_ROUTE_STATUS.unavailable) {
     return (
       <WindowShell
         title="Question unavailable"
@@ -77,6 +90,13 @@ export const PostDetailsPage = () => {
           <div className={styles.heading}>
             <h1>{post.title}</h1>
             <div className={styles.headingActions}>
+              <RefreshControl
+                onClick={refresh.onRefresh}
+                pendingCount={refresh.pendingCount}
+                showCount={false}
+                isFetching={refresh.isFetching}
+                error={refresh.error}
+              />
               <SharePostButton post={post} />
               <FavoriteButton post={post} />
             </div>
@@ -84,7 +104,9 @@ export const PostDetailsPage = () => {
           <PostMeta post={post} leading={<UserAvatar user={post.author} />} className={styles.meta} />
           <CategoryList categories={post.categories} className={styles.categories} />
         </header>
-        <div className={styles.content}>{post.content}</div>
+        <div className={`${styles.content} ${contentRecentlyChanged ? styles.refreshed : ""}`}>
+          {post.content}
+        </div>
         <div className={styles.actions}>
           <ReactionControls
             target="post"
@@ -105,7 +127,7 @@ export const PostDetailsPage = () => {
           </div>
         </div>
       </WindowShell>
-      <CommentDiscussion postId={post.id} postStatus={post.status} />
+      <CommentDiscussion postId={post.id} postStatus={post.status} discussion={discussion} />
     </div>
   );
 };
