@@ -83,10 +83,10 @@ export const ProfileAvatarForm = ({ user }) => {
           accept: "image/jpeg,image/png,image/webp",
         }}
       />
-      {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
       <button className="button" type="submit" disabled={avatarState.isLoading}>
         {avatarState.isLoading ? "Uploading…" : "Upload picture"}
       </button>
+      {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
     </form>
   );
 };

@@ -1,3 +1,5 @@
+import { baseApi } from "../api/index.js";
+
 const RTK_ACTION_TYPES = {
   executeMutationFulfilled: "api/executeMutation/fulfilled",
   executeMutationRejected: "api/executeMutation/rejected",
@@ -17,6 +19,8 @@ export const localMutationSync = (store) => {
   let deferredMutation = false;
 
   return (next) => (action) => {
+    if (!action.type.startsWith(`${baseApi.reducerPath}/`)) return next(action);
+
     const mutation = action.type === RTK_ACTION_TYPES.executeMutationFulfilled;
     const queryAccepted =
       action.type === RTK_ACTION_TYPES.executeQueryFulfilled ||

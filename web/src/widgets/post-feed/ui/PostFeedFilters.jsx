@@ -82,13 +82,11 @@ export const PostFeedFilters = ({
       >
         Filters{activeFilters.length > 0 ? ` (${activeFilters.length} active)` : ""}
       </button>
-      {activeFilters.length > 0 && (
-        <ul className={styles.activeFilters} aria-label="Active filters">
-          {activeFilters.map((filter) => (
-            <li key={filter}>{filter}</li>
-          ))}
-        </ul>
-      )}
+      <ul className={styles.activeFilters} aria-label="Active filters">
+        {activeFilters.map((filter) => (
+          <li key={filter}>{filter}</li>
+        ))}
+      </ul>
       <div id="post-feed-filters" className={styles.filterPanel} hidden={!expanded}>
         <div className={styles.filterGrid}>
           {!isHome && (
@@ -147,11 +145,6 @@ export const PostFeedFilters = ({
             <input type="date" name="date_to" value={values.date_to} onChange={updateField} />
           </label>
         </div>
-        {error && (
-          <p className={styles.validationError} role="alert">
-            {error}
-          </p>
-        )}
         <div className={styles.filterActions}>
           <button className="button" type="submit">
             Apply filters
@@ -160,6 +153,11 @@ export const PostFeedFilters = ({
             Clear filters
           </button>
         </div>
+        {error && (
+          <p className={styles.validationError} role="alert">
+            {error}
+          </p>
+        )}
       </div>
     </form>
   );

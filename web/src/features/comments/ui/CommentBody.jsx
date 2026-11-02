@@ -6,13 +6,11 @@ import { CommentEdit } from "./CommentEdit.jsx";
 import styles from "./CommentItem.module.css";
 
 export const CommentBody = ({ comment, postId, postStatus, canReply, currentUser }) => {
-  const isRefreshed = useRecentlyChanged([
-    comment.content,
-    comment.status,
-    comment.like_count,
-    comment.dislike_count,
-    comment.updated_at,
-  ]);
+  const isRefreshed = useRecentlyChanged({
+    content: comment.content,
+    status: comment.status,
+    updated_at: comment.updated_at,
+  });
   const isUnavailable = comment.is_deleted || comment.is_context_placeholder;
   const capabilities = getCommentCapabilities(comment, {
     postStatus,
@@ -21,7 +19,7 @@ export const CommentBody = ({ comment, postId, postStatus, canReply, currentUser
   });
   const label = `Comment by ${comment.author?.login || "user"}`;
   const contentClassName = isUnavailable ? styles.removed : styles.content;
-  const className = isRefreshed ? `${styles.comment} ${styles.refreshed}` : styles.comment;
+  const className = isRefreshed ? `${styles.comment} refreshed` : styles.comment;
 
   return (
     <article className={className} aria-label={label}>

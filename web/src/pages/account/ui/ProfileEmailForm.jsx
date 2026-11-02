@@ -58,10 +58,10 @@ export const ProfileEmailForm = ({ user }) => {
         />
       </label>
       <p>Changing your email signs you out. Confirm the new address before signing in again.</p>
-      {error && <p role="alert">{error}</p>}
       <button type="submit" disabled={state.isLoading || email.trim().toLowerCase() === user.email}>
         {state.isLoading ? "Saving email…" : "Change email address"}
       </button>
+      {error && <p role="alert">{error}</p>}
     </form>
   );
 };

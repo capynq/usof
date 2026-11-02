@@ -5,14 +5,26 @@
 }
 
 .wrapper {
+  position: relative;
   align-items: center;
   display: inline-flex;
   flex-wrap: wrap;
+  flex-shrink: 0;
   gap: 0.45rem;
+  min-height: var(--tap-target-size);
 }
 
 .error {
-  flex-basis: 100%;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 2;
+  width: max-content;
+  max-width: min(18rem, 90vw);
+  margin-top: 0.25rem;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid var(--feedback-error-border);
+  background: var(--feedback-error-surface);
   overflow-wrap: anywhere;
   color: var(--feedback-error-text);
   font-size: 0.75rem;

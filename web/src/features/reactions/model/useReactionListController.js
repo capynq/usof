@@ -1,5 +1,4 @@
 import { POLLING_INTERVALS, livePollingOptions } from "../../../shared/config.js";
-import { buildCollectionKey } from "../../../shared/lib/buildCollectionKey.js";
 import { useStagedCollection } from "../../../shared/lib/useStagedCollection.js";
 import { useGetReactionsQuery } from "../api/reactionsApi.js";
 
@@ -11,7 +10,7 @@ export const useReactionListController = ({ open, target, targetId }) => {
       ...livePollingOptions(POLLING_INTERVALS.reactions),
     },
   );
-  const staged = useStagedCollection(query.currentData, buildCollectionKey(target, targetId));
+  const staged = useStagedCollection(query.currentData, `${target}:${targetId}`);
   const onRefresh = staged.hasPending ? staged.applyPending : query.refetch;
 
   return {

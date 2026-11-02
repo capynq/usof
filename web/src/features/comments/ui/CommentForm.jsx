@@ -17,11 +17,6 @@ export const CommentForm = ({ postId, parentId = null, parentLabel, onCreated })
           onChange={(event) => form.setContent(event.currentTarget.value)}
         />
       </label>
-      {form.errorMessage && (
-        <p className={styles.error} role="alert">
-          {form.errorMessage}
-        </p>
-      )}
       <button
         className={`button ${styles.submit}`}
         type="submit"
@@ -29,6 +24,11 @@ export const CommentForm = ({ postId, parentId = null, parentLabel, onCreated })
       >
         {form.isLoading ? "Posting…" : parentId === null ? "Post comment" : "Post reply"}
       </button>
+      {form.errorMessage && (
+        <p className={styles.error} role="alert">
+          {form.errorMessage}
+        </p>
+      )}
     </form>
   );
 };

@@ -10,8 +10,8 @@
 
 .heading {
   display: flex;
-  flex-wrap: wrap;
-  min-height: 2.8rem;
+  flex-wrap: nowrap;
+  min-height: calc(var(--tap-target-size) + 0.9rem + 1px);
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
@@ -20,21 +20,29 @@
   background: linear-gradient(var(--navigation-surface-start), var(--navigation-surface-end));
 }
 
-.heading h2 {
+.heading > h2,
+.heading > span:first-child {
+  flex: 1;
+  min-width: 0;
   margin: 0;
+  overflow: hidden;
   font-size: 1.1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .filters {
-  display: grid;
-  gap: 0.7rem;
-  padding: 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
   border-bottom: 1px solid var(--border-color-subtle);
   background: var(--surface-color-neutral);
 }
 
 .filterToggle {
-  justify-self: start;
+  flex: 0 0 auto;
   min-height: var(--button-min-height);
   padding: var(--button-padding);
   border: 1px solid var(--border-color-layout);
@@ -51,17 +59,24 @@
 
 .filterPanel {
   display: grid;
+  flex: 1 1 100%;
   gap: 0.7rem;
   padding-top: 0.25rem;
 }
 
 .activeFilters {
   display: flex;
+  flex: 1 1 auto;
   flex-wrap: wrap;
   gap: 0.35rem;
+  min-width: 0;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.activeFilters:empty {
+  display: none;
 }
 
 .activeFilters li {
@@ -162,12 +177,6 @@
 }
 
 @media (max-width: 520px) {
-  .heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-
   .filterGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

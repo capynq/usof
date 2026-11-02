@@ -1,14 +1,16 @@
 .headingRow {
   align-items: center;
   display: flex;
+  flex-wrap: nowrap;
   gap: 1rem;
   justify-content: space-between;
+  min-height: var(--tap-target-size);
 }
 
-@media (max-width: 520px) {
-  .headingRow {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
+.headingRow h1 {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -87,10 +87,10 @@ export const UserEditor = ({ record, onClose }) => {
             />
           </label>
         )}
-        {error && <p role="alert">{error}</p>}
         <button type="submit" disabled={isLoading}>
           {isLoading ? "Saving…" : "Save member"}
         </button>
+        {error && <p role="alert">{error}</p>}
       </form>
     </ModalDialog>
   );

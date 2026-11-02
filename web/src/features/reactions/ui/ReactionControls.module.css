@@ -45,6 +45,7 @@
 }
 
 .error {
+  flex-basis: 100%;
   color: var(--feedback-error-text);
   font-size: 0.82rem;
 }

@@ -4,9 +4,25 @@
   min-width: 0;
 }
 
+.filterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  min-height: var(--tap-target-size);
+}
+
 .filter {
   display: grid;
+  flex: 1 1 10rem;
+  min-width: 0;
   gap: 0.4rem;
+}
+
+.status {
+  min-height: 1.5em;
+  margin: 0;
 }
 
 .content p {

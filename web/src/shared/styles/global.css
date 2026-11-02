@@ -97,6 +97,7 @@ select:focus-visible {
 }
 
 @media (forced-colors: active) {
+
   select:not([multiple]):not([size]),
   select:not([multiple])[size="1"] {
     appearance: auto;
@@ -125,23 +126,23 @@ input[type="checkbox"] {
   background-size: 70% 70%;
 }
 
-input[type="checkbox"] + label {
+input[type="checkbox"]+label {
   margin-left: 0;
 }
 
-input[type="checkbox"] + label::before,
-input[type="checkbox"] + label::after {
+input[type="checkbox"]+label::before,
+input[type="checkbox"]+label::after {
   display: none;
   content: none;
 }
 
-input[type="checkbox"]:checked + label::after,
-input[type="checkbox"]:disabled:checked + label::after {
+input[type="checkbox"]:checked+label::after,
+input[type="checkbox"]:disabled:checked+label::after {
   display: none;
   content: none;
 }
 
-input[type="checkbox"]:focus + label {
+input[type="checkbox"]:focus+label {
   outline: none;
 }
 
@@ -291,9 +292,11 @@ h3 {
 h1 {
   font-size: 2rem;
 }
+
 h2 {
   font-size: 1.25rem;
 }
+
 h3 {
   font-size: 1.1rem;
 }
@@ -310,7 +313,19 @@ textarea {
   color: var(--text-color-default);
 }
 
+.refreshed {
+  animation: refresh-flash var(--refresh-highlight-duration) steps(2, end);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .refreshed {
+    animation: none;
+    outline: 2px solid var(--action-color-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

@@ -47,7 +47,6 @@ export const ProfileDetailsForm = ({ user }) => {
           maxLength: PROFILE_FIELD_LIMITS.fullName.max,
         }}
       />
-      {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
       {conflict && (
         <div>
           <p>{PROFILE_DETAILS_MESSAGES.replaceDraft}</p>
@@ -59,6 +58,7 @@ export const ProfileDetailsForm = ({ user }) => {
       <button className="button" type="submit" disabled={busy}>
         {PROFILE_DETAILS_BUTTONS.save}
       </button>
+      {notice && <FormFeedback type={notice.type}>{notice.message}</FormFeedback>}
     </form>
   );
 };

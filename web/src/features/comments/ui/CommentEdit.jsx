@@ -54,11 +54,6 @@ export const CommentEdit = ({ comment, postId }) => {
           onChange={(event) => setContent(event.currentTarget.value)}
         />
       </label>
-      {errorMessage && (
-        <p className={formStyles.error} role="alert">
-          {errorMessage}
-        </p>
-      )}
       <div>
         <button
           className={`button ${formStyles.submit}`}
@@ -76,6 +71,11 @@ export const CommentEdit = ({ comment, postId }) => {
           Cancel
         </button>
       </div>
+      {errorMessage && (
+        <p className={formStyles.error} role="alert">
+          {errorMessage}
+        </p>
+      )}
     </form>
   );
 };

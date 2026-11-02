@@ -33,6 +33,8 @@ export const ManagementList = ({ query, resource, children }) => {
   const visibleRecords = staged.data ?? noRecords;
   const collection = useManagementCollection(visibleRecords);
   const onRefresh = staged.hasPending ? staged.applyPending : query.refetch;
+  const hasRecords = visibleRecords.length > 0;
+  const idle = !query.isFetching && !showInitialLoading && !query.error;
 
   return (
     <div className="management-list" data-resource={resource}>
@@ -51,35 +53,29 @@ export const ManagementList = ({ query, resource, children }) => {
             Searches {searchScopes[resource] ?? "ID and text"}.
           </span>
         </label>
-        {!query.error && (
+        <div className="management-toolbar-status">
           <p className="management-count" aria-live="polite">
             {collection.total} of {visibleRecords.length} {resource}
           </p>
-        )}
-        <RefreshControl
-          onClick={onRefresh}
-          isFetching={query.isFetching}
-          pendingCount={staged.pendingCount}
-          error={query.error && visibleRecords.length > 0 ? query.error : null}
-        />
+          <RefreshControl
+            onClick={onRefresh}
+            isFetching={query.isFetching}
+            pendingCount={staged.pendingCount}
+            error={query.error && hasRecords ? query.error : null}
+          />
+        </div>
       </div>
-      {visibleRecords.length === 0 && (query.isFetching || showInitialLoading) && (
+      {!hasRecords && (query.isFetching || showInitialLoading) && (
         <LoadingIndicator completing={completing} expanded>Opening records…</LoadingIndicator>
       )}
-      {query.error && visibleRecords.length === 0 && (
+      {query.error && !hasRecords && (
         <p role="alert">{getErrorMessage(query.error, "Records could not be loaded.")}</p>
       )}
-      {!query.isFetching && !showInitialLoading && !query.error && visibleRecords.length === 0 && (
-        <p className="management-empty">No {resource} yet.</p>
+      {idle && !hasRecords && <p className="management-empty">No {resource} yet.</p>}
+      {idle && hasRecords && collection.total === 0 && (
+        <p className="management-empty">No {resource} match this search.</p>
       )}
-      {!query.isFetching &&
-        !showInitialLoading &&
-        !query.error &&
-        visibleRecords.length > 0 &&
-        collection.total === 0 && (
-          <p className="management-empty">No {resource} match this search.</p>
-        )}
-      {collection.total > 0 && (
+      {hasRecords && (
         <div className="management-columns" aria-hidden="true">
           {(columnLabels[resource] ?? fallbackColumnLabels).map((label) => (
             <span key={label}>{label}</span>

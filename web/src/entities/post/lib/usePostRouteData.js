@@ -1,6 +1,5 @@
 import { useParams } from "react-router";
-import { POLLING_INTERVALS } from "../../../shared/config.js";
-import { buildCollectionKey } from "../../../shared/lib/buildCollectionKey.js";
+import { POLLING_INTERVALS, livePollingOptions } from "../../../shared/config.js";
 import { useStagedCollection } from "../../../shared/lib/useStagedCollection.js";
 import { useGetPostQuery } from "../api/postApi.js";
 
@@ -30,22 +29,16 @@ export const usePostRouteData = ({ poll = true } = {}) => {
   const isValidPostId = Number.isInteger(postId) && postId > 0;
   const query = useGetPostQuery(postId, {
     skip: !isValidPostId,
-    pollingInterval: poll ? POLLING_INTERVALS.postDetails : 0,
-    skipPollingIfUnfocused: poll,
+    ...(poll ? livePollingOptions(POLLING_INTERVALS.postDetails) : {}),
   });
-  const staged = useStagedCollection(
-    query.currentData,
-    buildCollectionKey("post", postId),
-    visiblePost,
-  );
-  const hasPending = poll && staged.hasPending;
+  const staged = useStagedCollection(query.currentData, `post:${postId}`, visiblePost);
 
   return {
     ...query,
     postId,
     isValidPostId,
     data: poll ? staged.data : query.currentData,
-    pendingCount: hasPending ? staged.pendingCount : 0,
+    pendingCount: poll ? staged.pendingCount : 0,
     applyPending: staged.applyPending,
   };
 };

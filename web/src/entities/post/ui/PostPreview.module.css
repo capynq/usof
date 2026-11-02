@@ -119,7 +119,7 @@
     flex: 0 1 5.5rem;
   }
 
-  .author > span:first-child {
+  .author>span:first-child {
     width: 1.85rem;
     height: 1.85rem;
     font-size: 0.72rem;
@@ -137,9 +137,25 @@
 }
 
 .heading {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.5rem;
   align-items: start;
   margin-bottom: 0.35rem;
+}
+
+.heading [role="alert"] {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1;
+  width: max-content;
+  max-width: min(18rem, 100%);
+  margin-top: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--feedback-error-border);
+  background: var(--feedback-error-surface);
+  color: var(--feedback-error-text);
+  font-size: 0.8rem;
 }

@@ -33,7 +33,8 @@ export const usePostFeedController = ({ lockedCategoryId, authorId }) => {
     queryArgs,
     livePollingOptions(POLLING_INTERVALS.postFeed),
   );
-  const staged = useStagedCollection(postsQuery.currentData, JSON.stringify(queryArgs));
+  const collectionKey = [searchKey, lockedCategoryId, authorId, canFilterStatus].join("|");
+  const staged = useStagedCollection(postsQuery.currentData, collectionKey);
   const onRefresh = staged.hasPending ? staged.applyPending : postsQuery.refetch;
 
   useEffect(() => {

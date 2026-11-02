@@ -72,6 +72,10 @@
   justify-self: start;
 }
 
+.managementBody :global(.stack-form > [role="alert"]) {
+  margin-top: -0.5rem;
+}
+
 .managementBody :global(.management-nav) {
   display: flex;
   flex-wrap: wrap;
@@ -147,10 +151,20 @@
   font-weight: 400;
 }
 
+.managementBody :global(.management-toolbar-status) {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: var(--tap-target-size);
+  margin-left: auto;
+}
+
 .managementBody :global(.management-count) {
   flex: 0 0 auto;
-  margin-left: auto;
-  margin: 0 0 0.2rem auto;
+  margin: 0;
   color: #345775;
   font-size: 0.875rem;
 }
@@ -303,10 +317,6 @@
     align-items: stretch;
     flex-direction: column;
     gap: 0.4rem;
-  }
-
-  .managementBody :global(.management-count) {
-    margin: 0;
   }
 
   .managementBody :global(.management-toolbar input) {

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ModalDialog } from "../../../shared/ui/confirm-dialog/ModalDialog.jsx";
 import { getErrorMessage } from "../../../shared/api/index.js";
 import { useSaveManagementRecordMutation } from "../api/managementApi.js";
+import { MANAGEMENT_RESOURCES } from "../model/constants.js";
 
 export const CategoryEditor = ({ record, onClose }) => {
   const [values, setValues] = useState({
@@ -22,7 +23,7 @@ export const CategoryEditor = ({ record, onClose }) => {
 
     try {
       await save({
-        resource: "categories",
+        resource: MANAGEMENT_RESOURCES.categories,
         id: record?.id,
         body: {
           title: values.title.trim(),
@@ -59,14 +60,14 @@ export const CategoryEditor = ({ record, onClose }) => {
             rows={4}
           />
         </label>
+        <button type="submit" disabled={state.isLoading}>
+          {state.isLoading ? "Saving…" : "Save category"}
+        </button>
         {(error || state.error) && (
           <p role="alert">
             {error || getErrorMessage(state.error, "The category could not be saved.")}
           </p>
         )}
-        <button type="submit" disabled={state.isLoading}>
-          {state.isLoading ? "Saving…" : "Save category"}
-        </button>
       </form>
     </ModalDialog>
   );

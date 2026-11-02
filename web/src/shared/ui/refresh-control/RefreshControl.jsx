@@ -7,11 +7,16 @@ export const RefreshControl = ({
   isFetching = false,
   pendingCount = 0,
   showCount = true,
-  pendingLabel = REFRESH_CONTROL_LABELS.pending,
   error = null,
 }) => {
   const hasPending = pendingCount > 0;
+  const pendingLabel = REFRESH_CONTROL_LABELS.pending;
   const actionLabel = showCount ? `${pendingLabel}: ${pendingCount} updates` : pendingLabel;
+  const buttonText = isFetching
+    ? REFRESH_CONTROL_LABELS.refreshing
+    : showCount
+      ? `${pendingLabel} (${pendingCount})`
+      : pendingLabel;
   const className = getActionButtonClass({
     labeled: true,
     extraClassName: `${styles.button} ${styles.pending}`,
@@ -30,13 +35,7 @@ export const RefreshControl = ({
           aria-label={actionLabel}
           title={actionLabel}
         >
-          <span>
-            {isFetching
-              ? REFRESH_CONTROL_LABELS.refreshing
-              : showCount
-                ? `${pendingLabel} (${pendingCount})`
-                : pendingLabel}
-          </span>
+          <span>{buttonText}</span>
         </button>
       )}
       {error && (

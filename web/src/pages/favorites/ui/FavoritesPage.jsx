@@ -49,7 +49,7 @@ export const FavoritesPage = () => {
           onClick={onRefresh}
           isFetching={query.isFetching}
           pendingCount={staged.pendingCount}
-          error={query.error}
+          error={staged.data?.data?.length ? query.error : null}
         />
       </div>
       <p>{FAVORITES_PAGE_COPY.intro}</p>

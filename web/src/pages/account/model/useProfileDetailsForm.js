@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useDispatch, useStore } from "react-redux";
 import { PROFILE_SAVE_CHECK_TIMEOUT_MS } from "../../../shared/config.js";
-import { authApi } from "../../../features/auth/api/authApi.js";
+import { authApi, sessionRestored } from "../../../features/auth/index.js";
 import { getProfileValues, sameProfileValues } from "./profileDetailsForm.js";
 import { PROFILE_DETAILS_MESSAGES } from "./constants.js";
-import { sessionRestored } from "../../../features/auth/model/authSlice.js";
 import { useUpdateProfileMutation } from "../../../entities/user/index.js";
 import { getErrorMessage } from "../../../shared/api/index.js";
 

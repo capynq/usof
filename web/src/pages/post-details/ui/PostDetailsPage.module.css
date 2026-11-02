@@ -192,17 +192,6 @@
   white-space: pre-wrap;
 }
 
-.refreshed {
-  animation: global(refresh-flash) var(--refresh-highlight-duration) steps(2, end);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .refreshed {
-    animation: none;
-    outline: 2px solid var(--action-color-primary);
-  }
-}
-
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -232,16 +221,23 @@
   }
 }
 
-.headingActions > div {
+.headingActions>div {
   display: contents;
 }
 
-.headingActions > div > [role="alert"] {
+.headingActions>div>[role="alert"] {
   position: absolute;
   top: 100%;
-  left: 0;
+  left: auto;
   right: 0;
   grid-column: auto;
+  width: max-content;
+  max-width: min(18rem, 90vw);
   margin-top: 0.25rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--feedback-error-border);
+  background: var(--feedback-error-surface);
+  color: var(--feedback-error-text);
+  font-size: 0.8rem;
   z-index: 1;
 }

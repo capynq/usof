@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router";
-import { useCommentDiscussionController } from "../../../features/comments/model/useCommentDiscussionController.js";
 import { LoadingIndicator, useMinimumLoading } from "../../../shared/ui/loading/index.js";
 import { FavoriteButton } from "../../../features/favorites/ui/FavoriteButton.jsx";
 import { SharePostButton } from "../../../features/post-management/ui/SharePostButton.jsx";
@@ -15,7 +14,10 @@ import {
 } from "../../../entities/post/index.js";
 import { CategoryList } from "../../../entities/category/index.js";
 import { WindowShell } from "../../../shared/ui/window-shell/index.js";
-import { CommentDiscussion } from "../../../features/comments/index.js";
+import {
+  CommentDiscussion,
+  useCommentDiscussionController,
+} from "../../../features/comments/index.js";
 import { ReactionControls } from "../../../features/reactions/index.js";
 import { DeletePostButton } from "../../../features/post-management/index.js";
 import { selectCurrentUser } from "../../../features/auth/index.js";
@@ -35,7 +37,16 @@ export const PostDetailsPage = () => {
     skip: !isValidPostId || !post,
   });
   const refresh = usePostDetailsRefresh(postRoute, discussion);
-  const contentRecentlyChanged = useRecentlyChanged(post);
+  const contentSnapshot = post
+    ? {
+        title: post.title,
+        content: post.content,
+        categories: post.categories,
+        status: post.status,
+        updated_at: post.updated_at,
+      }
+    : null;
+  const contentRecentlyChanged = useRecentlyChanged(contentSnapshot);
   const { visible: showLoading, completing } = useMinimumLoading(isLoading, error);
   const routeStatus = getPostRouteStatus({
     isValidPostId,
@@ -104,7 +115,7 @@ export const PostDetailsPage = () => {
           <PostMeta post={post} leading={<UserAvatar user={post.author} />} className={styles.meta} />
           <CategoryList categories={post.categories} className={styles.categories} />
         </header>
-        <div className={`${styles.content} ${contentRecentlyChanged ? styles.refreshed : ""}`}>
+        <div className={contentRecentlyChanged ? `${styles.content} refreshed` : styles.content}>
           {post.content}
         </div>
         <div className={styles.actions}>

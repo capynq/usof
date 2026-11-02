@@ -24,17 +24,17 @@ export const PostForm = ({ post, isAdmin = false, isOwner = false }) => {
         selectedIds={form.values.categories}
         onToggle={form.toggleCategory}
       />}
-      {form.formError && (
-        <p className={styles.error} role="alert">
-          {form.formError}
-        </p>
-      )}
       <PostFormActions
         isEditing={form.isEditing}
         isSaving={form.isSaving}
         isDisabled={!statusOnly && (form.categoriesLoading || Boolean(form.categoriesError))}
         onCancel={form.cancel}
       />
+      {form.formError && (
+        <p className={styles.error} role="alert">
+          {form.formError}
+        </p>
+      )}
     </form>
   );
 };

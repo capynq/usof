@@ -16,7 +16,7 @@ export const CommentDeleteAction = ({ comment, postId }) => {
   };
 
   return (
-    <>
+    <div className="inline-action">
       <button className={`button ${styles.actionButton}`} type="button" onClick={openConfirmation}>
         Remove
       </button>
@@ -36,6 +36,6 @@ export const CommentDeleteAction = ({ comment, postId }) => {
           onConfirm={() => confirmation.run({ commentId: comment.id, postId })}
         />
       )}
-    </>
+    </div>
   );
 };
