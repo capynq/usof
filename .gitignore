@@ -27,3 +27,6 @@ api/storage/avatars/*
 api/src/adminjs/
 api/.adminjs/
 api/adminjs/
+
+# Claude Code local settings
+.claude/settings.local.json
